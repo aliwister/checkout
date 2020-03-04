@@ -1,0 +1,58 @@
+scalar BigDecimal
+scalar Long
+
+type Message {
+    value: String
+}
+type Address {
+     name: String
+     line1: String
+     line2: String
+     city: String
+     country: String
+     postalCode: String
+}
+type PaymentMethod {
+    ref: String
+}
+type CartItem {
+    productId: Int
+    sku: String
+    image: String
+    name: String
+    quantity: Float
+    price: Float
+    subTotal: Float
+}
+type Cart {
+    id: ID!
+    ref: String
+    name: String
+    phone: String
+    email: String
+    secureKey: String
+    deliveryAddress: Address
+    invoiceAddress: Address
+    addresses: [Address]
+    paymentMethods: [PaymentMethod]
+    carrier: String
+    currency: String
+    items: [CartItem]
+    tenantId: Long
+}
+input AddressInput {
+     name: String
+     line1: String
+     line2: String
+     city: String
+     country: String
+     postalCode: String
+}
+type Query {
+    test(param: String): String
+    cart(secureKey: String): Cart
+}
+type Mutation {
+    setInfo(email: String, address: AddressInput, secureKey: String): Cart
+    processPayment(token: String): Message
+}
