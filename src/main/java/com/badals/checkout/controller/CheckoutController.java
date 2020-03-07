@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
@@ -43,10 +44,20 @@ public class CheckoutController {
         //return new ResponseEntity<CheckoutDTO>(dto, httpHeaders, HttpStatus.OK);
     }
 
-    @RequestMapping("/start/{token}")
-    public String start(@PathVariable(value="token") String token) {
-        log.info("I'm a token");
+    @GetMapping("/start")
+    public String start(@RequestParam(required=true) String token, Model model) {
+        log.info("I'm a token {}", token);
         //log.debug("REST request to create cart : {}", cart);
+        model.addAttribute("token", token);
         return "checkout";
+    }
+
+    @RequestMapping("/ping")
+    public String ping(Model model) {
+        //log.info("I'm a token {}", token);
+        //log.debug("REST request to create cart : {}", cart);
+        model.addAttribute("message", "I'm Alive");
+        model.addAttribute("token", "abc");
+        return "index";
     }
 }

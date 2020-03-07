@@ -1,14 +1,13 @@
 package com.badals.checkout.service;
 
+import com.badals.checkout.domain.pojo.PaymentResponsePayload;
+import com.badals.checkout.domain.pojo.PaymentStatus;
 import com.checkout.CheckoutApi;
 import com.checkout.CheckoutApiException;
 import com.checkout.CheckoutApiImpl;
 import com.checkout.CheckoutValidationException;
 import com.checkout.common.Currency;
-import com.checkout.payments.PaymentRequest;
-import com.checkout.payments.PaymentResponse;
-import com.checkout.payments.ThreeDSRequest;
-import com.checkout.payments.TokenSource;
+import com.checkout.payments.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class CheckoutPaymentService {
       this.api = CheckoutApiImpl.create("sk_56109822-a7d8-41f7-ae5d-c332b6bcd995", false, "pk_932e59ef-2d33-448d-80cd-8668691640fe");
    }
 
-   public PaymentResponse processPayment(String token) throws InterruptedException, ExecutionException {
+   public PaymentResponsePayload processPayment(String token) throws InterruptedException, ExecutionException {
       TokenSource tokenSource = new TokenSource(token);
       PaymentRequest<TokenSource> paymentRequest = PaymentRequest.fromSource(tokenSource, Currency.OMR, 10L);
       paymentRequest.setReference("ORD-090857");
@@ -35,13 +34,13 @@ public class CheckoutPaymentService {
          PaymentResponse response = api.paymentsClient().requestAsync(paymentRequest).get();
 
          if (response.isPending() && response.getPending().requiresRedirect()) {
-            return response; //redirect(response.getPending().getRedirectLink().getHref());
+            return redirect(response.getPending().getRedirectLink().getHref());
          }
 
          if (response.getPayment().isApproved())
-            return response; //paymentSucessful(response.getPayment());
+            return paymentSucessful(response.getPayment());
 
-         return response; //paymentDeclined(response.getPayment());
+         return paymentDeclined(response.getPayment());
       } catch (CheckoutValidationException e) {
          e.printStackTrace();
          //return validationError(e.getError());
@@ -57,4 +56,17 @@ public class CheckoutPaymentService {
          throw e;
       }
    }
+
+   private PaymentResponsePayload paymentSucessful(PaymentProcessed payment) {
+      return new PaymentResponsePayload("Payment Successful", null, PaymentStatus.SUCCESS);
+   }
+
+   private PaymentResponsePayload paymentDeclined(PaymentProcessed payment) {
+      return new PaymentResponsePayload("Payment Declined", null, PaymentStatus.DECLINED);
+   }
+
+   private PaymentResponsePayload redirect(String href) {
+      return new PaymentResponsePayload("Payment Successful", href, PaymentStatus.REDIRECT);
+   }
+   
 }

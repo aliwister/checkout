@@ -1,7 +1,7 @@
 package com.badals.checkout.service.mutation;
 
 import com.badals.checkout.domain.pojo.Address;
-import com.badals.checkout.domain.pojo.Message;
+import com.badals.checkout.domain.pojo.PaymentResponsePayload;
 import com.badals.checkout.service.CartService;
 import com.badals.checkout.service.CheckoutPaymentService;
 import com.badals.checkout.service.dto.CartDTO;
@@ -42,8 +42,8 @@ public class Mutation implements GraphQLMutationResolver {
         return cartService.setDeliveryAddressAndEmail(address, email, secureKey);
         //return new Message("success");
     }
-    public Message processPayment(String token) throws Exception{
-        PaymentResponse response = checkoutPaymentService.processPayment(token);
-        return new Message(response.toString());
+    public PaymentResponsePayload processPayment(String token) throws Exception{
+        PaymentResponsePayload response = checkoutPaymentService.processPayment(token);
+        return  response;
     }
 }

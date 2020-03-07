@@ -15,28 +15,28 @@ import org.springframework.http.MediaType;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.view.script.ScriptTemplateConfigurer;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Configuration of web application with Servlet 3.0 APIs.
  */
 @Configuration
-public class WebConfigurer { //implements ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory> {
-/*
+public class WebConfigurer implements ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory> {
     private final Logger log = LoggerFactory.getLogger(WebConfigurer.class);
-
     private final Environment env;
-
 
     public WebConfigurer(Environment env) {
         this.env = env;
+        //this.jHipsterProperties = jHipsterProperties;
     }
-
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
@@ -46,7 +46,9 @@ public class WebConfigurer { //implements ServletContextInitializer, WebServerFa
         log.info("Web application fully configured");
     }
 
-
+    /**
+     * Customize the Servlet engine: Mime types, the document root, the cache.
+     */
     @Override
     public void customize(WebServerFactory server) {
         setMimeMappings(server);
@@ -63,32 +65,27 @@ public class WebConfigurer { //implements ServletContextInitializer, WebServerFa
             servletWebServer.setMimeMappings(mappings);
         }
     }
-
-    @Bean
-    ScriptTemplateConfigurer configureScript() {
-        ScriptTemplateConfigurer configurer = new ScriptTemplateConfigurer();
-        configurer.setEngineName("nashorn");
-        configurer.setRenderFunction("render");
-        configurer.setScripts(
- //               "static/polyfill.js",
- //               "static/lib/js/ejs.min.js",
- //               "/META-INF/resources/webjars/react/0.13.1/react.js",
-//                "/META-INF/resources/webjars/react/0.13.1/JSXTransformer.js",
- //               "static/render.js",
-  //              "static/output/comment.js",
-   //             "static/output/comment-form.js",
-        //        "static/app/build/js/runtime-main.63c1efab.js"
-        );
-
-        //Log logger;
-        //logger.trace("  ScriptTemplateConfigurer configureScript()");
-        return configurer;
-    }
-
-*/
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        if (config.getAllowedOrigins() != null && !config.getAllowedOrigins().isEmpty()) {
+            log.debug("Registering CORS filter");
+            source.registerCorsConfiguration("/api/**", config);
+            source.registerCorsConfiguration("/management/**", config);
+            source.registerCorsConfiguration("/v2/api-docs", config);
+            source.registerCorsConfiguration("/**", config);
+        }
+        config.setAllowedOrigins(Collections.singletonList("*")); // Provide list of origins if you want multiple origins
+        config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
+        config.setAllowCredentials(true);
+        source.registerCorsConfiguration("/**", config);
+
         return new CorsFilter(source);
     }
+
+
+
+
 }

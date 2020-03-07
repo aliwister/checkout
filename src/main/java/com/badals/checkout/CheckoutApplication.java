@@ -10,4 +10,5 @@ public class CheckoutApplication {
 		SpringApplication.run(CheckoutApplication.class, args);
 	}
 
+
 }
