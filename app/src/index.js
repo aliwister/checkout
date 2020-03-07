@@ -10,7 +10,7 @@ import App from './App';
 const theme = createMuiTheme();
 
 const client = new ApolloClient({
-    uri: 'http://127.0.0.1:3003/graphql',
+    uri: 'http://127.0.0.1:8081/graphql',
 });
 
 render((

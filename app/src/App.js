@@ -54,7 +54,7 @@ function getStepContent(step, data, dispatch) {
 
 const App = (props) => {
     const initialState = {
-        step: 2
+        step: 0
     }
     const [state, dispatch] = useReducer(reducer, initialState);
     const [spacing, setSpacing] = React.useState(5);

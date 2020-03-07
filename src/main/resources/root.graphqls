@@ -1,16 +1,24 @@
 scalar BigDecimal
 scalar Long
 
-type Message {
-    value: String
+enum PaymentStatus {
+    SUCCESS
+    DECLINED
+    REDIRECT
+}
+type PaymentResponsePayload {
+    message: String
+    redirect: String
+    status: PaymentStatus
 }
 type Address {
-     name: String
-     line1: String
-     line2: String
-     city: String
-     country: String
-     postalCode: String
+    id: Long
+    name: String
+    line1: String
+    line2: String
+    city: String
+    country: String
+    postalCode: String
 }
 type PaymentMethod {
     ref: String
@@ -54,5 +62,5 @@ type Query {
 }
 type Mutation {
     setInfo(email: String, address: AddressInput, secureKey: String): Cart
-    processPayment(token: String): Message
+    processPayment(token: String): PaymentResponsePayload
 }

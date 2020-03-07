@@ -9,17 +9,14 @@
 <body>
 Ali here
 <script>
-    /*<![CDATA[*/
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    window.secureKey = urlParams.get('token');
-    console.log(secureKey);
-    /*]]>*/
+    window.secureKey = "abc";
 </script>
 <div id="index"></div>
 
-<script type="text/javascript" src="/app.6a97762b84fac23f892e.js"></script><script type="text/javascript" src="/app.0a9115dbe5b966d78d72.js"></script></body>
+<script type="text/javascript" src="app.6a97762b84fac23f892e.js"></script><script type="text/javascript" src="app.27312afe28901fa96924.js"></script></body>
 
+<script type="text/javascript" th:inline="javascript" th:src="@{/app.js}"></script>
+<script type="text/javascript" th:inline="javascript" th:src="@{/test.js}"></script>
 <!-- Checkout Frames CDN -->
 <script src="https://cdn.checkout.com/js/framesv2.min.js"></script>
 </html>

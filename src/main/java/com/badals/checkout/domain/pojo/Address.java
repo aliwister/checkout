@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 @Data
 public class Address implements Serializable {
+    Long id;
     String name;
     String line1;
     String line2;
