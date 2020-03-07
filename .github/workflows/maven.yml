@@ -1,0 +1,38 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: "11.0.x"
+    - name: install eb-cli
+      run: pip install awsebcli --upgrade --user
+    - name: check eb-cli
+      run: ~/.local/bin/eb --version
+    - name: Build with Maven
+      run: mvn clean install
+    - name: deploy.zip
+      run: bash .github/build-package-and-deploy-zip.sh
+    - name: write aws config files
+      run: bash .github/create-aws-config.sh
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    - name: deploy on live (if master)
+      run: ~/.local/bin/eb deploy backend-live -l $GITHUB_SHA
+      if: github.ref == 'refs/heads/master'
