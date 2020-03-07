@@ -12,6 +12,7 @@ class CkoFrames extends Component {
       paymentMethodIcon: '',
       payButton: false
     }
+    this.handleProcessPayment = props.handleProcessPayment;
   }
 
   // Initialise Frames and register the event handlers
@@ -35,11 +36,12 @@ class CkoFrames extends Component {
       token: event
     })
 
-    alert(
+    /*alert(
       'Token: ' +
         event.token +
         '\nFull response in the console or in state.token'
-    )
+    )*/
+    return this.handleProcessPayment(event.token);
     console.log(event)
   }
 
@@ -136,7 +138,7 @@ class CkoFrames extends Component {
             disabled={this.state.payButton}
             onClick={this.submitFrames}
           >
-            PAY GBP 25.00
+            PAY
           </button>
 
           <div>

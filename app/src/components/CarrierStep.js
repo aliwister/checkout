@@ -8,9 +8,9 @@ const InfoDiv = styled.div`
   margin-bottom: ${ props  =>  props.theme.spacing(4)}px;
 `;
 
-export const CarrierStep = () => {
+export const CarrierStep = ({data, dispatch}) => {
     const { register, handleSubmit } = useForm();
-    const onSubmit = data => { console.log(data); }
+    const onSubmit = data => { dispatch({type: 'NEXT'}); }
     return (
         <React.Fragment>
             <Typography variant="h6">Carrier Step</Typography>

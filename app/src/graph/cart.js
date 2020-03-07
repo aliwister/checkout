@@ -9,6 +9,7 @@ export const CART = gql`
         email
         secureKey
         deliveryAddress {
+
              name
              line1
              line2
@@ -17,6 +18,7 @@ export const CART = gql`
              postalCode
         }
         invoiceAddress {
+            id
              name
              line1
              line2
@@ -25,6 +27,7 @@ export const CART = gql`
              postalCode
         }
         addresses {
+            id
              name
              line1
              line2

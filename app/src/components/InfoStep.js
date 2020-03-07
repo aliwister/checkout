@@ -16,29 +16,41 @@ const InfoDiv = styled.div`
   //padding: ${ props  =>  props.theme.spacing(8)}px;
   margin-bottom: ${ props  =>  props.theme.spacing(4)}px;
 `;
-
+//{[{id:1,address1:"address1"},{id:0,address1:"address2"}]} address={{id:1, name:"Ali",line1:"Line1"}}
 export const InfoStep = (props) => {
     const { register, handleSubmit, watch, errors } = useForm();
-    const [setInfo,{loading, data2}] = useMutation(SET_INFO);
-    let {data} = props;
+    const [setInfoMutattion,{loading, data2}] = useMutation(SET_INFO);
+    let {data, dispatch} = props;
 
 
     const sendTokenToServer = async (email) => {
         let address= {name:"Ali", line1:"line1", line2:"line2",city:"city",country:"Oman"};
         //let email= "aliwister@gmail.com";
-        const cart_info = await setInfo({variables:{email, address,secureKey}
+        const cart_info = await setInfo({variables:{email, address, secureKey}
         });
-        //data = cart_info;
-        console.log(cart_info, 'cart_info');
+        const {
+            data: { setInfo },
+        } = await setInfoMutattion({
+            variables: {email, address, secureKey}
+        });
+        if(setInfo)
+            dispatch({type: 'NEXT'});
+        console.log(setInfo, 'cart_info');
     };
 
-    const onSubmit = formData => {
+    const onSubmit = async (formData) => {
         console.log("FORM DATA:")
         console.log(formData);
         let address= {name:"Ali", line1:"line1", line2:"line2",city:"city",country:"Oman"};
         let email= formData.email;
-        setInfo({variables:{email, address, secureKey}
+        const {
+            data: { setInfo },
+        } = await setInfoMutattion({
+            variables: {email, address, secureKey}
         });
+        console.log(setInfo, 'cart_info');
+        if(setInfo)
+            dispatch({type: 'NEXT'});
         //sendTokenToServer(formData.email);
         return false;
     }
@@ -53,8 +65,7 @@ export const InfoStep = (props) => {
                 <Typography variant="h6" gutterBottom>
                     Shipping address
                 </Typography>
-                <AddressForm addresses={[{id:1,address1:"address1"},{id:0,address1:"address2"}]} address={{id:1, name:"Ali",line1:"Line1"}} register={register} />
-                <PaymentStep register={register} />
+                <AddressForm addresses={data.cart.addresses} address={data.cart.deliveryAddress} register={register} />
                 <NavButton type="submit" ariant="contained"
                            color="primary">
                     Next
