@@ -38,19 +38,19 @@ function reducer(state, action) {
 
 }
 
-function getStepContent(step, data, dispatch) {
+function getStepContent(step, state, dispatch) {
+    console.log(step);
     switch (step) {
         case 0:
-            return <InfoStep data={data} dispatch={dispatch}/>;
+            return <InfoStep state={state} dispatch={dispatch}/>;
         case 1:
-            return <CarrierStep data={data} dispatch={dispatch}/>;
+            return <CarrierStep state={state} dispatch={dispatch}/>;
         case 2:
-            return <PaymentStep data={data} dispatch={dispatch}/>;
+            return <PaymentStep state={state} dispatch={dispatch}/>;
         default:
             throw new Error('Unknown step');
     }
 }
-
 
 const App = (props) => {
     const initialState = {
@@ -66,7 +66,6 @@ const App = (props) => {
         client.resetStore()
     }, []);
 */
-
 
     const handleNext = () => {
         setActiveStep(activeStep + 1);

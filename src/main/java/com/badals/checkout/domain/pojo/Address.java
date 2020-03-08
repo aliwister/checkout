@@ -11,6 +11,7 @@ public class Address implements Serializable {
     String line1;
     String line2;
     String city;
+    String state;
     String country;
     String postalCode;
 }

@@ -11,12 +11,21 @@ type PaymentResponsePayload {
     redirect: String
     status: PaymentStatus
 }
+type Carrier {
+    name: String!
+    value: String!
+    cost: BigDecimal!
+    image: String
+}
+
+
 type Address {
     id: Long
     name: String
     line1: String
     line2: String
     city: String
+    state: String
     country: String
     postalCode: String
 }
@@ -53,14 +62,17 @@ input AddressInput {
      line1: String
      line2: String
      city: String
+     state: String
      country: String
      postalCode: String
 }
 type Query {
     test(param: String): String
     cart(secureKey: String): Cart
+    carriers(state: String, city:String, weight:BigDecimal): [Carrier]
 }
 type Mutation {
     setInfo(email: String, address: AddressInput, secureKey: String): Cart
-    processPayment(token: String): PaymentResponsePayload
+    processPayment(token: String, name: String, secureKey: String): PaymentResponsePayload
+    setCarrier(value: String, secureKey: String): Cart
 }

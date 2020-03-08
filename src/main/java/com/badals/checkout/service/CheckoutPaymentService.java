@@ -25,12 +25,15 @@ public class CheckoutPaymentService {
        this.api = checkoutApi;
    }
 
-   public PaymentResponsePayload processPayment(String token) throws InterruptedException, ExecutionException {
+   public PaymentResponsePayload processPayment(String token, String name) throws InterruptedException, ExecutionException {
       TokenSource tokenSource = new TokenSource(token);
-      PaymentRequest<TokenSource> paymentRequest = PaymentRequest.fromSource(tokenSource, Currency.OMR, 10L);
+      PaymentRequest<TokenSource> paymentRequest = PaymentRequest.fromSource(tokenSource, Currency.OMR, 500L);
       paymentRequest.setReference("ORD-090857");
       paymentRequest.setCapture(false);
       paymentRequest.setThreeDS(ThreeDSRequest.from(true));
+      CustomerRequest x = new CustomerRequest();
+      x.setName(name);
+      paymentRequest.setCustomer(x);
 
       try {
          PaymentResponse response = api.paymentsClient().requestAsync(paymentRequest).get();

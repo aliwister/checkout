@@ -7,13 +7,12 @@
     <title>Title</title>
 </head>
 <body>
-Ali here
+<h1 th:text="#{welcome}"></h1>
 <script>
     /*<![CDATA[*/
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     window.secureKey = urlParams.get('token');
-    console.log(secureKey);
     /*]]>*/
 </script>
 <div id="index"></div>
