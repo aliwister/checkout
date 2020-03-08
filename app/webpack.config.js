@@ -19,6 +19,8 @@ module.exports = env => {
       optimization: {
         splitChunks: {
           chunks: 'all',
+		  minSize: 30000,
+		  maxSize: 50000,
         },
       },
       // Loaders
