@@ -1,0 +1,1 @@
+web: java -Dserver.port=5000 -jar checkout-0.0.1.jar -Xmx896M

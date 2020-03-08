@@ -6,11 +6,12 @@ import { ThemeProvider } from 'styled-components';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 import App from './App';
-
+console.log(process.env.REACT_APP_API_URL);
 const theme = createMuiTheme();
 
+
 const client = new ApolloClient({
-    uri: 'http://127.0.0.1:8081/graphql',
+    uri: process.env.REACT_APP_API_URL,
 });
 
 render((

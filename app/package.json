@@ -4,9 +4,9 @@
   "description": "",
   "main": "app.jsx",
   "scripts": {
-    "start": "webpack --mode development",
-    "build": "webpack --mode production",
-    "start:dev": "webpack-dev-server"
+    "start": "webpack --mode development --env.test",
+    "build": "webpack --mode production --env.REACT_APP_API_URL=http://badalstest.eu-central-1.elasticbeanstalk.com/graphql --env.production",
+    "start:dev": "webpack-dev-server --env.test"
   },
   "keywords": [],
   "author": "",
