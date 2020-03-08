@@ -42,10 +42,11 @@ export const PaymentStep = () => {
 
     const handleProcessPayment = async (token) => {
         console.log(token);
+        let name="Ali Allawati";
         const {
             data: { processPayment },
         } = await processPaymentMutation({
-            variables: {token}
+            variables: {token, name}
         });
         console.log(processPayment, 'cart_info');
         if(processPayment.status == 'REDIRECT')

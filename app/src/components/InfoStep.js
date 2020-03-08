@@ -20,7 +20,7 @@ const InfoDiv = styled.div`
 export const InfoStep = (props) => {
     const { register, handleSubmit, watch, errors } = useForm();
     const [setInfoMutattion,{loading, data2}] = useMutation(SET_INFO);
-    let {data, dispatch} = props;
+    let {state, dispatch} = props;
 
 
     const sendTokenToServer = async (email) => {
@@ -60,12 +60,12 @@ export const InfoStep = (props) => {
             <Typography variant="h6">Customer Information</Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <InfoDiv>
-                    <InfoForm register={register} email={data.cart.email}/>
+                    <InfoForm register={register} email={state.cart.email}/>
                 </InfoDiv>
                 <Typography variant="h6" gutterBottom>
                     Shipping address
                 </Typography>
-                <AddressForm addresses={data.cart.addresses} address={data.cart.deliveryAddress} register={register} />
+                <AddressForm addresses={state.cart.addresses} address={state.cart.deliveryAddress} register={register} />
                 <NavButton type="submit" ariant="contained"
                            color="primary">
                     Next
