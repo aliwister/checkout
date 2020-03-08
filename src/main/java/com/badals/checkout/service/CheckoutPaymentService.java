@@ -10,6 +10,8 @@ import com.checkout.common.Currency;
 import com.checkout.payments.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ExecutionException;
@@ -19,8 +21,8 @@ public class CheckoutPaymentService {
    private final Logger log = LoggerFactory.getLogger(CheckoutPaymentService.class);
    CheckoutApi api;
 
-   public CheckoutPaymentService() {
-      this.api = CheckoutApiImpl.create("sk_56109822-a7d8-41f7-ae5d-c332b6bcd995", false, "pk_932e59ef-2d33-448d-80cd-8668691640fe");
+   public CheckoutPaymentService(CheckoutApi checkoutApi) {
+       this.api = checkoutApi;
    }
 
    public PaymentResponsePayload processPayment(String token) throws InterruptedException, ExecutionException {
