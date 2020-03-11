@@ -18,16 +18,27 @@ import {RootGrid,
 export const AddressForm = (props) => {
     //const { register, handleSubmit, watch, errors } = useForm();
     //const onSubmit = data => { console.log(data); }
-    const {addresses, register, address} = props;
-    //const initEdit = ;
 
+    const {addresses, register} = props;
+    let address;
+    if (!props.address) {
+        console.log("!props.address");
+        address = {firstName: '', lastName: '', line1: '', line2: '', city: '', postalCode: '', country: 'Oman'}
+        console.log(address)
+    }
+    else
+        address = props.address;
 
-    const [edit, setEdit] = useState((!props.address || (!props.address.id && props.address.name))?-1:0);
-    const [name,setName] = useState(edit?address.name:"");
+    const [edit, setEdit] = useState((!props.address || (!address.id && address.firstName))?-1:0);
+    const [firstName,setFirstName] = useState(edit?address.firstName:"");
+    const [lastName,setLastName] = useState(edit?address.lastName:"");
     const [line1,setLine1] = useState(edit?address.line1:"");
     const [line2,setLine2] = useState(edit?address.line2:"");
     const [city,setCity] = useState(edit?address.city:"");
-    const [country,setCountry] = useState(edit?address.country:"");
+    const [country,setCountry] = useState(edit?"Oman":"");
+    const [postalCode,setPostalCode] = useState(edit?address.postalCode:"");
+
+
     //const [,] = useState(!props.address.id && props.address.);
     console.log(edit);
 
@@ -64,8 +75,8 @@ export const AddressForm = (props) => {
                             fullWidth
                             autoComplete="fname"
                             inputRef={register}
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -77,6 +88,8 @@ export const AddressForm = (props) => {
                             fullWidth
                             autoComplete="lname"
                             inputRef={register}
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -124,13 +137,15 @@ export const AddressForm = (props) => {
                     <Grid item xs={12} sm={6}>
                         <OutlinedInput
                             required
-                            id="zip"
-                            name="zip"
+                            id="postalCode"
+                            name="postalCode"
                             placeholder="Zip / Postal code"
                             fullWidth
                             autoComplete="billing postal-code"
                             inputRef={register}
-
+                            onChange={(e) => setPostalCode(e.target.value)}
+                            value={postalCode}
+                            setPostalCode
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -143,7 +158,7 @@ export const AddressForm = (props) => {
                             autoComplete="billing country"
                             inputRef={register}
                             value={country}
-                            onChange={(e) => setCountry(e.target.value)}
+
                         />
                     </Grid>
                     <Grid item xs={12}>

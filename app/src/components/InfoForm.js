@@ -27,7 +27,6 @@ export const InfoForm = (props) => {
                     variant="filled"
                     inputRef={register}
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
                 />
             </InfoDiv>
         </React.Fragment>

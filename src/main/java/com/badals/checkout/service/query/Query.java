@@ -2,8 +2,10 @@ package com.badals.checkout.service.query;
 
 import com.badals.checkout.domain.pojo.Address;
 import com.badals.checkout.domain.pojo.Carrier;
+import com.badals.checkout.domain.pojo.PaymentMethod;
 import com.badals.checkout.service.CarrierService;
 import com.badals.checkout.service.CartService;
+import com.badals.checkout.service.PaymentService;
 import com.badals.checkout.service.dto.CartDTO;
 import com.badals.checkout.service.mutation.Mutation;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
@@ -39,6 +41,9 @@ public class Query implements GraphQLQueryResolver {
     @Autowired
     private CarrierService carrierService;
 
+    @Autowired
+    private PaymentService paymentService;
+
     public String test(String param) {
         return "Im a query";
     }
@@ -49,5 +54,8 @@ public class Query implements GraphQLQueryResolver {
 
     public List<Carrier> carriers(String state, String city, BigDecimal weight) {
         return carrierService.findByStateCityWeight(state, city, weight);
+    }
+    public List<PaymentMethod> paymentMethods(String currency) {
+        return paymentService.findByCurrency(currency);
     }
 }

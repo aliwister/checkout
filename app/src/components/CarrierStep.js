@@ -25,15 +25,16 @@ export const CarrierStep = ({state, dispatch}) => {
     else
         console.log(data);
 
-    const onSubmit = async data => {
+    const onSubmit = async () => {
         const {
             data: { setCarrier },
         } = await setCarrierMutation({
             variables: {value: carrier, secureKey}
         });
         console.log(setCarrier, 'cart_info');
-        if(setCarrier)
-            dispatch({type: 'NEXT'});
+        if(setCarrier) {
+            dispatch({type: 'SET_CARRIER', payload: data.carriers.filter(x => x.value === carrier)[0]});
+        }
     }
     return (
         <React.Fragment>
@@ -47,7 +48,7 @@ export const CarrierStep = ({state, dispatch}) => {
                                    onChange={() => setCarrier(x.value)}
                                    checked={carrier === x.value}
                             />
-                            <label>{x.name} - {x.cost} </label>
+                            <span>{x.name} - OMR {x.cost} </span>
                         </Grid>
                     ))}
                     <input type="submit" />

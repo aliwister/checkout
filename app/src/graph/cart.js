@@ -10,7 +10,8 @@ export const CART = gql`
         secureKey
         deliveryAddress {
 
-             name
+             firstName
+             lastName
              line1
              line2
              city
@@ -19,7 +20,8 @@ export const CART = gql`
         }
         invoiceAddress {
             id
-             name
+             firstName
+             lastName
              line1
              line2
              city
@@ -28,7 +30,8 @@ export const CART = gql`
         }
         addresses {
             id
-             name
+             firstName
+             lastName
              line1
              line2
              city

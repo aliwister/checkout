@@ -3,10 +3,7 @@ package com.badals.checkout.service.mutation;
 import com.badals.checkout.domain.pojo.Address;
 import com.badals.checkout.domain.pojo.Carrier;
 import com.badals.checkout.domain.pojo.PaymentResponsePayload;
-import com.badals.checkout.service.CarrierService;
-import com.badals.checkout.service.CartService;
-import com.badals.checkout.service.CheckoutPaymentService;
-import com.badals.checkout.service.InvalidCartException;
+import com.badals.checkout.service.*;
 import com.badals.checkout.service.dto.CartDTO;
 import com.checkout.payments.PaymentResponse;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
@@ -36,6 +33,9 @@ public class Mutation implements GraphQLMutationResolver {
     @Autowired
     CheckoutPaymentService checkoutPaymentService;
 
+    @Autowired
+    private PaymentService paymentService;
+
     public CartDTO updateInfo(Address address, String secureKey) {
         log.info("REST request to save Address : {}", address);
         return cartService.setDeliveryAddress(address, secureKey);
@@ -46,9 +46,10 @@ public class Mutation implements GraphQLMutationResolver {
         return cartService.setDeliveryAddressAndEmail(address, email, secureKey);
         //return new Message("success");
     }
-    public PaymentResponsePayload processPayment(String token, String name, String secureKey) throws Exception{
-        PaymentResponsePayload response = checkoutPaymentService.processPayment(token, name);
-        return  response;
+    public PaymentResponsePayload processPayment(String token, String ref, String secureKey) throws Exception{
+        if(ref.equals("checkoutcom") && token != null)
+           return checkoutPaymentService.processPayment(token, secureKey); //, name);
+        return paymentService.processPayment(ref, secureKey);
     }
     public CartDTO setCarrier(String value, String secureKey) throws InvalidCartException {
         return carrierService.setCarrier(value, secureKey);

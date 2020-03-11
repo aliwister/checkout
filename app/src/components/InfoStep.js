@@ -10,7 +10,7 @@ import { InfoForm } from './InfoForm';
 import { AddressForm } from './AddressForm';
 import { CreditCardForm } from './CreditCardForm';
 import { PaymentStep } from './PaymentStep';
-import {NavButton} from "../App.styles";
+import {ButtonDiv, NavButton} from "../App.styles";
 
 const InfoDiv = styled.div`
   //padding: ${ props  =>  props.theme.spacing(8)}px;
@@ -19,39 +19,19 @@ const InfoDiv = styled.div`
 //{[{id:1,address1:"address1"},{id:0,address1:"address2"}]} address={{id:1, name:"Ali",line1:"Line1"}}
 export const InfoStep = (props) => {
     const { register, handleSubmit, watch, errors } = useForm();
-    const [setInfoMutattion,{loading, data2}] = useMutation(SET_INFO);
+    const [setInfoMutation,{loading, data2}] = useMutation(SET_INFO);
     let {state, dispatch} = props;
 
-
-    const sendTokenToServer = async (email) => {
-        let address= {name:"Ali", line1:"line1", line2:"line2",city:"city",country:"Oman"};
-        //let email= "aliwister@gmail.com";
-        const cart_info = await setInfo({variables:{email, address, secureKey}
-        });
-        const {
-            data: { setInfo },
-        } = await setInfoMutattion({
-            variables: {email, address, secureKey}
-        });
-        if(setInfo)
-            dispatch({type: 'NEXT'});
-        console.log(setInfo, 'cart_info');
-    };
-
     const onSubmit = async (formData) => {
-        console.log("FORM DATA:")
-        console.log(formData);
-        let address= {name:"Ali", line1:"line1", line2:"line2",city:"city",country:"Oman"};
+        let address= {firstName:formData.firstName, lastName:formData.lastName, line1:formData.line1, line2:formData.line2,city:formData.city,country:"Oman"};
         let email= formData.email;
         const {
             data: { setInfo },
-        } = await setInfoMutattion({
+        } = await setInfoMutation({
             variables: {email, address, secureKey}
         });
-        console.log(setInfo, 'cart_info');
         if(setInfo)
             dispatch({type: 'NEXT'});
-        //sendTokenToServer(formData.email);
         return false;
     }
     return (
@@ -66,10 +46,12 @@ export const InfoStep = (props) => {
                     Shipping address
                 </Typography>
                 <AddressForm addresses={state.cart.addresses} address={state.cart.deliveryAddress} register={register} />
-                <NavButton type="submit" ariant="contained"
-                           color="primary">
-                    Next
-                </NavButton>
+                <ButtonDiv>
+                    <NavButton type="submit" variant="contained"
+                               color="primary">
+                        Next
+                    </NavButton>
+                </ButtonDiv>
             </form>
         </React.Fragment>
     )

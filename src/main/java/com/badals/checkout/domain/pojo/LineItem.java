@@ -12,8 +12,8 @@ public class LineItem implements Serializable {
     String unit;
     String image;
     String name;
-    Float price;
-    Float quantity;
+    BigDecimal price;
+    BigDecimal quantity;
 
-    Float subTotal;
+    BigDecimal subTotal;
 }

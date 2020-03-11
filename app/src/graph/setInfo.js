@@ -2,14 +2,16 @@ import gql from 'graphql-tag';
 export const SET_INFO = gql`
   mutation setInfo($email: String, $address: AddressInput, $secureKey: String!) {
     setInfo(email: $email, address:$address, secureKey: $secureKey) {
-        id
+       id
         ref
         name
         phone
         email
         secureKey
         deliveryAddress {
-             name
+
+             firstName
+             lastName
              line1
              line2
              city
@@ -17,7 +19,9 @@ export const SET_INFO = gql`
              postalCode
         }
         invoiceAddress {
-             name
+            id
+             firstName
+             lastName
              line1
              line2
              city
@@ -25,7 +29,9 @@ export const SET_INFO = gql`
              postalCode
         }
         addresses {
-             name
+            id
+             firstName
+             lastName
              line1
              line2
              city

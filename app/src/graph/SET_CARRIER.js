@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 export const SET_CARRIER = gql`
     mutation setCarrier($value: String, $secureKey: String) {
       setCarrier(value: $value, secureKey: $secureKey) {
-        id
+          id
         ref
         name
         phone
@@ -10,7 +10,8 @@ export const SET_CARRIER = gql`
         secureKey
         deliveryAddress {
 
-             name
+             firstName
+             lastName
              line1
              line2
              city
@@ -19,7 +20,8 @@ export const SET_CARRIER = gql`
         }
         invoiceAddress {
             id
-             name
+             firstName
+             lastName
              line1
              line2
              city
@@ -28,7 +30,8 @@ export const SET_CARRIER = gql`
         }
         addresses {
             id
-             name
+             firstName
+             lastName
              line1
              line2
              city
@@ -50,6 +53,6 @@ export const SET_CARRIER = gql`
             subTotal
         }
         tenantId
-      }
+    }
     }
 `;

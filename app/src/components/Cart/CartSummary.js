@@ -30,6 +30,10 @@ import {
     CouponCode,
     ErrorMsg,
 } from './CartItemCard.style';
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardContent from "@material-ui/core/CardContent";
+import CardActionArea from "@material-ui/core/CardActionArea";
 
 const CURRENCY = 'OMR'
 const calculateItemPrice = (product) => {
@@ -40,7 +44,7 @@ const calculateItemPrice = (product) => {
     return itemPriceValue;
 };
 
-const calculateTotalPrice = (products, coupon) => {
+const calculateTotalPrice = (products, carrier, coupon) => {
     let total = Currency(0);
     let finalTotal;
     products.forEach(product => {
@@ -49,7 +53,13 @@ const calculateTotalPrice = (products, coupon) => {
         const itemPrice = Currency(quantity).multiply(price);
         total = Currency(total).add(itemPrice);
     });
+
+    if(carrier) {
+        console.log(carrier);
+        total = Currency(total).add(carrier.cost);
+    }
     finalTotal = Number(total.value);
+
     /*setLocalState('subTotalPrice', finalTotal);
     setSubTotalPrice(finalTotal);
     if (coupon.discountInPercent) {
@@ -65,7 +75,7 @@ const calculateTotalPrice = (products, coupon) => {
 const CartItem = ({ product, update }) => {
     const itemPrice = calculateItemPrice(product);
     return (
-        <ItemCards key={product.productIc}>
+        <ItemCards key={product.productId}>
             <ListItemText
                 type='vertical'
                 value={product.quantity}
@@ -111,19 +121,22 @@ const TotalText = styled(Typography)`
   font-weight: '700px';
 `;
 
-export const CartSummary = ({products}) => {
+export const CartSummary = ({products, carrier}) => {
     const {register, handleSubmit} = useForm();
     const onSubmit = data => {
         console.log(data);
     }
-    const totalPrice = calculateTotalPrice(products,null);
+    const totalPrice = calculateTotalPrice(products,carrier);
+
     return (
-        <React.Fragment>
+        <Card>
+            <CardHeader>
             <Typography variant="h6" gutterBottom>
                 Order Summary
             </Typography>
+            </CardHeader>
             <List disablePadding>
-
+<CardContent>
                 <CartListItem >
                     <ItemWrapper>
                         <>
@@ -144,14 +157,20 @@ export const CartSummary = ({products}) => {
                             </NoProductMsg>
                         )}
                         </>
-                        <PriceBox>
-                            {CURRENCY}
-                            {parseFloat(`${totalPrice}`).toFixed(1)}
-                        </PriceBox>
+                        {carrier && (
+                            <CartItem key={-1} product={{productId:-1, name:carrier.name, price: carrier.cost}}/>
+                        )}
                     </ItemWrapper>
 
                 </CartListItem>
+</CardContent>
+                <CardActionArea>
+                    <PriceBox>
+                        Order Total: {CURRENCY}
+                        {parseFloat(`${totalPrice}`).toFixed(1)}
+                    </PriceBox>
+                </CardActionArea>
             </List>
-        </React.Fragment>
+        </Card>
     )
 }

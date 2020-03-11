@@ -1,9 +1,13 @@
 package com.badals.checkout.controller;
 
 import com.badals.checkout.domain.Cart;
+import com.badals.checkout.domain.Order;
 import com.badals.checkout.repository.CartRepository;
+import com.badals.checkout.service.CartService;
+import com.badals.checkout.service.OrderService;
 import com.badals.checkout.service.dto.CartDTO;
 import com.badals.checkout.service.dto.CheckoutDTO;
+import com.badals.checkout.service.dto.OrderDTO;
 import com.badals.checkout.service.mapper.CartMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +32,10 @@ public class CheckoutController {
 
     @Autowired
     CartMapper cartMapper;
+
+    @Autowired
+    private OrderService orderService;
+    private CartService cartService;
 
     @PostMapping(value = "/request/{token}", produces = "application/json")
     public @ResponseBody CheckoutDTO request(@PathVariable(value="token") String token, @RequestBody CartDTO cartDTO) throws URISyntaxException {
@@ -59,5 +67,23 @@ public class CheckoutController {
         model.addAttribute("message", "I'm Alive");
         model.addAttribute("token", "abc");
         return "index";
+    }
+
+    @RequestMapping("/confirmation")
+    public String confirmation(@RequestParam(required=true) String ref, @RequestParam(required=true) String uiud, Model model) {
+        OrderDTO order = orderService.getByRefAndUiud(ref, uiud);
+        model.addAttribute("order", order);
+        return "confirmation";
+    }
+
+    @GetMapping("/checkout-com-confirmation")
+    public String checkoutConfirmation(@RequestParam(required=true, name="cko-payment-token") String paymentToken) {
+        log.info("I'm a token {}", paymentToken);
+        //orderService.c
+        //log.debug("REST request to create cart : {}", cart);
+        //model.addAttribute("token", token);
+        OrderDTO order = cartService.createOrderWithPaymentByPaymentToken(paymentToken);
+
+        return "confirmation";
     }
 }
