@@ -72,6 +72,9 @@ public class Cart implements Serializable {
     @Column(name="tenant_id")
     private Long tenantId;
 
+    @Column(name="payment_token")
+    private String paymentToken;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

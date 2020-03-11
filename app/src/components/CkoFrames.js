@@ -5,7 +5,7 @@ class CkoFrames extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      key: 'pk_17ac04d0-a778-44e4-99de-d94b8965fc60',
+      key: 'pk_932e59ef-2d33-448d-80cd-8668691640fe',
       token: '',
       errorMessage: '',
       showPaymentMethod: false,
@@ -70,7 +70,10 @@ class CkoFrames extends Component {
 
   // Handle form submission
   handleSubmit (event) {
-    event.preventDefault()
+    event.preventDefault();
+    window.Frames.cardholder = {
+      name: "Ali Hussain Mohsin"
+    }
     window.Frames.submitCard()
   }
 

@@ -26,6 +26,12 @@ public class CarrierService {
     @Autowired
     CartMapper cartMapper;
 
+    List<Carrier> list = new ArrayList<Carrier>(){{
+        add(new Carrier("Badals.com Home Delivery", "BADALSCARGO", BigDecimal.valueOf(2), ""));
+        add(new Carrier("Pickup from our showroom", "PICKUP", BigDecimal.ZERO, ""));
+        add(new Carrier("Cargo shipment", "CARGO", BigDecimal.ONE,""));
+    }};
+
     @Transactional(readOnly = true)
     public List<Carrier> findByStateCityWeight(String state, String city, BigDecimal weight) {
         List<Carrier> list = new ArrayList<>();
@@ -42,5 +48,9 @@ public class CarrierService {
         cart.setCarrier(value);
         cart = cartRepository.save(cart);
         return cartMapper.toDto(cart);
+    }
+
+    public BigDecimal getCarrierCost(String ref) {
+        return list.stream().filter(x-> x.getValue().equals(ref)).findFirst().get().getCost();
     }
 }

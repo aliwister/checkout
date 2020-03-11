@@ -21,7 +21,8 @@ type Carrier {
 
 type Address {
     id: Long
-    name: String
+    firstName: String
+    lastName: String
     line1: String
     line2: String
     city: String
@@ -31,6 +32,8 @@ type Address {
 }
 type PaymentMethod {
     ref: String
+    name: String
+    image: String
 }
 type CartItem {
     productId: Int
@@ -58,7 +61,8 @@ type Cart {
     tenantId: Long
 }
 input AddressInput {
-     name: String
+     firstName: String
+     lastName: String
      line1: String
      line2: String
      city: String
@@ -70,9 +74,10 @@ type Query {
     test(param: String): String
     cart(secureKey: String): Cart
     carriers(state: String, city:String, weight:BigDecimal): [Carrier]
+    paymentMethods(currency: String): [PaymentMethod]
 }
 type Mutation {
     setInfo(email: String, address: AddressInput, secureKey: String): Cart
-    processPayment(token: String, name: String, secureKey: String): PaymentResponsePayload
+    processPayment(token: String, ref: String, secureKey: String): PaymentResponsePayload
     setCarrier(value: String, secureKey: String): Cart
 }

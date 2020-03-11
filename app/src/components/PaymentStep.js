@@ -1,10 +1,12 @@
-import React, {useReducer} from 'react';
-import {Container, Grid, Paper, Typography, TextField } from '@material-ui/core';
+import React, {useReducer, useState} from 'react';
+import {Container, Grid, Paper, Typography, TextField, OutlinedInput} from '@material-ui/core';
 import styled, { ThemeProvider } from 'styled-components';
 import { useForm, Controller } from "react-hook-form";
 import CkoFrames from './CkoFrames';
-import {useMutation} from "@apollo/react-hooks";
+import {useMutation, useQuery} from "@apollo/react-hooks";
 import {PROCESS_PAYMENT} from "../graph/PROCESS_PAYMENT";
+import {PAYMENT_METHODS} from "../graph/PAYMENT_METHODS";
+import {ButtonDiv, NavButton} from "../App.styles";
 
 const InfoDiv = styled.div`
   //padding: ${ props  =>  props.theme.spacing(8)}px;
@@ -31,24 +33,37 @@ function reducer(state, action) {
 
 }
 
-export const PaymentStep = () => {
+export const PaymentStep = ({state, dispatch}) => {
 
     const { register, handleSubmit } = useForm();
     //const [state, dispatch] = useReducer(reducer, initialState);
-    const [processPaymentMutation,{loading, data}] = useMutation(PROCESS_PAYMENT);
+    const { data, error, loading } = useQuery(PAYMENT_METHODS, {
+        variables: {currency: state.cart.currency}
+    });
+    const [processPaymentMutation,{loading2, data2}] = useMutation(PROCESS_PAYMENT);
+    const [paymentMethod, setPaymentMethod] = useState();
+    const [name, setName] = useState(state.cart.name);
 
-
-    const onSubmit = data => { console.log(data); }
-
-    const handleProcessPayment = async (token) => {
-        console.log(token);
-        let name="Ali Allawati";
+    const onSubmit = async () => {
+        console.log("In onsubmit");
+        console.log(data);
         const {
             data: { processPayment },
         } = await processPaymentMutation({
-            variables: {token, name}
+            variables: {token: null, ref:paymentMethod, secureKey}
         });
-        console.log(processPayment, 'cart_info');
+        if(processPayment.redirect)
+            window.location = processPayment.redirect;
+        else
+            alert("Payment unsuccessful");
+    }
+
+    const handleProcessPayment = async (token) => {
+        const {
+            data: { processPayment },
+        } = await processPaymentMutation({
+            variables: {token, ref:paymentMethod, secureKey}
+        });
         if(processPayment.status == 'REDIRECT')
             window.location = processPayment.redirect;
          //   dispatch({type: 'PROCESS_DONE'});
@@ -58,14 +73,43 @@ export const PaymentStep = () => {
     if(loading)
         return "loading";
 
-
     return (
         <React.Fragment>
             <Typography variant="h6">Payment Step</Typography>
             <InfoDiv>
+                {data.paymentMethods.map(x => (
+                    <Grid item sm={6} key={x.ref}>
+                        <input name="pm" type="radio" value={x.ref} key={x.ref}
+                               ref={register({ required: true })}
+                               onChange={() => setPaymentMethod(x.ref)}
+                               checked={paymentMethod === x.ref}
+                        />
+                        {x.image && (<img src ={x.image} />)}
+                        {!x.image &&(<span>{x.name} </span>)}
+                        {(x.ref == 'checkoutcom' && paymentMethod === x.ref) && (
+                            <div>
+                                <Typography>Name on Card</Typography>
+                                <OutlinedInput
+                                    required
+                                    id="name"
+                                    name="name"
+                                    placeholder="Name on Card"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                />
+                                <CkoFrames handleProcessPayment={handleProcessPayment}/>
+                            </div>
 
-                    <CkoFrames handleProcessPayment={handleProcessPayment}/>
+                            )}
 
+                    </Grid>
+                ))}
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    {(paymentMethod != 'checkoutcom') && (<NavButton type="submit" variant="contained"
+                           color="primary">
+                    Complete Order
+                </NavButton>)}
+                </form>
             </InfoDiv>
         </React.Fragment>
     )

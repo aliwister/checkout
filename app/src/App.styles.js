@@ -12,8 +12,13 @@ export const Title = styled.h1`
 export const RootGrid = styled(Grid)`
   height: 100vh;
   width: 100%;
+  padding:  ${ props  =>  props.theme.spacing(10)}px;
 `;
-
+export const ContainerGrid = styled(Grid)`
+  height: 100vh;
+  width: 100%;
+  margin-top:  ${ props  =>  props.theme.spacing(10)}px;
+`;
 export const RightGrid = styled(Grid)`
   height: 100%;
   width: 100%;
@@ -22,12 +27,11 @@ export const RightGrid = styled(Grid)`
 export const LeftGrid = styled(Grid)`
   height: 100%;
   width: 100%;
-  background-color: papayawhip;
 `;
 
 export const InfoContainer = styled(Container)`
-  padding-top: ${ props  =>  props.theme.spacing(8)}px;
-  padding-left: ${ props  =>  props.theme.spacing(20)}px !important;
+  padding-top: ${ props  =>  props.theme.spacing(1)}px;
+  padding-left: ${ props  =>  props.theme.spacing(10)}px !important;
 `;
 
 export const CheckoutPaper = styled(Paper)`
@@ -39,16 +43,17 @@ export const CheckoutPaper = styled(Paper)`
 // Create a <Wrapper> react component that renders a <section> with
 // some padding and a papayawhip background
 export const Wrapper = styled.section`
-  padding: 4em;
-  background: papayawhip;
+  padding: ${ props  =>  props.theme.spacing(1)}px;;
 `;
 
 export const NavButton = styled(Button)`
   marginTop: ${ props  =>  props.theme.spacing(3)}px;
   marginLeft: ${ props  =>  props.theme.spacing(1)}px;
+  float: right;
 `;
 
 export const ButtonDiv = styled.div`
   display: 'flex';
   justifyContent: 'flex-end';
+  
 `;

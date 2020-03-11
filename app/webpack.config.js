@@ -1,5 +1,6 @@
 // Imports: Dependencies
 const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // installed via npm
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 // Webpack Configuration

@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 export const PROCESS_PAYMENT = gql`
-    mutation processPayment($token: String, $name: String, $secureKey: String) {
-      processPayment(token: $token, name: $name, secureKey: $secureKey ) {
+    mutation processPayment($token: String, $ref: String, $secureKey: String) {
+      processPayment(token: $token, ref: $ref, secureKey: $secureKey ) {
         message
         redirect
         status

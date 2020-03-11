@@ -13,4 +13,8 @@ public class PaymentResponsePayload {
         this.redirect = redirect;
         this.status = status;
     }
+
+    public PaymentResponsePayload(String message) {
+        this.message = message;
+    }
 }
