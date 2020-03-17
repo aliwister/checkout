@@ -5,6 +5,7 @@
 /src/test/javascript/coverage/
 /deploy
 /deploy/**
+/src/main/resources/static/**
 ######################
 # Node
 ######################
@@ -15,7 +16,7 @@ npm-debug.log.*
 /.awcache/*
 /.cache-loader/*
 
-/src/main/resources/static/**
+
 
 HELP.md
 target/

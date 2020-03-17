@@ -1,35 +1,25 @@
 package com.badals.checkout.service;
 
-import com.badals.checkout.domain.Cart;
 import com.badals.checkout.domain.pojo.LineItem;
 import com.badals.checkout.domain.pojo.PaymentResponsePayload;
 import com.badals.checkout.domain.pojo.PaymentStatus;
 import com.badals.checkout.service.dto.CartDTO;
-import com.checkout.*;
+import com.checkout.APIClient;
 import com.checkout.api.services.charge.request.CardTokenCharge;
 import com.checkout.api.services.charge.response.Charge;
 import com.checkout.api.services.shared.Product;
 import com.checkout.api.services.shared.Response;
-import com.checkout.common.Address;
-import com.checkout.common.Currency;
+
 import com.checkout.helpers.Environment;
-import com.checkout.payments.*;
-import com.google.gson.Gson;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
+import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 class CardTokenChargeChild extends CardTokenCharge {
    public String successUrl;
@@ -48,7 +38,7 @@ class CheckoutProduct extends Product {
 @Service
 public class CheckoutPaymentService {
    private final Logger log = LoggerFactory.getLogger(CheckoutPaymentService.class);
-   CheckoutApi api;
+   //CheckoutApi api;
 
    @Autowired
    CartService cartService;
@@ -59,9 +49,9 @@ public class CheckoutPaymentService {
    @Value("${app.baseurl}")
    private String baseUrl;
 
-   public CheckoutPaymentService(CheckoutApi checkoutApi) {
-       this.api = checkoutApi;
-   }
+   //public CheckoutPaymentService(CheckoutApi checkoutApi) {
+    //   this.api = checkoutApi;
+  // }
 
    public PaymentResponsePayload processPayment(String cardToken, String secureKey) {
       //String cardToken = "card_tok_CB9C10E3-24CC-4A82-B50A-4DEFDCB15580";
@@ -126,7 +116,7 @@ public class CheckoutPaymentService {
       return new PaymentResponsePayload("");
    }
 
-   @Deprecated
+/*   @Deprecated
    public PaymentResponsePayload processPayment(String token) throws InterruptedException, ExecutionException {
       log.info("Token sent: "+token);
       TokenSource tokenSource = new TokenSource(token);
@@ -166,10 +156,10 @@ public class CheckoutPaymentService {
          throw e;
       }
    }
-
-   private PaymentResponsePayload paymentSucessful(PaymentProcessed payment) {
+*/
+   /*private PaymentResponsePayload paymentSucessful(PaymentProcessed payment) {
       return new PaymentResponsePayload("Payment Successful", null, PaymentStatus.SUCCESS);
-   }
+   }*/
 
    private PaymentResponsePayload paymentDeclined(String message) {
       return new PaymentResponsePayload(message, null, PaymentStatus.DECLINED);
