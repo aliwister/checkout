@@ -5,7 +5,7 @@ import com.badals.checkout.domain.pojo.Carrier;
 import com.badals.checkout.domain.pojo.PaymentResponsePayload;
 import com.badals.checkout.service.*;
 import com.badals.checkout.service.dto.CartDTO;
-import com.checkout.payments.PaymentResponse;
+
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
