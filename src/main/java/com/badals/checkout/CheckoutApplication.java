@@ -1,7 +1,6 @@
 package com.badals.checkout;
 
-import com.checkout.CheckoutApi;
-import com.checkout.CheckoutApiImpl;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,9 +15,9 @@ public class CheckoutApplication {
 		SpringApplication.run(CheckoutApplication.class, args);
 	}
 
-	@Bean
-	public CheckoutApi checkoutApi(@Value("${checkoutcom.pk}") String _pk, @Value("${checkoutcom.sk}") String _sk) {
-		return CheckoutApiImpl.create(_sk, false, _pk);
-	}
+	//@Bean
+	//public CheckoutApi checkoutApi(@Value("${checkoutcom.pk}") String _pk, @Value("${checkoutcom.sk}") String _sk) {
+	//	return CheckoutApiImpl.create(_sk, false, _pk);
+	//}
 }
 //5594 0606 7504 7208
