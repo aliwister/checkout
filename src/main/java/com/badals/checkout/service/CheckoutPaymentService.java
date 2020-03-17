@@ -75,15 +75,15 @@ public class CheckoutPaymentService {
       //cardTokenChargePayload.chargeMode=1;
       cardTokenChargePayload.email = "testuser@email.com";
       cardTokenChargePayload.description = "charge description";
-      cardTokenChargePayload.value=String.valueOf(cartService.calculateValue(cart).doubleValue() * 100.0);
+      cardTokenChargePayload.value=String.valueOf(cartService.calculateValue(cart).doubleValue() * 1000.0);
 
       cardTokenChargePayload.currency="OMR";
       cardTokenChargePayload.trackId= "TRK12345";
       cardTokenChargePayload.transactionIndicator = "1";
       //cardTokenChargePayload.customerIp= "96.125.185.51";
       cardTokenChargePayload.cardToken = cardToken;
-      cardTokenChargePayload.successUrl = baseUrl + "/checkout/checkout-com-confirmation";;
-      cardTokenChargePayload.failUrl = baseUrl + "/checkout/checkout-com-confirmation";;
+      cardTokenChargePayload.successUrl = baseUrl + "checkout/checkout-com-confirmation";;
+      cardTokenChargePayload.failUrl = baseUrl + "checkout/checkout-com-failure";;
 
 
       cardTokenChargePayload.metadata = new HashMap<String,String>();

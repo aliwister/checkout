@@ -18,7 +18,6 @@ public class CheckoutApplication {
 
 	@Bean
 	public CheckoutApi checkoutApi(@Value("${checkoutcom.pk}") String _pk, @Value("${checkoutcom.sk}") String _sk) {
-		logger.info(_pk, _sk);
 		return CheckoutApiImpl.create(_sk, false, _pk);
 	}
 }

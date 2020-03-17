@@ -20,7 +20,8 @@ import { CartSummary } from './components/Cart/CartSummary';
 
 import {useMutation, useQuery} from '@apollo/react-hooks';
 import { withApollo } from "react-apollo";
-
+import { MdLock } from 'react-icons/md';
+import { MdArrowBack } from 'react-icons/md';
 import {
     RootGrid,
     InfoContainer,
@@ -99,8 +100,6 @@ const App = (props) => {
        variables: {secureKey}
     });
 
-    console.log(loading);
-    console.log(error);
     if (loading) {
         return <div>loading...</div>;
     }
@@ -113,11 +112,14 @@ const App = (props) => {
             <CssBaseline />
             <AppBar position="absolute" color="default" >
                 <Toolbar>
-                    <Typography variant="h6" color="inherit" noWrap>
+
+                    <MdLock />                    <Typography variant="h6" color="inherit" noWrap>
                         Badals.com Secure Checkout
                     </Typography>
+
                 </Toolbar>
             </AppBar>
+
             <main>
                 <ContainerGrid container>
                     <Grid item xs={12} md={12}>
@@ -131,9 +133,11 @@ const App = (props) => {
                     </Grid>
 
                 <RootGrid container spacing={0}>
-            <RightGrid item xs={7} >
+            <RightGrid item md={7} xs={12} >
                 <Grid item xs={12} md={12} >
-
+                    <a href="https://www.badals.com">
+                        <MdArrowBack/>
+                    </a>
                 <InfoContainer>
                     <React.Fragment>
                         {getStepContent(state.step, data, dispatch)}
@@ -148,7 +152,7 @@ const App = (props) => {
                 </InfoContainer>
                 </Grid>
             </RightGrid>
-            <LeftGrid item xs={5}>
+            <LeftGrid item md={5} xs={12}>
 
                     <Wrapper>
                       <CartSummary products={data.cart.items} carrier={state.carrier}/>

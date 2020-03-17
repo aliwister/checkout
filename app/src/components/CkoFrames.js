@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import './CkoFrames.css'
+import {OutlinedInput, Typography} from "@material-ui/core";
+import { FaExpeditedssl } from 'react-icons/fa';
+import Loader from "./Loader";
 
 class CkoFrames extends Component {
   constructor (props) {
@@ -10,7 +13,9 @@ class CkoFrames extends Component {
       errorMessage: '',
       showPaymentMethod: false,
       paymentMethodIcon: '',
-      payButton: false
+      payButton: false,
+      loading: false,
+      customerName: props.customerName
     }
     this.handleProcessPayment = props.handleProcessPayment;
   }
@@ -28,6 +33,7 @@ class CkoFrames extends Component {
     window.Frames.addEventHandler('cardTokenized', function (event) {
       context.cardTokenised(event)
     })
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   // Handle tokenisation
@@ -71,8 +77,14 @@ class CkoFrames extends Component {
   // Handle form submission
   handleSubmit (event) {
     event.preventDefault();
+    //console.log(this.state);
+    this.setState({loading: true});
+    let name = this.state['customerName'];
+    //console.log(name);
+    //return;
+
     window.Frames.cardholder = {
-      name: "Ali Hussain Mohsin"
+      name: name
     }
     window.Frames.submitCard()
   }
@@ -81,6 +93,15 @@ class CkoFrames extends Component {
     return (
       <div className='App'>
         <form id='payment-form' onSubmit={this.handleSubmit}>
+          <label>Name on Card</label>
+          <OutlinedInput
+              required
+              id="name"
+              name="name"
+              placeholder="Name on Card"
+              value={this.state.customerName}
+              onChange={event => this.setState({ customerName: event.target.value})}
+          />
           <label htmlFor='card-number'>Card number</label>
           <div className='input-container card-number'>
             <div className='icon-container'>
@@ -138,12 +159,14 @@ class CkoFrames extends Component {
           <button
             id='pay-button'
             type='submit'
-            disabled={this.state.payButton}
+            disabled={this.state.payButton || this.state.loading}
             onClick={this.submitFrames}
           >
-            PAY
+            {this.state.loading ? <Loader style={{marginLeft:50}}/> :
+                <span>PAY SECURELY</span>
+            }
           </button>
-
+          <p><FaExpeditedssl /> SHA-2 256 bit Encryption SSL</p>
           <div>
             <span className='error-message error-message__card-number' />
             <span className='error-message error-message__expiry-date' />

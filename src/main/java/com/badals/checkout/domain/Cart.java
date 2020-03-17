@@ -48,6 +48,9 @@ public class Cart implements Serializable {
     @Column(name = "delivery_address", columnDefinition = "string")
     private Address deliveryAddress;
 
+    @Column(name = "delivery_address_id", columnDefinition = "string")
+    private Long deliveryAddressId;
+
     @Type(type = "json")
     @Column(name = "invoice_address", columnDefinition = "string")
     private Address invoiceAddress;
@@ -74,6 +77,9 @@ public class Cart implements Serializable {
 
     @Column(name="payment_token")
     private String paymentToken;
+
+
+
 
     @Override
     public boolean equals(Object o) {

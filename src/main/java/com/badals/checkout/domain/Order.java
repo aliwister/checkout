@@ -6,11 +6,13 @@ import com.badals.enumeration.OrderState;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.hibernate.annotations.Type;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +21,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "jhi_order")
-public class Order implements Serializable {
+public class Order extends Auditable<String>  implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -89,6 +91,29 @@ public class Order implements Serializable {
     @Column(name = "coupon_name")
     private BigDecimal couponName;
 
+    @Column
+    private String carrier;
+
+    @Column
+    private String paymentMethod;
+
+    public String getCarrier() {
+        return carrier;
+    }
+
+    public void setCarrier(String carrier) {
+        this.carrier = carrier;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+
     public BigDecimal getSubtotal() {
         return subtotal;
     }
@@ -153,7 +178,7 @@ public class Order implements Serializable {
         @JsonIgnoreProperties("orders")
         private Address invoiceAddress;
         */
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade=CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItem> orderItems = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

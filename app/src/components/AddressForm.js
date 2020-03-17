@@ -6,14 +6,16 @@ import { useForm, Controller } from "react-hook-form";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 
-import {RootGrid,
+import {
+    RootGrid,
     InfoContainer,
     RightGrid,
     LeftGrid,
     Wrapper,
     Title,
     NavButton,
-    ButtonDiv} from '../App.styles'
+    ButtonDiv, Address
+} from '../App.styles'
 
 export const AddressForm = (props) => {
     //const { register, handleSubmit, watch, errors } = useForm();
@@ -35,7 +37,7 @@ export const AddressForm = (props) => {
     const [line1,setLine1] = useState(edit?address.line1:"");
     const [line2,setLine2] = useState(edit?address.line2:"");
     const [city,setCity] = useState(edit?address.city:"");
-    const [country,setCountry] = useState(edit?"Oman":"");
+    const [country,setCountry] = useState("Oman");
     const [postalCode,setPostalCode] = useState(edit?address.postalCode:"");
 
 
@@ -55,7 +57,7 @@ export const AddressForm = (props) => {
                            onChange={() => setEdit(x.id)}
                            checked={edit !== 0 && edit === x.id}
                     />
-                    <label>{x.name} <br/> {x.line1} <br/> {x.line2} <br/> {x.city}</label>
+                    <Address>{x.firstName} {x.lastName} <div>{x.line1 }</div><div>{x.line2}</div><div>{x.city}</div><div>{x.phone}</div></Address>
                 </Grid>
                 ))
                 }
