@@ -5,7 +5,7 @@
   "main": "app.jsx",
   "scripts": {
     "start": "webpack --mode development --env.test",
-    "build": "webpack --mode production --env.REACT_APP_API_URL=http://badalstest.eu-central-1.elasticbeanstalk.com/graphql --env.production",
+    "build": "webpack --mode production --env.REACT_APP_API_URL=https://checkout.badals.com/graphql --env.production",
     "start:dev": "webpack-dev-server --env.test"
   },
   "keywords": [],
