@@ -159,45 +159,11 @@
 		</dependency>
 		<dependency>
 			<groupId>com.trust2</groupId>
-			<artifactId>bridge</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/bridge-0.0.1-SNAPSHOT.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.trust2</groupId>
-			<artifactId>cryptix32</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/cryptix32.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.trust2</groupId>
-			<artifactId>bcprov</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/bcprov-jdk15-145.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.trust2</groupId>
-			<artifactId>bouncycastle</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/bouncycastle-1.20.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.trust2</groupId>
-			<artifactId>ipayPipe</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/ipayPipe.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.trust2</groupId>
 			<artifactId>checkoutcom</artifactId>
 			<version>1.0</version>
-			<scope>system</scope>
+			<!--<scope>system</scope>
 			<systemPath>${basedir}/lib/checkout-java-v1.20.jar</systemPath>
+			-->
 		</dependency>
 
 	</dependencies>
