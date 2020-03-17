@@ -38,7 +38,11 @@ public class CartService {
 
     @Autowired
     CarrierService carrierService;
+
+    @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
     private OrderMapper orderMapper;
 
     @Transactional(readOnly = true)
@@ -61,7 +65,10 @@ public class CartService {
 
     public CartDTO setDeliveryAddressAndEmail(Address address, String email, String secureKey) {
         Cart cart = cartRepository.findBySecureKey(secureKey).get();
-        cart.setDeliveryAddress(address);
+        if(address.getId() == null || address.getId() < 0)
+            cart.setDeliveryAddress(address);
+        else
+            cart.setDeliveryAddressId(address.getId());
         cart.setEmail(email);
         cart = cartRepository.save(cart);
         return cartMapper.toDto(cart);
@@ -76,13 +83,24 @@ public class CartService {
        return sum;
    }
 
+    public BigDecimal calculateTotal(Cart cart) {
+        BigDecimal sum = BigDecimal.valueOf(cart.getItems().stream().mapToDouble(x -> x.getPrice().doubleValue() * x.getQuantity().doubleValue()).sum());
+        sum.add(carrierService.getCarrierCost(cart.getCarrier()));
+        return sum;
+    }
+
+    public BigDecimal calculateSubtotal(Cart cart) {
+        BigDecimal sum = BigDecimal.valueOf(cart.getItems().stream().mapToDouble(x -> x.getPrice().doubleValue() * x.getQuantity().doubleValue()).sum());
+        return sum;
+    }
+
     public void setPaymentToken(Long cartId, String paymentToken) {
         Cart cart = cartRepository.findById(cartId).get();
         cart.setPaymentToken(paymentToken);
         cartRepository.save(cart);
     }
 
-    public Order createOrder(Cart cart) {
+    public Order createOrder(Cart cart, String paymentMethod) {
         Order order = new Order();
         order.setCurrency(cart.getCurrency());
         //order.setCustomerId(cart.get);
@@ -94,6 +112,13 @@ public class CartService {
 
         order.setReference(orderRef);
         order.setConfirmationKey(uiud);
+        order.setTotal(calculateTotal(cart));
+        order.setSubtotal(calculateSubtotal(cart));
+        order.setCarrier(cart.getCarrier());
+        order.setDeliveryTotal(carrierService.getCarrierCost(cart.getCarrier()));
+        order.setPaymentMethod(paymentMethod);
+
+        //order.s
 
         int i = 1;
         for(LineItem item : cart.getItems()) {
@@ -102,6 +127,10 @@ public class CartService {
             orderItem.setProductName(item.getName());
             orderItem.setQuantity(item.getQuantity());
             orderItem.sequence(i++);
+            orderItem.setImage(item.getImage());
+            orderItem.setWeight(item.getWeight());
+            orderItem.setUnit(item.getUnit());
+            orderItem.setLineTotal(item.getPrice().multiply(item.getQuantity()));
             order.addOrderItem(orderItem);
         }
         order = orderRepository.save(order);
@@ -110,7 +139,7 @@ public class CartService {
 
     private String generateOrderId() {
         Random generator = new Random();
-        int num = generator. nextInt(899999) + 100000;
+        int num = generator. nextInt(8999999) + 100000;
         return String.valueOf(num);
     }
     public static String createUIUD() {
@@ -121,14 +150,13 @@ public class CartService {
 
     public OrderDTO createOrderWithPaymentByPaymentToken(String paymentKey) {
         Cart cart = cartRepository.findByPaymentToken(paymentKey).get();
-        Order order = createOrder(cart);
+        Order order = createOrder(cart, "checkoutcom");
         Payment payment = new Payment();
         payment.setAmount(order.getTotal());
         payment.setOrder(order);
-        payment.setPaymentMethod("checkoutcom");
         payment.setCreated_date(Instant.now());
         paymentRepository.save(payment);
 
-        return orderMapper.toDto(createOrder(cart));
+        return orderMapper.toDto(order);
     }
 }

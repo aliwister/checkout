@@ -35,6 +35,8 @@ public class CheckoutController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
     private CartService cartService;
 
     @PostMapping(value = "/request/{token}", produces = "application/json")
@@ -85,5 +87,10 @@ public class CheckoutController {
         OrderDTO order = cartService.createOrderWithPaymentByPaymentToken(paymentToken);
 
         return "confirmation";
+    }
+
+    @GetMapping("/checkout-com-failure")
+    public String checkoutFailure(@RequestParam(required=true, name="cko-payment-token") String paymentToken) {
+        return "failure";
     }
 }

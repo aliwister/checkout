@@ -57,3 +57,11 @@ export const ButtonDiv = styled.div`
   justifyContent: 'flex-end';
   
 `;
+
+export const Address = styled.span`
+  font-family: 'Lato', sans-serif;
+  font-size: '15'px;
+  font-weight:  '400';
+  color: '#77798c';
+  line-height: 1.5;
+`;

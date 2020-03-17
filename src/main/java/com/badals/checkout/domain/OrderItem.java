@@ -38,6 +38,50 @@ public class OrderItem implements Serializable {
     @Column(name = "shipping_instructions")
     private String shippingInstructions;
 
+    @Column
+    private String image;
+
+    @Column
+    private BigDecimal weight;
+
+    @Column
+    private String unit;
+
+    @Column(name="line_total")
+    private BigDecimal lineTotal;
+
+    public BigDecimal getLineTotal() {
+        return lineTotal;
+    }
+
+    public void setLineTotal(BigDecimal lineTotal) {
+        this.lineTotal = lineTotal;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
+    }
+
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties("orderItems")

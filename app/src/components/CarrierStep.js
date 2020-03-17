@@ -5,6 +5,8 @@ import { useForm, Controller } from "react-hook-form";
 import {useMutation, useQuery} from "@apollo/react-hooks";
 import {CARRIERS} from "../graph/CARRIERS";
 import {SET_CARRIER} from "../graph/SET_CARRIER";
+import {ButtonDiv, NavButton} from "../App.styles";
+import Loader from "./Loader";
 
 const InfoDiv = styled.div`
   //padding: ${ props  =>  props.theme.spacing(8)}px;
@@ -51,7 +53,19 @@ export const CarrierStep = ({state, dispatch}) => {
                             <span>{x.name} - OMR {x.cost} </span>
                         </Grid>
                     ))}
-                    <input type="submit" />
+
+                    <NavButton type="submit" variant="contained"
+                               color="primary">
+                        {(loading)?<Loader />:(
+                            <span>Next</span>
+                        )}
+                    </NavButton>
+                    <NavButton variant="contained"
+                               color="secondary" onClick={() =>  dispatch({type: 'PREV'})}>
+                        {(loading)?<Loader />:(
+                            <span>Back</span>
+                        )}
+                    </NavButton>
                 </form>
 
             </InfoDiv>

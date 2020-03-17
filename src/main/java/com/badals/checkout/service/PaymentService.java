@@ -13,6 +13,7 @@ import com.badals.enumeration.OrderState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,14 +30,19 @@ public class PaymentService {
     @Autowired
     CartMapper cartMapper;
 
+    @Value("${app.faceurl}")
+    String faceUrl;
+
     List<PaymentMethod> list = new ArrayList<PaymentMethod>() {{
-        add(new PaymentMethod("omannet", "Omannet", "", true));
+        //add(new PaymentMethod("omannet", "Omannet", "", true));
         add(new PaymentMethod("checkoutcom", "Checkout.com", "https://www.checkout.com/static/img/logos/cko/checkout-logo.svg", true));
         add(new PaymentMethod("bankwire", "Deposit to Bank Account", "",false));
     }};
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
     private CartService cartService;
 
     @Transactional(readOnly = true)
@@ -44,9 +50,9 @@ public class PaymentService {
         return list;
     }
 
-    public PaymentResponsePayload processPayment(String ref, String secureKey) throws InvalidCartException {
+    public PaymentResponsePayload processPayment(String paymentMethod, String secureKey) throws InvalidCartException {
         Cart cart = cartRepository.findBySecureKey(secureKey).orElse(null);
-        Order order = cartService.createOrder(cart);
-        return new PaymentResponsePayload("Success","/checkout/confirmation?ref="+order.getReference()+"&uiud="+order.getConfirmationKey(), PaymentStatus.SUCCESS);
+        Order order = cartService.createOrder(cart, paymentMethod);
+        return new PaymentResponsePayload("Success",faceUrl+ "order-received?ref="+order.getReference()+"&key="+order.getConfirmationKey(), PaymentStatus.SUCCESS);
     }
 }

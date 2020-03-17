@@ -11,6 +11,7 @@ import { AddressForm } from './AddressForm';
 import { CreditCardForm } from './CreditCardForm';
 import { PaymentStep } from './PaymentStep';
 import {ButtonDiv, NavButton} from "../App.styles";
+import Loader from "./Loader";
 
 const InfoDiv = styled.div`
   //padding: ${ props  =>  props.theme.spacing(8)}px;
@@ -22,8 +23,12 @@ export const InfoStep = (props) => {
     const [setInfoMutation,{loading, data2}] = useMutation(SET_INFO);
     let {state, dispatch} = props;
 
+    console.log(watch);
+
     const onSubmit = async (formData) => {
-        let address= {firstName:formData.firstName, lastName:formData.lastName, line1:formData.line1, line2:formData.line2,city:formData.city,country:"Oman"};
+        console.log(formData);
+        if(loading) return;
+        let address= {id: formData.Address, firstName:formData.firstName, lastName:formData.lastName, line1:formData.line1, line2:formData.line2,city:formData.city,country:"Oman"};
         let email= formData.email;
         const {
             data: { setInfo },
@@ -49,7 +54,9 @@ export const InfoStep = (props) => {
                 <ButtonDiv>
                     <NavButton type="submit" variant="contained"
                                color="primary">
-                        Next
+                        {(loading)?<Loader />:(
+                        <span>Next</span>
+                        )}
                     </NavButton>
                 </ButtonDiv>
             </form>

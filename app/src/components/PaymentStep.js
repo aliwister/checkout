@@ -7,7 +7,8 @@ import {useMutation, useQuery} from "@apollo/react-hooks";
 import {PROCESS_PAYMENT} from "../graph/PROCESS_PAYMENT";
 import {PAYMENT_METHODS} from "../graph/PAYMENT_METHODS";
 import {ButtonDiv, NavButton} from "../App.styles";
-
+import { FaExpeditedssl } from 'react-icons/fa';
+import Loader from "./Loader";
 const InfoDiv = styled.div`
   //padding: ${ props  =>  props.theme.spacing(8)}px;
   margin-bottom: ${ props  =>  props.theme.spacing(4)}px;
@@ -43,6 +44,7 @@ export const PaymentStep = ({state, dispatch}) => {
     const [processPaymentMutation,{loading2, data2}] = useMutation(PROCESS_PAYMENT);
     const [paymentMethod, setPaymentMethod] = useState();
     const [name, setName] = useState(state.cart.name);
+
 
     const onSubmit = async () => {
         console.log("In onsubmit");
@@ -87,28 +89,26 @@ export const PaymentStep = ({state, dispatch}) => {
                         {x.image && (<img src ={x.image} />)}
                         {!x.image &&(<span>{x.name} </span>)}
                         {(x.ref == 'checkoutcom' && paymentMethod === x.ref) && (
-                            <div>
-                                <Typography>Name on Card</Typography>
-                                <OutlinedInput
-                                    required
-                                    id="name"
-                                    name="name"
-                                    placeholder="Name on Card"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                />
-                                <CkoFrames handleProcessPayment={handleProcessPayment}/>
-                            </div>
+
+                                <CkoFrames handleProcessPayment={handleProcessPayment} customerName={name}/>
 
                             )}
 
                     </Grid>
                 ))}
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    {(paymentMethod != 'checkoutcom') && (<NavButton type="submit" variant="contained"
+                    {(paymentMethod != 'checkoutcom') && (<><NavButton type="submit" variant="contained"
                            color="primary">
                     Complete Order
-                </NavButton>)}
+                </NavButton>
+                        <NavButton variant="contained"
+                        color="secondary" onClick={() =>  dispatch({type: 'PREV'})}>
+                    {(loading)?<Loader />:(
+                        <span>Back</span>
+                        )}
+                        </NavButton>
+                    </>
+                    )}
                 </form>
             </InfoDiv>
         </React.Fragment>
