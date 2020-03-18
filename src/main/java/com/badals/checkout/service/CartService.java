@@ -105,6 +105,7 @@ public class CartService {
         order.setCurrency(cart.getCurrency());
         //order.setCustomerId(cart.get);
         order.setInvoiceAddress(cart.getInvoiceAddress());
+        order.setDeliveryAddressId(cart.getDeliveryAddressId());
         order.setDeliveryAddress(cart.getDeliveryAddress());
         order.setOrderState(OrderState.AWAITING_PAYMENT);
         String orderRef = generateOrderId();
@@ -135,6 +136,9 @@ public class CartService {
             order.addOrderItem(orderItem);
         }
         order = orderRepository.save(order);
+        cart.setSecureKey(cart.getSecureKey() + " DONE");
+        cartRepository.save(cart);
+
         return order;
     }
 

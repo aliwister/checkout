@@ -66,6 +66,9 @@ public class Order extends Auditable<String>  implements Serializable {
     @Column(name = "delivery_address", columnDefinition = "string")
     private Address deliveryAddress;
 
+    @Column(name = "delivery_address_id")
+    private Long deliveryAddressId;
+
     @Type(type = "json")
     @Column(name = "invoice_address", columnDefinition = "string")
     private Address invoiceAddress;
@@ -120,6 +123,14 @@ public class Order extends Auditable<String>  implements Serializable {
 
     public void setSubtotal(BigDecimal subtotal) {
         this.subtotal = subtotal;
+    }
+
+    public Long getDeliveryAddressId() {
+        return deliveryAddressId;
+    }
+
+    public void setDeliveryAddressId(Long deliveryAddressId) {
+        this.deliveryAddressId = deliveryAddressId;
     }
 
     public BigDecimal getTotal() {
