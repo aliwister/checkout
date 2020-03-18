@@ -112,8 +112,9 @@ public class CartService {
 
         order.setReference(orderRef);
         order.setConfirmationKey(uiud);
-        order.setTotal(calculateTotal(cart));
         order.setSubtotal(calculateSubtotal(cart));
+        order.setTotal(calculateTotal(cart));
+
         order.setCarrier(cart.getCarrier());
         order.setDeliveryTotal(carrierService.getCarrierCost(cart.getCarrier()));
         order.setPaymentMethod(paymentMethod);
@@ -139,7 +140,7 @@ public class CartService {
 
     private String generateOrderId() {
         Random generator = new Random();
-        int num = generator. nextInt(8999999) + 100000;
+        int num = generator. nextInt(8999999) + 1000000;
         return String.valueOf(num);
     }
     public static String createUIUD() {
