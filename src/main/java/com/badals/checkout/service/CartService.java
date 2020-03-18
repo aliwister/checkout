@@ -100,14 +100,17 @@ public class CartService {
         cartRepository.save(cart);
     }
 
-    public Order createOrder(Cart cart, String paymentMethod) {
+    public Order createOrder(Cart cart, String paymentMethod, boolean isPaid) {
         Order order = new Order();
         order.setCurrency(cart.getCurrency());
         //order.setCustomerId(cart.get);
         order.setInvoiceAddress(cart.getInvoiceAddress());
         order.setDeliveryAddressId(cart.getDeliveryAddressId());
         order.setDeliveryAddress(cart.getDeliveryAddress());
-        order.setOrderState(OrderState.AWAITING_PAYMENT);
+
+        if(isPaid) order.setOrderState(OrderState.PAYMENT_ACCEPTED);
+        else order.setOrderState(OrderState.AWAITING_PAYMENT);
+
         String orderRef = generateOrderId();
         String uiud = createUIUD();
 
@@ -115,7 +118,7 @@ public class CartService {
         order.setConfirmationKey(uiud);
         order.setSubtotal(calculateSubtotal(cart));
         order.setTotal(calculateTotal(cart));
-
+        order.setCart(cart);
         order.setCarrier(cart.getCarrier());
         order.setDeliveryTotal(carrierService.getCarrierCost(cart.getCarrier()));
         order.setPaymentMethod(paymentMethod);
@@ -155,7 +158,7 @@ public class CartService {
 
     public OrderDTO createOrderWithPaymentByPaymentToken(String paymentKey) {
         Cart cart = cartRepository.findByPaymentToken(paymentKey).get();
-        Order order = createOrder(cart, "checkoutcom");
+        Order order = createOrder(cart, "checkoutcom", true);
         Payment payment = new Payment();
         payment.setAmount(order.getTotal());
         payment.setOrder(order);
