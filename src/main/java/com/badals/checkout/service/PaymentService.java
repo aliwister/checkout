@@ -52,7 +52,7 @@ public class PaymentService {
 
     public PaymentResponsePayload processPayment(String paymentMethod, String secureKey) throws InvalidCartException {
         Cart cart = cartRepository.findBySecureKey(secureKey).orElse(null);
-        Order order = cartService.createOrder(cart, paymentMethod);
+        Order order = cartService.createOrder(cart, paymentMethod, false);
         return new PaymentResponsePayload("Success",faceUrl+ "order-received?ref="+order.getReference()+"&key="+order.getConfirmationKey(), PaymentStatus.SUCCESS);
     }
 }
