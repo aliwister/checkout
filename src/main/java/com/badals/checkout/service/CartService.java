@@ -155,6 +155,8 @@ public class CartService {
         Payment payment = new Payment();
         payment.setAmount(order.getTotal());
         payment.setOrder(order);
+        payment.setPaymentMethod("checkoutcom");
+        payment.setTransactionId(paymentKey);
         payment.setCreated_date(Instant.now());
         paymentRepository.save(payment);
 
