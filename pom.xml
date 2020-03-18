@@ -24,6 +24,10 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
@@ -162,8 +166,7 @@
 			<artifactId>checkoutcom</artifactId>
 			<version>1.0</version>
 			<!--<scope>system</scope>
-			<systemPath>${basedir}/lib/checkout-java-v1.20.jar</systemPath>
-			-->
+			<systemPath>${basedir}/lib/checkout-java-v1.20.jar</systemPath>-->
 		</dependency>
 
 	</dependencies>
