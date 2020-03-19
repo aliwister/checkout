@@ -107,6 +107,7 @@ public class CartService {
         order.setInvoiceAddress(cart.getInvoiceAddress());
         order.setDeliveryAddressId(cart.getDeliveryAddressId());
         order.setDeliveryAddress(cart.getDeliveryAddress());
+        order.setEmail(cart.getEmail());
 
         if(isPaid) order.setOrderState(OrderState.PAYMENT_ACCEPTED);
         else order.setOrderState(OrderState.AWAITING_PAYMENT);
