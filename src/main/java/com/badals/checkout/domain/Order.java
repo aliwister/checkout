@@ -94,6 +94,19 @@ public class Order extends Auditable<String>  implements Serializable {
     @Column(name = "coupon_name")
     private BigDecimal couponName;
 
+
+    @Column
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+
     @Column
     private String carrier;
 
