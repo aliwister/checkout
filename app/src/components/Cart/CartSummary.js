@@ -150,10 +150,7 @@ export const CartSummary = ({products, carrier}) => {
                             ))
                         ) : (
                             <NoProductMsg>
-                                <FormattedMessage
-                                    id='noProductFound'
-                                    defaultMessage='No products found'
-                                />
+Cart is empty
                             </NoProductMsg>
                         )}
                         </>
