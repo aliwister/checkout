@@ -135,7 +135,7 @@ const App = (props) => {
                 <RootGrid container spacing={0}>
             <RightGrid item md={7} xs={12} >
                 <Grid item xs={12} md={12} >
-                    <a href="https://beta.badals.com">
+                    <a href="https://www.badals.com">
                         <MdArrowBack/>
                     </a>
                 <InfoContainer>
