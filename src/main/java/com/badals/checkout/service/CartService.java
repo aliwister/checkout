@@ -157,7 +157,7 @@ public class CartService {
         return uuid.toString();
     }
 
-    public OrderDTO createOrderWithPaymentByPaymentToken(String paymentKey) {
+    public Order createOrderWithPaymentByPaymentToken(String paymentKey) {
         Cart cart = cartRepository.findByPaymentToken(paymentKey).get();
         Order order = createOrder(cart, "checkoutcom", true);
         Payment payment = new Payment();
@@ -168,6 +168,6 @@ public class CartService {
         payment.setCreated_date(Instant.now());
         paymentRepository.save(payment);
 
-        return orderMapper.toDto(order);
+        return order;
     }
 }

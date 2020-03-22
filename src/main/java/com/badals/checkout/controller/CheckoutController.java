@@ -12,6 +12,7 @@ import com.badals.checkout.service.mapper.CartMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 @Controller
@@ -38,6 +41,9 @@ public class CheckoutController {
 
     @Autowired
     private CartService cartService;
+
+    @Value("${app.faceurl}")
+    String faceUrl;
 
     @PostMapping(value = "/request/{token}", produces = "application/json")
     public @ResponseBody CheckoutDTO request(@PathVariable(value="token") String token, @RequestBody CartDTO cartDTO) throws URISyntaxException {
@@ -79,14 +85,25 @@ public class CheckoutController {
     }
 
     @GetMapping("/checkout-com-confirmation")
-    public String checkoutConfirmation(@RequestParam(required=true, name="cko-payment-token") String paymentToken) {
+    public void checkoutConfirmation(@RequestParam(required=true, name="cko-payment-token") String paymentToken, HttpServletResponse response) throws IOException {
         log.info("I'm a token {}", paymentToken);
         //orderService.c
         //log.debug("REST request to create cart : {}", cart);
         //model.addAttribute("token", token);
-        OrderDTO order = cartService.createOrderWithPaymentByPaymentToken(paymentToken);
+        Order order = cartService.createOrderWithPaymentByPaymentToken(paymentToken);
+        response.sendRedirect(faceUrl+"order-received?ref="+order.getReference()+"&key="+order.getConfirmationKey());
+        //return "confirmation";
+    }
 
-        return "confirmation";
+    @GetMapping("/testtesttesttest")
+    public void testRedirect(@RequestParam(required=true, name="cko-payment-token") String paymentToken, HttpServletResponse response) throws IOException {
+        log.info("I'm a token {}", paymentToken);
+        //orderService.c
+        //log.debug("REST request to create cart : {}", cart);
+        //model.addAttribute("token", token);
+        //Order order = cartService.createOrderWithPaymentByPaymentToken(paymentToken);
+        response.sendRedirect(faceUrl+"order-received?ref="+"abc+&key=efg");
+        //return "confirmation";
     }
 
     @GetMapping("/checkout-com-failure")
