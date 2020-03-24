@@ -78,6 +78,8 @@ public class Cart implements Serializable {
     @Column(name="payment_token")
     private String paymentToken;
 
+    @Column(name="checked_out")
+    private Boolean checkedOut;
 
 
 
