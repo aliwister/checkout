@@ -68,7 +68,7 @@ public class CheckoutPaymentService {
       cardTokenChargePayload.value=String.valueOf(cartService.calculateValue(cart).doubleValue() * 1000.0);
 
       cardTokenChargePayload.currency="OMR";
-      cardTokenChargePayload.trackId= "TRK12345";
+      cardTokenChargePayload.trackId= cart.getId().toString();
       cardTokenChargePayload.transactionIndicator = "1";
       //cardTokenChargePayload.customerIp= "96.125.185.51";
       cardTokenChargePayload.cardToken = cardToken;
@@ -103,9 +103,14 @@ public class CheckoutPaymentService {
                cartService.setPaymentToken(cart.getId(), apiResponse.model.id);
                if(apiResponse.model.redirectUrl != null)
                   return redirect(apiResponse.model.redirectUrl);
+
+               Charge charge = apiResponse.model;
+               if(apiResponse.model.responseCode.equalsIgnoreCase("10000")) {
+                  return redirect(baseUrl + "checkout/checkout-com-confirmation?cko-payment-token="+apiResponse.model.id);
+               }
             }
 
-            Charge charge = apiResponse.model;
+
          } else {
             // Api has returned an error object. You can access the details in the error property of the apiResponse.
             // apiResponse.error

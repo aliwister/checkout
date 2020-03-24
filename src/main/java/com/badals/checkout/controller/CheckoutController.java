@@ -13,10 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -85,14 +81,17 @@ public class CheckoutController {
     }
 
     @GetMapping("/checkout-com-confirmation")
-    public void checkoutConfirmation(@RequestParam(required=true, name="cko-payment-token") String paymentToken, HttpServletResponse response) throws IOException {
+    public String checkoutConfirmation(@RequestParam(required=true, name="cko-payment-token") String paymentToken, HttpServletResponse response) throws IOException {
         log.info("I'm a token {}", paymentToken);
-        //orderService.c
-        //log.debug("REST request to create cart : {}", cart);
-        //model.addAttribute("token", token);
-        Order order = cartService.createOrderWithPaymentByPaymentToken(paymentToken);
+        Order order = null;
+        try {
+            order = cartService.createOrderWithPaymentByPaymentToken(paymentToken);
+        }
+        catch(Exception e) {
+            return "failure";
+        }
         response.sendRedirect(faceUrl+"order-received?ref="+order.getReference()+"&key="+order.getConfirmationKey());
-        //return "confirmation";
+        return "index";
     }
 
     @GetMapping("/testtesttesttest")

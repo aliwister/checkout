@@ -14,5 +14,5 @@ import java.util.Optional;
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
    Optional<Cart> findBySecureKey(String secureKey);
-   Optional<Cart> findByPaymentToken(String paymentToken);
+   Optional<Cart> findByPaymentTokenAAndCheckedOut(String paymentToken, Boolean checkedOut);
 }

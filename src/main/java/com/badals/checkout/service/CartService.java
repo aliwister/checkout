@@ -157,8 +157,11 @@ public class CartService {
         return uuid.toString();
     }
 
-    public Order createOrderWithPaymentByPaymentToken(String paymentKey) {
-        Cart cart = cartRepository.findByPaymentToken(paymentKey).get();
+    public Order createOrderWithPaymentByPaymentToken(String paymentKey) throws InvalidCartException {
+        Cart cart = cartRepository.findByPaymentTokenAAndCheckedOut(paymentKey, false).orElse(null);
+        if(cart == null)
+            throw new InvalidCartException("No cart found");
+
         Order order = createOrder(cart, "checkoutcom", true);
         Payment payment = new Payment();
         payment.setAmount(order.getTotal());
@@ -167,7 +170,8 @@ public class CartService {
         payment.setTransactionId(paymentKey);
         payment.setCreated_date(Instant.now());
         paymentRepository.save(payment);
-
+        cart.setCheckedOut(true);
+        cartRepository.save(cart);
         return order;
     }
 }
