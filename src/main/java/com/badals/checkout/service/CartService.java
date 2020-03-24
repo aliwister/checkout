@@ -158,7 +158,7 @@ public class CartService {
     }
 
     public Order createOrderWithPaymentByPaymentToken(String paymentKey) throws InvalidCartException {
-        Cart cart = cartRepository.findByPaymentTokenAAndCheckedOut(paymentKey, false).orElse(null);
+        Cart cart = cartRepository.findByPaymentTokenAndCheckedOut(paymentKey, false).orElse(null);
         if(cart == null)
             throw new InvalidCartException("No cart found");
 
