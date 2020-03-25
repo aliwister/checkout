@@ -57,13 +57,14 @@ public class CheckoutPaymentService {
       //String cardToken = "card_tok_CB9C10E3-24CC-4A82-B50A-4DEFDCB15580";
 
       CartDTO cart = cartService.findBySecureKey(secureKey);
-
-      log.info("Token sent: "+cardToken);
+      log.info("=========================================================================: "+cardToken);
+      log.info("==========================NEW CC PAYMENT ================================: "+cardToken);
+      log.info("==========================Token sent: "+cardToken);
       CardTokenChargeChild cardTokenChargePayload = new CardTokenChargeChild();
       cardTokenChargePayload.autoCapTime=24;
       cardTokenChargePayload.autoCapture="Y";
       //cardTokenChargePayload.chargeMode=1;
-      cardTokenChargePayload.email = "testuser@email.com";
+      cardTokenChargePayload.email = cart.getEmail();
       cardTokenChargePayload.description = "charge description";
       cardTokenChargePayload.value=String.valueOf(cartService.calculateValue(cart).doubleValue() * 1000.0);
 
@@ -98,27 +99,43 @@ public class CheckoutPaymentService {
 
          if(!apiResponse.hasError){
             // Access the response object retrieved from the api
+            log.info("No Error HTTP Status " + apiResponse.httpStatus);
+            if(apiResponse.model == null)
+               log.info("No Model");
+            log.info("No Error HTTP Status " + apiResponse.model);
 
             if(apiResponse.httpStatus == 200) {
+               Charge charge = apiResponse.model;
+               if(charge.status.equalsIgnoreCase("declined") || charge.status.equalsIgnoreCase("flagged"))
+                  return paymentDeclined("Payment declined with message " + apiResponse.model.responseCode + " " + apiResponse.model.responseMessage);
+
                cartService.setPaymentToken(cart.getId(), apiResponse.model.id);
                if(apiResponse.model.redirectUrl != null)
                   return redirect(apiResponse.model.redirectUrl);
 
-               Charge charge = apiResponse.model;
                if(apiResponse.model.responseCode.equalsIgnoreCase("10000")) {
                   return redirect(baseUrl + "checkout/checkout-com-confirmation?cko-payment-token="+apiResponse.model.id);
                }
+
+               return paymentDeclined("Payment declined " + charge.status + apiResponse.model.responseCode + " " + apiResponse.model.responseMessage);
+            }
+            else {
+               log.info("NO ERROR/INVALID RESPONSE DECLINING----------------------------------------------");
+               return paymentDeclined("Payment declined " + apiResponse.model.responseCode + " " + apiResponse.model.responseMessage);
             }
 
 
          } else {
             // Api has returned an error object. You can access the details in the error property of the apiResponse.
             // apiResponse.error
+            log.info("DECLINING----------------------------------------------");
             return paymentDeclined("Payment declined " + apiResponse.model.responseCode + " " + apiResponse.model.responseMessage);
          }
-      } catch (Exception e) {}
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
 
-      return new PaymentResponsePayload("");
+      return paymentDeclined("Exception Occurred for " + cardToken);
    }
 
 /*   @Deprecated

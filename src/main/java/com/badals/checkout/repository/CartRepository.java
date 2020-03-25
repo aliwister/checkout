@@ -16,3 +16,4 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
    Optional<Cart> findBySecureKey(String secureKey);
    Optional<Cart> findByPaymentTokenAndCheckedOut(String paymentToken, Boolean checkedOut);
 }
+
