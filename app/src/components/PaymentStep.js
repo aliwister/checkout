@@ -68,6 +68,11 @@ export const PaymentStep = ({state, dispatch}) => {
         });
         if(processPayment.status == 'REDIRECT')
             window.location = processPayment.redirect;
+        else if(processPayment.status == 'DECLINED') {
+            alert(processPayment.message);
+            window.location.reload();
+        }
+
          //   dispatch({type: 'PROCESS_DONE'});
         //sendTokenToServer(formData.email);
         return false;
