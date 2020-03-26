@@ -34,6 +34,7 @@ import {
     CheckoutPaper, ContainerGrid
 } from './App.styles'
 import {CART} from './graph/cart';
+import Loader from "./components/Loader";
 
 
 
@@ -96,12 +97,22 @@ const App = (props) => {
     };
 
     const secureKey = window.secureKey;
-    const { data, error, loading } = useQuery(CART, {
+    const { data, loading, error } = useQuery(CART, {
        variables: {secureKey}
     });
+    if (error) {
+        return(
+            <div>
+                <a href="https://www.badals.com">
+                    <MdArrowBack/>
+                </a>
+                <div>Failure</div>
+            </div>
+        )
+    }
 
     if (loading) {
-        return <div>loading...</div>;
+        return <Loader/>;
     }
     else {
         console.log(data);
