@@ -106,7 +106,7 @@ public class CheckoutPaymentService {
 
             if(apiResponse.httpStatus == 200) {
                Charge charge = apiResponse.model;
-               if(charge.status.equalsIgnoreCase("declined") || charge.status.equalsIgnoreCase("flagged"))
+               if(charge.status != null && (charge.status.equalsIgnoreCase("declined") || charge.status.equalsIgnoreCase("flagged")))
                   return paymentDeclined("Payment declined with message " + apiResponse.model.responseCode + " " + apiResponse.model.responseMessage);
 
                cartService.setPaymentToken(cart.getId(), apiResponse.model.id);
@@ -129,7 +129,7 @@ public class CheckoutPaymentService {
             // Api has returned an error object. You can access the details in the error property of the apiResponse.
             // apiResponse.error
             log.info("DECLINING----------------------------------------------");
-            return paymentDeclined("Payment declined " + apiResponse.model.responseCode + " " + apiResponse.model.responseMessage);
+            return paymentDeclined("Payment declined " + ((apiResponse.model!= null)?apiResponse.model.responseCode + " " + apiResponse.model.responseMessage:"no code"));
          }
       } catch (Exception e) {
          e.printStackTrace();
@@ -184,6 +184,7 @@ public class CheckoutPaymentService {
    }*/
 
    private PaymentResponsePayload paymentDeclined(String message) {
+      log.warn("DECLINE MESSAGE: " + message);
       return new PaymentResponsePayload(message, null, PaymentStatus.DECLINED);
    }
 
