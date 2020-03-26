@@ -47,8 +47,28 @@ public class OrderItem implements Serializable {
     @Column
     private String unit;
 
+    @Column String sku;
+
+    @Column(name="product_id") String ref;
+
     @Column(name="line_total")
     private BigDecimal lineTotal;
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+    public String getRef() {
+        return ref;
+    }
+
+    public void setRef(String ref) {
+        this.ref = ref;
+    }
 
     public BigDecimal getLineTotal() {
         return lineTotal;
