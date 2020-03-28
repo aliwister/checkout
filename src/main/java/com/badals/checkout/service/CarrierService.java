@@ -27,17 +27,13 @@ public class CarrierService {
     CartMapper cartMapper;
 
     List<Carrier> list = new ArrayList<Carrier>(){{
-        add(new Carrier("Badals.com Home Delivery", "BADALSCARGO", BigDecimal.valueOf(2), ""));
-        add(new Carrier("Pickup from our showroom", "PICKUP", BigDecimal.ZERO, ""));
+        add(new Carrier("Badals.com Home Delivery -- Muscat Only", "BADALSCARGO", BigDecimal.valueOf(1), ""));
+        //add(new Carrier("Pickup from our showroom", "PICKUP", BigDecimal.ZERO, ""));
         add(new Carrier("Cargo shipment", "CARGO", BigDecimal.ONE,""));
     }};
 
     @Transactional(readOnly = true)
     public List<Carrier> findByStateCityWeight(String state, String city, BigDecimal weight) {
-        List<Carrier> list = new ArrayList<>();
-        list.add(new Carrier("Badals.com Home Delivery", "BADALSCARGO", BigDecimal.valueOf(2), ""));
-        list.add(new Carrier("Pickup from our showroom", "PICKUP", BigDecimal.ZERO, ""));
-        list.add(new Carrier("Cargo shipment", "CARGO", BigDecimal.ONE,""));
         return list;
     }
 

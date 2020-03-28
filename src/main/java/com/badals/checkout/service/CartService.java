@@ -137,7 +137,10 @@ public class CartService {
             orderItem.setWeight(item.getWeight());
             orderItem.setUnit(item.getUnit());
             orderItem.setLineTotal(item.getPrice().multiply(item.getQuantity()));
+            orderItem.setSku(item.getSku());
+            orderItem.setRef(item.getRef());
             order.addOrderItem(orderItem);
+
         }
         order = orderRepository.save(order);
         cart.setSecureKey(cart.getSecureKey() + " DONE");
