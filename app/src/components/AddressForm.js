@@ -50,7 +50,7 @@ export const AddressForm = (props) => {
     return (
         <React.Fragment>
             <Grid container spacing={3}>
-                {addresses.map(x => (
+                {addresses && addresses.map(x => (
                 <Grid item sm={6} key={x.id}>
                     <input name="Address" type="radio" value={x.id} key={x.id}
                            ref={register({ required: true })}
