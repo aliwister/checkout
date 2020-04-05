@@ -79,7 +79,7 @@ public class CartService {
 
    public BigDecimal calculateValue(CartDTO cart) {
        BigDecimal sum = BigDecimal.valueOf(cart.getItems().stream().mapToDouble(x -> x.getPrice().doubleValue() * x.getQuantity().doubleValue()).sum());
-       sum.add(carrierService.getCarrierCost(cart.getCarrier()));
+       sum = sum.add(carrierService.getCarrierCost(cart.getCarrier()));
        return sum;
    }
 
