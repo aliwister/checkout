@@ -85,7 +85,7 @@ public class CartService {
 
     public BigDecimal calculateTotal(Cart cart) {
         BigDecimal sum = BigDecimal.valueOf(cart.getItems().stream().mapToDouble(x -> x.getPrice().doubleValue() * x.getQuantity().doubleValue()).sum());
-        sum.add(carrierService.getCarrierCost(cart.getCarrier()));
+        sum = sum.add(carrierService.getCarrierCost(cart.getCarrier()));
         return sum;
     }
 
@@ -102,7 +102,7 @@ public class CartService {
 
     public Order createOrder(Cart cart, String paymentMethod, boolean isPaid) {
         Order order = new Order();
-        order.setCurrency(cart.getCurrency());
+        order.setCurrency("OMR");//cart.getCurrency());
         //order.setCustomerId(cart.get);
         order.setInvoiceAddress(cart.getInvoiceAddress());
         order.setDeliveryAddressId(cart.getDeliveryAddressId());
