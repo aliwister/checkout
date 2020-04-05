@@ -29,7 +29,7 @@ public class CarrierService {
     List<Carrier> list = new ArrayList<Carrier>(){{
         add(new Carrier("Badals.com Home Delivery -- Muscat Only", "BADALSCARGO", BigDecimal.valueOf(1), ""));
         //add(new Carrier("Pickup from our showroom", "PICKUP", BigDecimal.ZERO, ""));
-        add(new Carrier("Cargo shipment", "CARGO", BigDecimal.ONE,""));
+        add(new Carrier("Dakhiliya/Batina Home Delivery", "BADALSMANDOOB", BigDecimal.valueOf(2),""));
     }};
 
     @Transactional(readOnly = true)
