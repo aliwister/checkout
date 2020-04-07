@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.Random;
@@ -77,10 +78,11 @@ public class CartService {
         return null;
     }
 
-   public BigDecimal calculateValue(CartDTO cart) {
+   public String calculateValue(CartDTO cart) {
        BigDecimal sum = BigDecimal.valueOf(cart.getItems().stream().mapToDouble(x -> x.getPrice().doubleValue() * x.getQuantity().doubleValue()).sum());
-       sum = sum.add(carrierService.getCarrierCost(cart.getCarrier()));
-       return sum;
+       sum = sum.add(carrierService.getCarrierCost(cart.getCarrier())).multiply(BigDecimal.valueOf(1000L));
+
+       return sum.setScale(2, RoundingMode.HALF_UP).toString();
    }
 
     public BigDecimal calculateTotal(Cart cart) {

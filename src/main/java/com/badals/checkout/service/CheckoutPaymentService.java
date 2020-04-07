@@ -66,7 +66,7 @@ public class CheckoutPaymentService {
       //cardTokenChargePayload.chargeMode=1;
       cardTokenChargePayload.email = cart.getEmail();
       cardTokenChargePayload.description = "charge description";
-      cardTokenChargePayload.value=String.valueOf(cartService.calculateValue(cart).doubleValue() * 1000.0);
+      cardTokenChargePayload.value=cartService.calculateValue(cart);
 
       cardTokenChargePayload.currency="OMR";
       cardTokenChargePayload.trackId= cart.getId().toString();
