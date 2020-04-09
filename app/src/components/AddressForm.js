@@ -58,7 +58,7 @@ export const AddressForm = (props) => {
                 {addresses && addresses.map(x => (
 
                 <Grid item sm={6} key={x.id}>
-                    <Card>
+                    <Card onClick={() => setEdit(x.id)}>
                         <CardContent>
                     <input name="Address" type="radio" value={x.id} key={x.id}
                            ref={register({ required: true })}
