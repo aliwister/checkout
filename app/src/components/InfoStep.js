@@ -110,12 +110,16 @@ export const InfoStep =  (props) => {
                 </Typography>
                 <AddressForm addresses={state.cart.addresses} address={state.cart.deliveryAddress} register={register} />
                 <ButtonDiv>
+                    {(!state.cart.items || !state.cart.items.length)?
+                        <NavButton type="submit" variant="contained" disabled color="primary">Next</NavButton>:
+
                     <NavButton type="submit" variant="contained"
                                color="primary">
                         {(loading)?<Loader />:(
                         <span>Next</span>
                         )}
                     </NavButton>
+                    }
                 </ButtonDiv>
             </form>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

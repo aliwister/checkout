@@ -43,7 +43,7 @@ export const AddressForm = (props) => {
     const [city,setCity] = useState(edit?address.city:"");
     //const [state,setState] = useState(edit?address.state:"");
     const [country,setCountry] = useState("Oman");
-    const [postalCode,setPostalCode] = useState(edit?address.postalCode:"");
+    const [postalCode,setPostalcode] = useState(edit?address.postalCode:"");
 
 
     //const [,] = useState(!props.address.id && props.address.);
@@ -173,9 +173,8 @@ export const AddressForm = (props) => {
                             fullWidth
                             autoComplete="billing postal-code"
                             inputRef={register}
-                            onChange={(e) => setPostalCode(e.target.value)}
+                            onChange={(e) => setPostalcode(e.target.value)}
                             value={postalCode}
-                            setPostalCode
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
