@@ -6,7 +6,7 @@ import { IconContext } from "react-icons";
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 import App from './App';
-console.log(process.env.REACT_APP_API_URL);
+
 const theme = createMuiTheme();
 
 
@@ -17,7 +17,7 @@ const client = new ApolloClient({
 render((
     <ThemeProvider theme={theme}>
         <ApolloProvider client={client}>
-            <IconContext.Provider value={{style:{ color: "blue", verticalAlign: 'middle' }, size:"2em"}}>
+            <IconContext.Provider value={{style:{ color: "blue", verticalAlign: 'middle' }, size:"1.5em"}}>
                 <App/>
             </IconContext.Provider>
         </ApolloProvider>

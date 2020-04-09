@@ -18,7 +18,8 @@ export const InfoForm = (props) => {
                     id="filled-full-width"
                     name="email"
                     placeholder="Email"
-                    helperText="Please Enter Your E-mail!"
+                    //helperText="Please Enter Your E-mail!"
+                    size="small"
                     fullWidth
                     label="Email"
                     InputLabelProps={{

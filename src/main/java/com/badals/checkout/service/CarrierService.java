@@ -30,7 +30,7 @@ public class CarrierService {
         add(new Carrier("Badals.com Home Delivery -- Muscat Only", "BADALSCARGO", BigDecimal.valueOf(1), ""));
         //add(new Carrier("Pickup from our showroom", "PICKUP", BigDecimal.ZERO, ""));
         add(new Carrier("Dakhiliya/Batina Home Delivery", "BADALSMANDOOB", BigDecimal.valueOf(2),""));
-        add(new Carrier("DHL Home Deliver (Salalah/Sohar ONLY)", "BADALSMANDOOB", BigDecimal.valueOf(3),""));
+        add(new Carrier("DHL Home Deliver (Salalah/Sohar ONLY)", "DHL", BigDecimal.valueOf(3),""));
     }};
 
     @Transactional(readOnly = true)

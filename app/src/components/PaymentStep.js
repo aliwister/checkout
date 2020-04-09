@@ -9,6 +9,9 @@ import {PAYMENT_METHODS} from "../graph/PAYMENT_METHODS";
 import {ButtonDiv, NavButton} from "../App.styles";
 import { FaExpeditedssl } from 'react-icons/fa';
 import Loader from "./Loader";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
 const InfoDiv = styled.div`
   //padding: ${ props  =>  props.theme.spacing(8)}px;
   margin-bottom: ${ props  =>  props.theme.spacing(4)}px;
@@ -85,19 +88,27 @@ export const PaymentStep = ({state, dispatch}) => {
             <Typography variant="h6">Payment Step</Typography>
             <InfoDiv>
                 {data.paymentMethods.map(x => (
-                    <Grid item sm={6} key={x.ref}>
-                        <input name="pm" type="radio" value={x.ref} key={x.ref}
-                               ref={register({ required: true })}
-                               onChange={() => setPaymentMethod(x.ref)}
-                               checked={paymentMethod === x.ref}
-                        />
-                        {x.image && (<img src ={x.image} />)}
-                        {!x.image &&(<span>{x.name} </span>)}
-                        {(x.ref == 'checkoutcom' && paymentMethod === x.ref) && (
+                    <Grid item sm={12} key={x.ref}>
+                        <Card onClick={() => setPaymentMethod(x.ref)}>
+                            <CardContent>
+                                <CardActions>
+                                    <input name="pm" type="radio" value={x.ref} key={x.ref}
+                                           ref={register({ required: true })}
+                                           onChange={() => setPaymentMethod(x.ref)}
+                                           checked={paymentMethod === x.ref}
+                                    />
+                                </CardActions>
+                                {x.image && (<img src ={x.image} />)}
+                                {!x.image &&(<span>{x.name} </span>)}
+                                {(x.ref == 'checkoutcom' && paymentMethod === x.ref) && (
 
-                                <CkoFrames handleProcessPayment={handleProcessPayment} customerName={name}/>
+                                    <CkoFrames handleProcessPayment={handleProcessPayment} customerName={name}/>
 
-                            )}
+                                )}
+                            </CardContent>
+                        </Card>
+<br/>
+
 
                     </Grid>
                 ))}

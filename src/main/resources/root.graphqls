@@ -29,6 +29,7 @@ type Address {
     state: String
     country: String
     postalCode: String
+    mobile: String
 }
 type PaymentMethod {
     ref: String
@@ -70,6 +71,7 @@ input AddressInput {
      state: String
      country: String
      postalCode: String
+     mobile: String
 }
 type Query {
     test(param: String): String

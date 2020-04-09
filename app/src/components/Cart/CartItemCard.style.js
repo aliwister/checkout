@@ -88,7 +88,7 @@ const ItemWrapper = styled.div`
 
 const ItemCards = styled.div`
   width: 100%;
-  padding: 15px 25px;
+  padding: 0px 0px;
   display: inline-flex;
   align-items: center;
   background-color: #ffffff;
