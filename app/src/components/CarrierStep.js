@@ -7,6 +7,9 @@ import {CARRIERS} from "../graph/CARRIERS";
 import {SET_CARRIER} from "../graph/SET_CARRIER";
 import {ButtonDiv, NavButton} from "../App.styles";
 import Loader from "./Loader";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
 
 const InfoDiv = styled.div`
   //padding: ${ props  =>  props.theme.spacing(8)}px;
@@ -44,13 +47,26 @@ export const CarrierStep = ({state, dispatch}) => {
             <InfoDiv>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     {data.carriers.map(x => (
-                        <Grid item sm={6} key={x.value}>
-                            <input name="Carrier" type="radio" value={x.value} key={x.value}
-                                   ref={register({ required: true })}
-                                   onChange={() => setCarrier(x.value)}
-                                   checked={carrier === x.value}
-                            />
-                            <span>{x.name} - OMR {x.cost} </span>
+                        <Grid item sm={12} key={x.value} spacing={3}>
+                            <Card onClick={() => setCarrier(x.value)}>
+                                <CardActions>
+                                    <input name="Carrier" type="radio" value={x.value} key={x.value}
+                                           ref={register({ required: true })}
+                                           onChange={() => setCarrier(x.value)}
+                                           checked={carrier === x.value}
+                                    />
+                                </CardActions>
+                                <CardContent>
+                                    <Typography variant="subtitle1" color="textSecondary" gutterBottom>
+                                        {x.name}
+                                    </Typography>
+                                    <Typography variant="subtitle2" component="h2">
+                                        OMR {x.cost}
+                                    </Typography>
+                                </CardContent>
+
+                            </Card>
+                            <br/>
                         </Grid>
                     ))}
 

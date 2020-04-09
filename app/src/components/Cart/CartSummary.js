@@ -114,7 +114,7 @@ const CartItem = ({ product, update }) => {
 
 
 const CartListItem = styled(ListItem)`
-  padding: ${ props  =>  props.theme.spacing(1, 0)}px;
+  padding: ${ props  =>  props.theme.spacing(0, 0)}px;
 `;
 
 const TotalText = styled(Typography)`
@@ -122,21 +122,18 @@ const TotalText = styled(Typography)`
 `;
 
 export const CartSummary = ({products, carrier}) => {
-    const {register, handleSubmit} = useForm();
-    const onSubmit = data => {
-        console.log(data);
-    }
     const totalPrice = calculateTotalPrice(products,carrier);
 
     return (
         <Card>
-            <CardHeader>
-            <Typography variant="h6" gutterBottom>
-                Order Summary
-            </Typography>
-            </CardHeader>
+
             <List disablePadding>
-<CardContent>
+            <CardContent>
+
+                <Typography variant="h6" gutterBottom>
+                  Order Summary
+                </Typography>
+
                 <CartListItem >
                     <ItemWrapper>
                         <>

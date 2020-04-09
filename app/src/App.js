@@ -31,11 +31,11 @@ import {
     Title,
     NavButton,
     ButtonDiv,
-    CheckoutPaper, ContainerGrid
+    CheckoutPaper, ContainerGrid, LogoImage, LogoWrapper, HelpPageWrapper, HelpPageContainer
 } from './App.styles'
 import {CART} from './graph/cart';
 import Loader from "./components/Loader";
-
+import Logoimage from './assets/logo.svg';
 
 
 const steps = ['Shipping address', 'Payment details', 'Review your order'];
@@ -58,7 +58,7 @@ function reducer(state, action) {
 }
 
 function getStepContent(step, dataAsState, dispatch, setCarrier) {
-    console.log(step);
+    //console.log(step);
     switch (step) {
         case 0:
             return <InfoStep state={dataAsState} dispatch={dispatch}/>;
@@ -98,7 +98,8 @@ const App = (props) => {
 
     const secureKey = window.secureKey;
     const { data, loading, error } = useQuery(CART, {
-       variables: {secureKey}
+       variables: {secureKey},
+       fetchPolicy: "network-only"
     });
     if (error) {
         return(
@@ -115,23 +116,26 @@ const App = (props) => {
         return <Loader/>;
     }
     else {
-        console.log(data);
+        //console.log(data);
     }
     return (
         <React.Fragment>
 
             <CssBaseline />
-            <AppBar position="absolute" color="default" >
+
                 <Toolbar>
 
-                    <MdLock />                    <Typography variant="h6" color="inherit" noWrap>
-                        Badals.com Secure Checkout
+                    <LogoWrapper> <LogoImage src={Logoimage}/> </LogoWrapper>
+                    <div style={{width: '100%', float:'right'}}>
+                    <Typography variant="h6" color="inherit" noWrap style={{float:'right'}}>
+                        <MdLock />Secure Checkout
                     </Typography>
-
+                    </div>
                 </Toolbar>
-            </AppBar>
 
-            <main>
+
+            <HelpPageWrapper>
+                <HelpPageContainer>
                 <ContainerGrid container>
                     <Grid item xs={12} md={12}>
                         <Stepper activeStep={state.step}>
@@ -173,7 +177,8 @@ const App = (props) => {
 
         </RootGrid>
                 </ContainerGrid>
-            </main>
+                </HelpPageContainer>
+            </HelpPageWrapper>
         </React.Fragment>
     );
 };

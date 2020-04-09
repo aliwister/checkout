@@ -12,12 +12,12 @@ export const Title = styled.h1`
 export const RootGrid = styled(Grid)`
   height: 100vh;
   width: 100%;
-  padding:  ${ props  =>  props.theme.spacing(10)}px;
+  padding:  ${ props  =>  props.theme.spacing(0)}px;
 `;
 export const ContainerGrid = styled(Grid)`
   height: 100vh;
   width: 100%;
-  margin-top:  ${ props  =>  props.theme.spacing(10)}px;
+  margin-top:  ${ props  =>  props.theme.spacing(0)}px;
 `;
 export const RightGrid = styled(Grid)`
   height: 100%;
@@ -31,12 +31,12 @@ export const LeftGrid = styled(Grid)`
 
 export const InfoContainer = styled(Container)`
   padding-top: ${ props  =>  props.theme.spacing(1)}px;
-  padding-left: ${ props  =>  props.theme.spacing(10)}px !important;
+  padding-left: ${ props  =>  props.theme.spacing(2)}px !important;
 `;
 
 export const CheckoutPaper = styled(Paper)`
 
-  padding: ${ props  =>  props.theme.spacing(8)}px;
+  padding: ${ props  =>  props.theme.spacing(2)}px;
   margin-top: ${ props  =>  props.theme.spacing(2)}px;
 `;
 
@@ -64,4 +64,57 @@ export const Address = styled.span`
   font-weight:  '400';
   color: '#77798c';
   line-height: 1.5;
+`;
+export const LogoImage = styled.img`
+  display: block;
+  backface-visibility: hidden;
+  max-width: 150px;
+  text-align: center;
+`;
+export const LogoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  padding: 50px 40px 35px 20px;
+`;
+export const Heading = styled.h3`
+  font-size: 21px;
+  font-weight: 700;
+  color: #0d1136;
+  line-height: 1.2;
+  margin-bottom: 25px;
+  width: 100%;
+  text-align: center;
+`;
+
+export const HelpPageWrapper = styled.div`
+  background-color: white;
+  position: relative;
+  padding: 10px 0 60px 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  @media (max-width: 989px) {
+    padding-top: 70px;
+  }
+`;
+
+export const HelpPageContainer = styled.div`
+  background-color: transparent;
+  padding: 0;
+  border-radius: 6px;
+
+  position: relative;
+  @media (min-width: 990px) {
+    width: 870px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (max-width: 989px) {
+    padding: 30px;
+  }
 `;
