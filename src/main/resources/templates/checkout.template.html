@@ -12,6 +12,7 @@
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     window.secureKey = urlParams.get('token');
+    window.guid = urlParams.get('guid');
     /*]]>*/
 </script>
 <div id="index"></div>

@@ -35,6 +35,7 @@ export const AddressForm = (props) => {
         address = props.address;
 
     const [edit, setEdit] = useState((!props.address || (!address.id && address.firstName))?-1:0);
+    const [alias,setAlias] = useState(edit?address.firstName:"");
     const [firstName,setFirstName] = useState(edit?address.firstName:"");
     const [lastName,setLastName] = useState(edit?address.lastName:"");
     const [line1,setLine1] = useState(edit?address.line1:"");
@@ -44,13 +45,14 @@ export const AddressForm = (props) => {
     //const [state,setState] = useState(edit?address.state:"");
     const [country,setCountry] = useState("Oman");
     const [postalCode,setPostalcode] = useState(edit?address.postalCode:"");
+    const [save,setSave] = useState(edit?address.save:false);
 
 
     //const [,] = useState(!props.address.id && props.address.);
-    console.log(edit);
+   // console.log(edit);
 
     const setAddress = (id) => {
-        console.log(id);
+        //console.log(id);
     }
     return (
         <React.Fragment>
@@ -76,6 +78,18 @@ export const AddressForm = (props) => {
                 {edit == -1 &&
                 (
                     <Grid container spacing={3}>
+                        <Grid item xs={12} sm={12}>
+                            <TextField size="small"
+                                       required
+                                       id="alias"
+                                       name="alias"
+                                       placeholder="Address Name, e.g. Home or Work"
+                                       fullWidth
+                                       inputRef={register}
+                                       value={alias}
+                                       onChange={(e) => setAlias(e.target.value)}
+                            />
+                        </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField size="small"
                             required
@@ -192,9 +206,9 @@ export const AddressForm = (props) => {
                     </Grid>
                     <Grid item xs={12}>
                         <FormControlLabel
-                            control={<Checkbox color="secondary" name="saveAddress" value="yes"
+                            control={<Checkbox color="secondary" name="save"
                             inputRef={register} />}
-                            label="Use this address for payment details"
+                            label="Save address in account"
                         />
                     </Grid>
                     </Grid>

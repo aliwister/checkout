@@ -1,15 +1,13 @@
 import React, {useEffect, useReducer, useState} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import PaymentForm from "./components/old/PaymentForm";
-import Review from "./components/old/Review";
-import Button from "@material-ui/core/Button";
+
 import Step from "@material-ui/core/Step";
 import Stepper from "@material-ui/core/Stepper";
 import StepLabel from "@material-ui/core/StepLabel";
-import Card from "@material-ui/core/Card";
+
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import AppBar from "@material-ui/core/AppBar";
+import {useCookies} from 'react-cookie';
 import Grid from "@material-ui/core/Grid";
 
 import { InfoStep } from './components/InfoStep';
@@ -18,8 +16,11 @@ import { CarrierStep } from './components/CarrierStep';
 import { CartSummary } from './components/Cart/CartSummary';
 
 
-import {useMutation, useQuery} from '@apollo/react-hooks';
+import { useQuery} from '@apollo/react-hooks';
 import { withApollo } from "react-apollo";
+import HttpsIconSharp from '@material-ui/icons/Https';
+import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
+import CloseIcon from '@material-ui/icons/Close';
 import { MdLock } from 'react-icons/md';
 import { MdArrowBack } from 'react-icons/md';
 import {
@@ -28,14 +29,17 @@ import {
     RightGrid,
     LeftGrid,
     Wrapper,
-    Title,
     NavButton,
     ButtonDiv,
-    CheckoutPaper, ContainerGrid, LogoImage, LogoWrapper, HelpPageWrapper, HelpPageContainer
+    ContainerGrid, LogoImage, LogoWrapper, HelpPageWrapper, HelpPageContainer
 } from './App.styles'
 import {CART} from './graph/cart';
 import Loader from "./components/Loader";
 import Logoimage from './assets/logo.svg';
+import Hidden from "@material-ui/core/Hidden";
+import Button from "@material-ui/core/Button";
+import Drawer from "@material-ui/core/Drawer";
+import IconButton from "@material-ui/core/IconButton";
 
 
 const steps = ['Shipping address', 'Payment details', 'Review your order'];
@@ -71,22 +75,33 @@ function getStepContent(step, dataAsState, dispatch, setCarrier) {
     }
 }
 
+
 const App = (props) => {
     const initialState = {
         step: 0
     }
     const steps = ['Customer Information', 'Select Carrier', 'Select Payment']
+    const secureKey = window.secureKey;
+    const guid = window.guid;
 
     const [state, dispatch] = useReducer(reducer, initialState);
-    const [spacing, setSpacing] = React.useState(5);
     const [activeStep, setActiveStep] = React.useState(0);
     const [carrier, setCarrier] = useState();
     const { client } = props;
-
-    /*useEffect(() => {
-        client.resetStore()
+    const [cookies, setCookie, removeCookie] = useCookies(['nonce']);
+    useEffect(() => {
+        setCookie("nonce", guid, {path: "/", maxAge : 60*15});
     }, []);
-*/
+
+
+    const [drawer, setDrawer] = useState(false);
+
+    const toggleDrawer = (open) => (event) => {
+        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+            return;
+        }
+        setDrawer(open);
+    };
 
     const handleNext = () => {
         setActiveStep(activeStep + 1);
@@ -96,7 +111,7 @@ const App = (props) => {
         setActiveStep(activeStep - 1);
     };
 
-    const secureKey = window.secureKey;
+
     const { data, loading, error } = useQuery(CART, {
        variables: {secureKey},
        fetchPolicy: "network-only"
@@ -105,7 +120,7 @@ const App = (props) => {
         return(
             <div>
                 <a href="https://www.badals.com">
-                    <MdArrowBack/>
+                    <ArrowBackSharpIcon/>
                 </a>
                 <div>Failure</div>
             </div>
@@ -128,7 +143,7 @@ const App = (props) => {
                     <LogoWrapper> <LogoImage src={Logoimage}/> </LogoWrapper>
                     <div style={{width: '100%', float:'right'}}>
                     <Typography variant="h6" color="inherit" noWrap style={{float:'right'}}>
-                        <MdLock />Secure Checkout
+                        <HttpsIconSharp />Secure Checkout
                     </Typography>
                     </div>
                 </Toolbar>
@@ -148,11 +163,18 @@ const App = (props) => {
                     </Grid>
 
                 <RootGrid container spacing={0}>
-            <RightGrid item md={7} xs={12} >
+            <RightGrid item md={7} sm={12} >
                 <Grid item xs={12} md={12} >
                     <a href="https://www.badals.com">
-                        <MdArrowBack/>
+                        <ArrowBackSharpIcon/>
                     </a>
+                    <Hidden mdUp>
+                        <span style={{float: 'right'}}> <Button onClick={toggleDrawer(true)} variant="contained">Show cart</Button></span>
+                        <Drawer anchor="right" open={drawer} onClose={toggleDrawer(false)}>
+                            <span style={{float: 'right'}}> <IconButton onClick={toggleDrawer(false)} ><CloseIcon /></IconButton></span>
+                            <CartSummary products={data.cart.items} carrier={state.carrier}/>
+                        </Drawer>
+                    </Hidden>
                 <InfoContainer>
                     <React.Fragment>
                         {getStepContent(state.step, data, dispatch)}
@@ -167,6 +189,7 @@ const App = (props) => {
                 </InfoContainer>
                 </Grid>
             </RightGrid>
+                    <Hidden smDown>
             <LeftGrid item md={5} xs={12}>
 
                     <Wrapper>
@@ -174,6 +197,7 @@ const App = (props) => {
                     </Wrapper>
 
             </LeftGrid>
+                    </Hidden>
 
         </RootGrid>
                 </ContainerGrid>

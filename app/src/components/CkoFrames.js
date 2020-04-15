@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import './CkoFrames.css'
 import {OutlinedInput, Typography} from "@material-ui/core";
-import { FaExpeditedssl } from 'react-icons/fa';
-import Loader from "./Loader";
 
+import Loader from "./Loader";
+import HttpsIconSharp from '@material-ui/icons/Https';
 class CkoFrames extends Component {
   constructor (props) {
     super(props)
@@ -166,7 +166,7 @@ class CkoFrames extends Component {
                 <span>PAY SECURELY</span>
             }
           </button>
-          <p><FaExpeditedssl /> SHA-2 256 bit Encryption SSL</p>
+          <p><HttpsIconSharp /> SHA-2 256 bit Encryption SSL</p>
           <div>
             <span className='error-message error-message__card-number' />
             <span className='error-message error-message__expiry-date' />

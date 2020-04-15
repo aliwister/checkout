@@ -66,10 +66,14 @@ public class CartService {
 
     public CartDTO setDeliveryAddressAndEmail(Address address, String email, String secureKey) {
         Cart cart = cartRepository.findBySecureKey(secureKey).get();
-        if(address.getId() == null || address.getId() < 0)
+        if(address.getId() == null || address.getId() < 0) {
             cart.setDeliveryAddress(address);
-        else
+            cart.setDeliveryAddressId(null);
+        }
+        else {
             cart.setDeliveryAddressId(address.getId());
+            cart.setDeliveryAddress(null);
+        }
         cart.setEmail(email);
         cart = cartRepository.save(cart);
         return cartMapper.toDto(cart);
