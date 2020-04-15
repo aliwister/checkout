@@ -72,6 +72,8 @@ input AddressInput {
      country: String
      postalCode: String
      mobile: String
+     save: Boolean
+     alias: String
 }
 type Query {
     test(param: String): String

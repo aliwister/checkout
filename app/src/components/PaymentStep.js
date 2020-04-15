@@ -12,6 +12,9 @@ import Loader from "./Loader";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 const InfoDiv = styled.div`
   //padding: ${ props  =>  props.theme.spacing(8)}px;
   margin-bottom: ${ props  =>  props.theme.spacing(4)}px;
@@ -20,6 +23,14 @@ const initialState = {
     token: false,
     hideFrame: false
 };
+
+const useStyles = makeStyles((theme) => ({
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
+}));
+
 function reducer(state, action) {
     switch (action.type) {
         case 'PROCESS_BEGIN':;
@@ -38,7 +49,7 @@ function reducer(state, action) {
 }
 
 export const PaymentStep = ({state, dispatch}) => {
-
+    const classes = useStyles();
     const { register, handleSubmit } = useForm();
     //const [state, dispatch] = useReducer(reducer, initialState);
     const { data, error, loading } = useQuery(PAYMENT_METHODS, {
@@ -47,11 +58,12 @@ export const PaymentStep = ({state, dispatch}) => {
     const [processPaymentMutation,{loading2, data2}] = useMutation(PROCESS_PAYMENT);
     const [paymentMethod, setPaymentMethod] = useState();
     const [name, setName] = useState(state.cart.name);
-
+    const [open, setOpen] = React.useState(false);
 
     const onSubmit = async () => {
         console.log("In onsubmit");
         console.log(data);
+        setOpen(true);
         const {
             data: { processPayment },
         } = await processPaymentMutation({
@@ -85,6 +97,9 @@ export const PaymentStep = ({state, dispatch}) => {
 
     return (
         <React.Fragment>
+            <Backdrop className={classes.backdrop} open={open} >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <Typography variant="h6">Payment Step</Typography>
             <InfoDiv>
                 {data.paymentMethods.map(x => (

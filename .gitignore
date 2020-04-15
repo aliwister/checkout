@@ -5,7 +5,7 @@
 /src/test/javascript/coverage/
 /deploy
 /deploy/**
-/src/main/resources/static/**
+/src/main/resources/static/**.js
 ######################
 # Node
 ######################

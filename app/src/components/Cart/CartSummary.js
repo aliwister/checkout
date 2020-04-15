@@ -83,12 +83,13 @@ const CartItem = ({ product, update }) => {
             />
 
             <ItemImgWrapper>
+                {product.image &&
                 <img
                     className='ListImage'
                     src={product.image}
                     height='150'
                     width='150'
-                />
+                />}
             </ItemImgWrapper>
 
             <ItemDetails>
@@ -140,7 +141,7 @@ export const CartSummary = ({products, carrier}) => {
                         {products && products.length ? (
                             products.map(item => (
                                 <CartItem
-                                    key={`cartItem-${item.productId}`}
+                                    key={item.sku}
 
                                     product={item}
                                 />
@@ -158,11 +159,20 @@ Cart is empty
 
                 </CartListItem>
 </CardContent>
-                <CardActionArea>
-                    <PriceBox>
-                        Order Total: {CURRENCY}
-                        {parseFloat(`${totalPrice}`).toFixed(1)}
-                    </PriceBox>
+                <CardActionArea style={{backgroundColor:'#ececec'}}>
+                    <CartListItem >
+                    <ItemWrapper>
+                        <ItemCards style={{backgroundColor:'#ececec'}}>
+                            <ItemDetails>
+                            Grand Total:
+                            </ItemDetails>
+                        <TotalPrice>
+                            {CURRENCY}
+                        { parseFloat(`${totalPrice}`).toFixed(1)}
+                        </TotalPrice>
+                        </ItemCards>
+                    </ItemWrapper>
+                    </CartListItem>
                 </CardActionArea>
             </List>
         </Card>

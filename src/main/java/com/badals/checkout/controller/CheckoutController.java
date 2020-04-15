@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("checkout")
@@ -61,8 +62,18 @@ public class CheckoutController {
         log.info("I'm a token {}", token);
         //log.debug("REST request to create cart : {}", cart);
         model.addAttribute("token", token);
+        model.addAttribute("guid",  UUID.randomUUID().toString());
         return "checkout";
     }
+
+    @GetMapping("/update")
+    public String update(@RequestParam(required=true) String token, Model model) {
+        log.info("I'm a token {}", token);
+        //log.debug("REST request to create cart : {}", cart);
+        model.addAttribute("order", token);
+        return "checkout";
+    }
+
 
     @RequestMapping("/ping")
     public String ping(Model model) {

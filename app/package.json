@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack --mode development --env.test",
     "build": "webpack --mode production --env.REACT_APP_API_URL=https://checkout.badals.com/graphql --env.production",
-    "start:dev": "webpack-dev-server --env.test"
+    "dev": "webpack-dev-server --env.test"
   },
   "keywords": [],
   "author": "",
@@ -25,9 +25,9 @@
     "lodash.startswith": "^4.2.1",
     "react": "^16.13.1",
     "react-apollo": "^3.1.4",
+    "react-cookie": "^4.0.3",
     "react-dom": "^16.13.1",
     "react-hook-form": "^4.10.2",
-    "react-icons": "^3.9.0",
     "react-phone-input-2": "^2.12.1",
     "styled-components": "^5.1.0",
     "yup": "^0.28.3"

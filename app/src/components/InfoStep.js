@@ -27,6 +27,7 @@ const InfoDiv = styled.div`
 
 //{[{id:1,address1:"address1"},{id:0,address1:"address2"}]} address={{id:1, name:"Ali",line1:"Line1"}}
 const schema = object().shape({
+    alias: string().required("Address Name is required"),
     firstName: string().required("First name is required"),
     lastName: string().required("Last name is required"),
     line1: string().required("Address is required"),
@@ -66,7 +67,9 @@ export const InfoStep =  (props) => {
             city:formData.city,
             country:"Oman",
             postalCode: formData.postalCode,
-            mobile: formData.mobile
+            mobile: formData.mobile,
+            save: formData.save,
+            alias: formData.alias
         };
         let email= formData.email;
         console.log(formData);
