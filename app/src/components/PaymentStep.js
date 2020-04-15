@@ -7,7 +7,6 @@ import {useMutation, useQuery} from "@apollo/react-hooks";
 import {PROCESS_PAYMENT} from "../graph/PROCESS_PAYMENT";
 import {PAYMENT_METHODS} from "../graph/PAYMENT_METHODS";
 import {ButtonDiv, NavButton} from "../App.styles";
-import { FaExpeditedssl } from 'react-icons/fa';
 import Loader from "./Loader";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
