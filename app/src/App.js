@@ -21,8 +21,7 @@ import { withApollo } from "react-apollo";
 import HttpsIconSharp from '@material-ui/icons/Https';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import CloseIcon from '@material-ui/icons/Close';
-import { MdLock } from 'react-icons/md';
-import { MdArrowBack } from 'react-icons/md';
+
 import {
     RootGrid,
     InfoContainer,
