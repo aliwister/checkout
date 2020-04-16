@@ -122,7 +122,7 @@ public class CartService {
         String uiud = createUIUD();
 
         order.setReference(orderRef);
-        order.setConfirmationKey(uiud);
+        order.setConfirmationKey(cart.getSecureKey()+"."+uiud);
         order.setSubtotal(calculateSubtotal(cart));
         order.setTotal(calculateTotal(cart));
         order.setCart(cart);
