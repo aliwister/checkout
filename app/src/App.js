@@ -170,8 +170,10 @@ const App = (props) => {
                     <Hidden mdUp>
                         <span style={{float: 'right'}}> <Button onClick={toggleDrawer(true)} variant="contained">Show cart</Button></span>
                         <Drawer anchor="right" open={drawer} onClose={toggleDrawer(false)}>
-                            <span style={{float: 'right'}}> <IconButton onClick={toggleDrawer(false)} ><CloseIcon /></IconButton></span>
+<div>
+                            <span> <IconButton onClick={toggleDrawer(false)} ><CloseIcon /></IconButton></span>
                             <CartSummary products={data.cart.items} carrier={state.carrier}/>
+</div>
                         </Drawer>
                     </Hidden>
                 <InfoContainer>
