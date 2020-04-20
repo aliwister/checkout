@@ -85,7 +85,7 @@ export const AddressForm = (props) => {
                                        name="alias"
                                        placeholder="Address Name, e.g. Home or Work"
                                        fullWidth
-                                       inputRef={register}
+                                       inputRef={register({required: true, maxLength: 15, minLength: 2})}
                                        value={alias}
                                        onChange={(e) => setAlias(e.target.value)}
                             />
@@ -98,7 +98,7 @@ export const AddressForm = (props) => {
                             placeholder="First name"
                             fullWidth
                             autoComplete="fname"
-                            inputRef={register}
+                                   inputRef={register({required: true, maxLength: 15, minLength: 2})}
                             value={firstName}
                             onChange={(e) => setFirstName(e.target.value)}
                         />
@@ -111,7 +111,7 @@ export const AddressForm = (props) => {
                             placeholder="Last name"
                             fullWidth
                             autoComplete="lname"
-                            inputRef={register}
+                                   inputRef={register({required: true, maxLength: 15, minLength: 2})}
                             value={lastName}
                             onChange={(e) => setLastName(e.target.value)}
                         />
@@ -124,7 +124,7 @@ export const AddressForm = (props) => {
                             placeholder="Address line 1"
                             fullWidth
                             autoComplete="billing address-line1"
-                            inputRef={register}
+                                   inputRef={register({required: true, maxLength: 50, minLength: 2})}
                             value={line1}
                             onChange={(e) => setLine1(e.target.value)}
                         />
@@ -136,7 +136,7 @@ export const AddressForm = (props) => {
                             placeholder="Address line 2"
                             fullWidth
                             autoComplete="billing address-line2"
-                            inputRef={register}
+                                   inputRef={register({maxLength: 50, minLength: 2})}
                             value={line2}
                             onChange={(e) => setLine2(e.target.value)}
                         />
@@ -169,7 +169,7 @@ export const AddressForm = (props) => {
                             placeholder="City"
                             fullWidth
                             autoComplete="billing address-level2"
-                            inputRef={register}
+                                   inputRef={register({required: true, maxLength: 15, minLength: 2})}
                             value={city}
                             onChange={(e) => setCity(e.target.value)}
                         />

@@ -61,7 +61,7 @@ public class CheckoutPaymentService {
       log.info("==========================NEW CC PAYMENT ================================: "+cardToken);
       log.info("==========================Token sent: "+cardToken);
       CardTokenChargeChild cardTokenChargePayload = new CardTokenChargeChild();
-      cardTokenChargePayload.autoCapTime=24;
+      cardTokenChargePayload.autoCapTime=1;
       cardTokenChargePayload.autoCapture="Y";
       //cardTokenChargePayload.chargeMode=1;
       cardTokenChargePayload.email = cart.getEmail();

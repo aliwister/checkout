@@ -27,11 +27,11 @@ const InfoDiv = styled.div`
 
 //{[{id:1,address1:"address1"},{id:0,address1:"address2"}]} address={{id:1, name:"Ali",line1:"Line1"}}
 const schema = object().shape({
-    alias: string().required("Address Name is required"),
-    firstName: string().required("First name is required"),
-    lastName: string().required("Last name is required"),
-    line1: string().required("Address is required"),
-    mobile: string().matches(/(968[7,9]{1}[0-9]{7})/, "Mobile is required"),
+    alias: string().required("Alias is required and should be between 2 and 15 characters"),
+    firstName: string().required("First name is required and should be between 2 and 15 characters"),
+    lastName: string().required("Last name is required and should be between 2 and 15 characters"),
+    line1: string().required("Address is required and should be between 2 and 15 characters" ),
+    mobile: string().matches(/(968[7,9]{1}[0-9]{7})/, "A valid mobile number is required"),
     //password: string().matches(/(?=.*[\w])(?=.*[\W])[\w\W]{6,}/),
     //password: string().matches(/([\w\W]{6,})/, intl.formatMessage(messages.password)),
 });
