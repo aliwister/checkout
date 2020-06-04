@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Container, Grid, Paper, Typography, TextField } from '@material-ui/core';
 import styled, { ThemeProvider } from 'styled-components';
 import { useForm, Controller } from "react-hook-form";
+import Alert from "@material-ui/lab/Alert";
 
 const InfoDiv = styled.div`
   //padding: ${ props  =>  props.theme.spacing(8)}px;
@@ -19,6 +20,8 @@ export const CreditCardForm = (props) => {
 
     return (
         <React.Fragment>
+          <Alert severity="info">Since the Central Bank of Oman Omannet System has been compromised, you will not be able to use Debit card until tomorrow afternoon!</Alert>
+          <Alert severity="info">نظرا لاختراق نظام عمان نت الخاص بالبنك المركزي العماني فلن تتمكنوا من استخدام بطاقات السحب الفوري (debit card) حتى مساء يوم غد!</Alert>
             {cardTypes.map(item => (
                 <Grid item sm={6} key={item.id}>
                     <input name="type" type="radio" value={item} key={item}
