@@ -14,6 +14,7 @@ import CardActions from "@material-ui/core/CardActions";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import Alert from "@material-ui/lab/Alert";
 const InfoDiv = styled.div`
   //padding: ${ props  =>  props.theme.spacing(8)}px;
   margin-bottom: ${ props  =>  props.theme.spacing(4)}px;
@@ -103,6 +104,8 @@ export const PaymentStep = ({state, dispatch}) => {
             <InfoDiv>
                 {data.paymentMethods.map(x => (
                     <Grid item sm={12} key={x.ref}>
+                        <Alert severity="info">Since the Central Bank of Oman Omannet System has been compromised, you will not be able to use Debit card until tomorrow afternoon!</Alert>
+                        <Alert severity="info">نظرا لاختراق نظام عمان نت الخاص بالبنك المركزي العماني فلن تتمكنوا من استخدام بطاقات السحب الفوري (debit card) حتى مساء يوم غد!</Alert>
                         <Card onClick={() => setPaymentMethod(x.ref)}>
                             <CardContent>
                                 <CardActions>
