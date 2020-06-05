@@ -102,8 +102,8 @@ export const PaymentStep = ({state, dispatch}) => {
             </Backdrop>
             <Typography variant="h6">Payment Step</Typography>
             <InfoDiv>
-                <Alert severity="info">Since the Central Bank of Oman Omannet System has been compromised, we have blocked debit card usage until tomorrow afternoon while they resolve the issue!</Alert>
-                <Alert severity="info">نظرا لاختراق نظام عمان نت الخاص بالبنك المركزي العماني ولحماية معلوماتكم فسيتم حجب استخدام بطاقات السحب الفوري حتى مساء يوم غد حيث سيتم تحديث مستوى الأمان في نظامهم!</Alert>
+                <Alert severity="success">We are now back live with secure Debit Card processing!</Alert>
+                <Alert severity="success">الآن يمكنكم استخدام بطاقات الدفع المباشر بشكل آمن.</Alert>
                 {data.paymentMethods.map(x => (
                     <Grid item sm={12} key={x.ref}>
 
