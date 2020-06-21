@@ -49,6 +49,7 @@ function reducer(state, action) {
 }
 
 export const PaymentStep = ({state, dispatch}) => {
+
     const classes = useStyles();
     const { register, handleSubmit } = useForm();
     //const [state, dispatch] = useReducer(reducer, initialState);
@@ -59,6 +60,7 @@ export const PaymentStep = ({state, dispatch}) => {
     const [paymentMethod, setPaymentMethod] = useState();
     const [name, setName] = useState(state.cart.name);
     const [open, setOpen] = React.useState(false);
+    const [once, setOnce] = React.useState(false);
 
     const onSubmit = async () => {
         console.log("In onsubmit");
@@ -76,6 +78,10 @@ export const PaymentStep = ({state, dispatch}) => {
     }
 
     const handleProcessPayment = async (token) => {
+        //console.log(once);
+        setOnce(true);
+        if(once)
+            return;
         const {
             data: { processPayment },
         } = await processPaymentMutation({
@@ -103,7 +109,7 @@ export const PaymentStep = ({state, dispatch}) => {
             <Typography variant="h6">Payment Step</Typography>
             <InfoDiv>
                 <Alert severity="success">We are now back live with secure Debit Card processing!</Alert>
-                <Alert severity="success">الآن يمكنكم استخدام بطاقات الدفع المباشر بشكل آمن.</Alert>
+                <Alert severity="success">الآن يمكنكم استخدام بطاقات الدفع المباشر بشكل آمن!</Alert>
                 {data.paymentMethods.map(x => (
                     <Grid item sm={12} key={x.ref}>
 

@@ -15,6 +15,7 @@ class CkoFrames extends Component {
       paymentMethodIcon: '',
       payButton: false,
       loading: false,
+      submit: false,
       customerName: props.customerName
     }
     this.handleProcessPayment = props.handleProcessPayment;
@@ -76,7 +77,11 @@ class CkoFrames extends Component {
 
   // Handle form submission
   handleSubmit (event) {
+
+    //alert(this.state.submit);
+    this.setState({submit: true})
     event.preventDefault();
+    if(this.state.submit) return;
     //console.log(this.state);
     this.setState({loading: true});
     let name = this.state['customerName'];
