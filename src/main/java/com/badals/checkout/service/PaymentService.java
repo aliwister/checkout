@@ -35,7 +35,7 @@ public class PaymentService {
 
     List<PaymentMethod> list = new ArrayList<PaymentMethod>() {{
         //add(new PaymentMethod("omannet", "Omannet", "", true));
-        add(new PaymentMethod("checkoutcom", "Checkout.com", "https://www.checkout.com/static/img/logos/cko/checkout-logo.svg", true));
+        add(new PaymentMethod("checkoutcom", "Checkout.com", "checkout-logo.svg", true));
         add(new PaymentMethod("bankwire", "Deposit to Bank Account", "",false));
     }};
 
