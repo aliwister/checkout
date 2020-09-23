@@ -29,9 +29,12 @@ public class CarrierService {
     List<Carrier> list = new ArrayList<Carrier>(){{
         add(new Carrier("Badals.com Home Delivery -- Muscat Only", "BADALSMUSCAT", BigDecimal.valueOf(1), ""));
         //add(new Carrier("Pickup from our showroom", "PICKUP", BigDecimal.ZERO, ""));
-        add(new Carrier("Dakhiliya/Batina Home Delivery", "BADALSMANDOOB", BigDecimal.valueOf(2),""));
-        add(new Carrier("Sharqiya/Wusta Home Delivery", "BADALSMANDOOB", BigDecimal.valueOf(2),""));
-        add(new Carrier("Dhahira/Buraymi Home Delivery", "BADALSMANDOOB", BigDecimal.valueOf(2),""));
+        add(new Carrier("Dakhiliya Home Delivery", "Dakhiliya", BigDecimal.valueOf(2),""));
+        add(new Carrier("Batina Home Delivery", "Batina", BigDecimal.valueOf(2),""));
+        add(new Carrier("Sharqiya Home Delivery", "Sharqiya", BigDecimal.valueOf(2),""));
+        add(new Carrier("Wusta Home Delivery", "Wusta", BigDecimal.valueOf(2.5),""));
+        add(new Carrier("Dhahira Home Delivery", "Dhahira", BigDecimal.valueOf(2),""));
+        add(new Carrier("Buraymi Home Delivery", "BURAYMI", BigDecimal.valueOf(2),""));
         add(new Carrier("DHL Home Delivery (Salalah/Sohar ONLY)", "DHL", BigDecimal.valueOf(3),""));
     }};
 
