@@ -122,7 +122,7 @@ export const PaymentStep = ({state, dispatch}) => {
                                            checked={paymentMethod === x.ref}
                                     />
                                 </CardActions>
-                                {x.image && (<img src ={x.image} />)}
+                                {x.image && (<img src={require('../assets/'+x.image)}/>)}
                                 {!x.image &&(<span>{x.name} </span>)}
                                 {(x.ref == 'checkoutcom' && paymentMethod === x.ref) && (
 
