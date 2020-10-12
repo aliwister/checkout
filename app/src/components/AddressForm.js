@@ -55,11 +55,11 @@ export const AddressForm = (props) => {
         //console.log(id);
     }
     return (
-        <React.Fragment>
+        <>
             <Grid container spacing={3}>
                 {addresses && addresses.map(x => (
 
-                <Grid item sm={6} key={x.id}>
+                <Grid item xs={12} sm={6} key={x.id}>
                     <Card onClick={() => setEdit(x.id)}>
                         <CardContent>
                     <input name="Address" type="radio" value={x.id} key={x.id}
@@ -129,7 +129,7 @@ export const AddressForm = (props) => {
                             onChange={(e) => setLine1(e.target.value)}
                         />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <TextField size="small"
                             id="line2"
                             name="line2"
@@ -141,7 +141,7 @@ export const AddressForm = (props) => {
                             onChange={(e) => setLine2(e.target.value)}
                         />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <PhoneInput
                             type='text'
                             country={'om'}
@@ -215,6 +215,6 @@ export const AddressForm = (props) => {
                 )}
 
             </Grid>
-        </React.Fragment>
+        </>
     )
 }

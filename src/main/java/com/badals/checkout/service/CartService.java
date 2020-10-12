@@ -183,4 +183,22 @@ public class CartService {
         cartRepository.save(cart);
         return order;
     }
+    @Transactional
+    public CartDTO findBySecureKeyWithLock(String secureKey) throws InvalidCartException, LockedCartException {
+        log.info("Request to get Cart : {}", secureKey);
+       // log.info("Entity {}", cartRepository.findBySecureKey(secureKey));
+
+        Cart cart = cartRepository.findBySecureKey(secureKey).orElseThrow(() -> new InvalidCartException("Cart Not Found"));
+        if(cart.getLock())
+            throw new LockedCartException("Already locked");
+        cart.setLock(true);
+        cart = cartRepository.saveAndFlush(cart);
+        return cartMapper.toDto(cart);
+    }
+    @Transactional
+    public void unlock(String secureKey) {
+        Cart cart = cartRepository.findBySecureKey(secureKey).get();
+        cart.setLock(false);
+        cartRepository.saveAndFlush(cart);
+    }
 }

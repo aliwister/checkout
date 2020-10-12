@@ -40,6 +40,8 @@ public class Cart implements Serializable {
     private String phone;
     private String email;
 
+    @Column(name="_lock")
+    private Boolean lock;
 
     @Column(name="secure_key")
     private String secureKey;

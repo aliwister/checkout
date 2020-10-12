@@ -39,6 +39,9 @@ import Hidden from "@material-ui/core/Hidden";
 import Button from "@material-ui/core/Button";
 import Drawer from "@material-ui/core/Drawer";
 import IconButton from "@material-ui/core/IconButton";
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Backdrop from "@material-ui/core/Backdrop";
 
 
 const steps = ['Shipping address', 'Payment details', 'Review your order'];
@@ -74,11 +77,11 @@ function getStepContent(step, dataAsState, dispatch, setCarrier) {
     }
 }
 
-
 const App = (props) => {
     const initialState = {
         step: 0
     }
+
     const steps = ['Customer Information', 'Select Carrier', 'Select Payment']
     const secureKey = window.secureKey;
     const guid = window.guid;
@@ -127,17 +130,19 @@ const App = (props) => {
     }
 
     if (loading) {
-        return <Loader/>;
+        return         <Backdrop open={loading} >
+          <CircularProgress color="inherit" />
+        </Backdrop>;
     }
     else {
         //console.log(data);
     }
     return (
-        <React.Fragment>
+        <>
 
             <CssBaseline />
 
-                <Toolbar>
+{/*                <Toolbar>
 
                     <LogoWrapper> <LogoImage src={Logoimage}/> </LogoWrapper>
                     <div style={{width: '100%', float:'right'}}>
@@ -145,7 +150,7 @@ const App = (props) => {
                         <HttpsIconSharp />Secure Checkout
                     </Typography>
                     </div>
-                </Toolbar>
+                </Toolbar>*/}
 
 
             <HelpPageWrapper>
@@ -155,7 +160,7 @@ const App = (props) => {
                         <Stepper activeStep={state.step}>
                             {steps.map(label => (
                                 <Step key={label}>
-                                    <StepLabel>{label}</StepLabel>
+                                  <StepLabel><Hidden xsDown>{label}</Hidden></StepLabel>
                                 </Step>
                             ))}
                         </Stepper>
@@ -164,11 +169,11 @@ const App = (props) => {
                 <RootGrid container spacing={0}>
             <RightGrid item md={7} sm={12} >
                 <Grid item xs={12} md={12} >
-                    <a href="https://www.badals.com">
+{/*                    <a href="https://www.badals.com">
                         <ArrowBackSharpIcon/>
-                    </a>
+                    </a>*/}
                     <Hidden mdUp>
-                        <span style={{float: 'right'}}> <Button onClick={toggleDrawer(true)} variant="contained">Show cart</Button></span>
+                       <div style={{textAlign: 'center'}}> <ShoppingBasketIcon fontSize="large" onClick={toggleDrawer(true)} /></div>
                         <Drawer anchor="right" open={drawer} onClose={toggleDrawer(false)}>
 <div>
                             <span> <IconButton onClick={toggleDrawer(false)} ><CloseIcon /></IconButton></span>
@@ -204,7 +209,7 @@ const App = (props) => {
                 </ContainerGrid>
                 </HelpPageContainer>
             </HelpPageWrapper>
-        </React.Fragment>
+        </>
     );
 };
 export default withApollo(App);

@@ -78,7 +78,7 @@ export const PaymentStep = ({state, dispatch}) => {
     }
 
     const handleProcessPayment = async (token) => {
-        //console.log(once);
+        console.log('In handleProcessPayment');
         setOnce(true);
         if(once)
             return;
@@ -94,6 +94,7 @@ export const PaymentStep = ({state, dispatch}) => {
             window.location.reload();
         }
 
+
          //   dispatch({type: 'PROCESS_DONE'});
         //sendTokenToServer(formData.email);
         return false;
@@ -108,8 +109,8 @@ export const PaymentStep = ({state, dispatch}) => {
             </Backdrop>
             <Typography variant="h6">Payment Step</Typography>
             <InfoDiv>
-                <Alert severity="success">We are now back live with secure Debit Card processing!</Alert>
-                <Alert severity="success">الآن يمكنكم استخدام بطاقات الدفع المباشر بشكل آمن!</Alert>
+{/*                <Alert severity="success">We are now back live with secure Debit Card processing!</Alert>
+                <Alert severity="success">الآن يمكنكم استخدام بطاقات الدفع المباشر بشكل آمن!</Alert>*/}
                 {data.paymentMethods.map(x => (
                     <Grid item sm={12} key={x.ref}>
 

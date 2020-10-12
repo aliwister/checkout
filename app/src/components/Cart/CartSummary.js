@@ -18,22 +18,14 @@ import {
     ItemPrice,
     ItemWeight,
     TotalPrice,
-    PromoCode,
-    DeleteButton,
-    CheckoutButtonWrapper,
-    CheckoutButton,
-    Title,
-    PriceBox,
     NoProductMsg,
     ItemWrapper,
-    CouponBoxWrapper,
-    CouponCode,
-    ErrorMsg,
 } from './CartItemCard.style';
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActionArea from "@material-ui/core/CardActionArea";
+import Hidden from "@material-ui/core/Hidden";
 
 const CURRENCY = 'OMR'
 const calculateItemPrice = (product) => {
@@ -126,10 +118,10 @@ export const CartSummary = ({products, carrier}) => {
     const totalPrice = calculateTotalPrice(products,carrier);
 
     return (
-        <Card>
+        <Card >
 
             <List disablePadding>
-            <CardContent>
+            <CardContent style={{minHeight:'95vh'}}>
 
                 <Typography variant="h6" gutterBottom>
                   Order Summary
@@ -159,6 +151,24 @@ Cart is empty
 
                 </CartListItem>
 </CardContent>
+                <Hidden mdUp>
+                <CardActionArea style={{backgroundColor:'#ececec', position: 'fixed', bottom: '0'}}>
+                    <CartListItem >
+                    <ItemWrapper>
+                        <ItemCards style={{backgroundColor:'#ececec'}}>
+                            <ItemDetails>
+                            Grand Total:
+                            </ItemDetails>
+                        <TotalPrice>
+                            {CURRENCY}
+                        { parseFloat(`${totalPrice}`).toFixed(1)}
+                        </TotalPrice>
+                        </ItemCards>
+                    </ItemWrapper>
+                    </CartListItem>
+                </CardActionArea>
+                </Hidden>
+                <Hidden smDown>
                 <CardActionArea style={{backgroundColor:'#ececec'}}>
                     <CartListItem >
                     <ItemWrapper>
@@ -174,6 +184,7 @@ Cart is empty
                     </ItemWrapper>
                     </CartListItem>
                 </CardActionArea>
+                </Hidden>
             </List>
         </Card>
     )
