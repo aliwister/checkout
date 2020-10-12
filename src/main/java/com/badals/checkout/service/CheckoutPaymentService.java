@@ -53,45 +53,46 @@ public class CheckoutPaymentService {
     //   this.api = checkoutApi;
   // }
 
-   public PaymentResponsePayload processPayment(String cardToken, String secureKey) {
+   public synchronized PaymentResponsePayload processPayment(String cardToken, String secureKey) throws InvalidCartException {
       //String cardToken = "card_tok_CB9C10E3-24CC-4A82-B50A-4DEFDCB15580";
-
-      CartDTO cart = cartService.findBySecureKey(secureKey);
-      log.info("=========================================================================: "+cardToken);
-      log.info("==========================NEW CC PAYMENT ================================: "+cardToken);
-      log.info("==========================Token sent: "+cardToken);
-      CardTokenChargeChild cardTokenChargePayload = new CardTokenChargeChild();
-      cardTokenChargePayload.autoCapTime=1;
-      cardTokenChargePayload.autoCapture="Y";
-      //cardTokenChargePayload.chargeMode=1;
-      cardTokenChargePayload.email = cart.getEmail();
-      cardTokenChargePayload.description = "charge description";
-      cardTokenChargePayload.value=cartService.calculateValue(cart);
-
-      cardTokenChargePayload.currency="OMR";
-      cardTokenChargePayload.trackId= cart.getId().toString();
-      cardTokenChargePayload.transactionIndicator = "1";
-      //cardTokenChargePayload.customerIp= "96.125.185.51";
-      cardTokenChargePayload.cardToken = cardToken;
-      cardTokenChargePayload.successUrl = baseUrl + "checkout/checkout-com-confirmation";;
-      cardTokenChargePayload.failUrl = baseUrl + "checkout/checkout-com-failure";;
-
-
-      cardTokenChargePayload.metadata = new HashMap<String,String>();
-      cardTokenChargePayload.metadata.put("key1", "value1");
-
-      cardTokenChargePayload.udf1="ali";
-      cardTokenChargePayload.udf2="is";
-      cardTokenChargePayload.udf3="here";
-      cardTokenChargePayload.udf4="udf 4 value";
-      cardTokenChargePayload.udf5="udf 5 value";
-
-      cardTokenChargePayload.products = new ArrayList<Product>();
-      for (LineItem item: cart.getItems())
-         cardTokenChargePayload.products.add(new CheckoutProduct(item.getName(), "", item.getSku(), item.getPrice().doubleValue(), item.getQuantity().intValue()));
-
-
       try {
+         CartDTO cart = cartService.findBySecureKeyWithLock(secureKey);
+
+         log.info("=========================================================================: "+cardToken);
+         log.info("==========================NEW CC PAYMENT ================================: "+cardToken);
+         log.info("==========================Token sent: "+cardToken);
+         CardTokenChargeChild cardTokenChargePayload = new CardTokenChargeChild();
+         cardTokenChargePayload.autoCapTime=1;
+         cardTokenChargePayload.autoCapture="Y";
+         //cardTokenChargePayload.chargeMode=1;
+         cardTokenChargePayload.email = cart.getEmail();
+         cardTokenChargePayload.description = "charge description";
+         cardTokenChargePayload.value=cartService.calculateValue(cart);
+
+         cardTokenChargePayload.currency="OMR";
+         cardTokenChargePayload.trackId= cart.getId().toString();
+         cardTokenChargePayload.transactionIndicator = "1";
+         //cardTokenChargePayload.customerIp= "96.125.185.51";
+         cardTokenChargePayload.cardToken = cardToken;
+         cardTokenChargePayload.successUrl = baseUrl + "checkout/checkout-com-confirmation";;
+         cardTokenChargePayload.failUrl = baseUrl + "checkout/checkout-com-failure";;
+
+
+         cardTokenChargePayload.metadata = new HashMap<String,String>();
+         cardTokenChargePayload.metadata.put("key1", "value1");
+
+         cardTokenChargePayload.udf1="ali";
+         cardTokenChargePayload.udf2="is";
+         cardTokenChargePayload.udf3="here";
+         cardTokenChargePayload.udf4="udf 4 value";
+         cardTokenChargePayload.udf5="udf 5 value";
+
+         cardTokenChargePayload.products = new ArrayList<Product>();
+         for (LineItem item: cart.getItems())
+            cardTokenChargePayload.products.add(new CheckoutProduct(item.getName(), "", item.getSku(), item.getPrice().doubleValue(), item.getQuantity().intValue()));
+
+
+
          // Create APIClient instance with your secret key
          APIClient ckoAPIClient= new APIClient(_sk, Environment.LIVE);
          // Submit your request and receive an apiResponse
@@ -131,8 +132,12 @@ public class CheckoutPaymentService {
             log.info("DECLINING----------------------------------------------");
             return paymentDeclined("Payment declined " + ((apiResponse.model!= null)?apiResponse.model.responseCode + " " + apiResponse.model.responseMessage:"no code"));
          }
+      } catch (LockedCartException e) {
+         return paymentIgnored("Exception Occurred for " + cardToken);
       } catch (Exception e) {
          e.printStackTrace();
+      } finally {
+         cartService.unlock(secureKey);
       }
 
       return paymentDeclined("Exception Occurred for " + cardToken);
@@ -186,6 +191,11 @@ public class CheckoutPaymentService {
    private PaymentResponsePayload paymentDeclined(String message) {
       log.warn("DECLINE MESSAGE: " + message);
       return new PaymentResponsePayload(message, null, PaymentStatus.DECLINED);
+   }
+
+   private PaymentResponsePayload paymentIgnored(String message) {
+      log.warn("IGNORED MESSAGE: " + message);
+      return new PaymentResponsePayload(message, null, PaymentStatus.IGNORED);
    }
 
    private PaymentResponsePayload redirect(String href) {

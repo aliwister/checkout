@@ -5,6 +5,7 @@ enum PaymentStatus {
     SUCCESS
     DECLINED
     REDIRECT
+    IGNORED
 }
 type PaymentResponsePayload {
     message: String
