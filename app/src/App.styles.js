@@ -47,8 +47,9 @@ export const Wrapper = styled.section`
 `;
 
 export const NavButton = styled(Button)`
-  marginTop: ${ props  =>  props.theme.spacing(3)}px;
-  marginLeft: ${ props  =>  props.theme.spacing(1)}px;
+  margin-top: ${ props  =>  props.theme.spacing(3)}px;
+  margin-bottom: ${ props  =>  props.theme.spacing(3)}px;
+  padding-left: ${ props  =>  props.theme.spacing(1)}px;
   float: right;
 `;
 
@@ -97,9 +98,6 @@ export const HelpPageWrapper = styled.div`
   flex-direction: column;
   justify-content: space-between;
 
-  @media (max-width: 989px) {
-    padding-top: 70px;
-  }
 `;
 
 export const HelpPageContainer = styled.div`
@@ -114,7 +112,7 @@ export const HelpPageContainer = styled.div`
     margin-right: auto;
   }
 
-  @media (max-width: 989px) {
+  @media (min-width: 400px) {
     padding: 30px;
   }
 `;

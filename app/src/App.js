@@ -142,15 +142,17 @@ const App = (props) => {
 
             <CssBaseline />
 
-{/*                <Toolbar>
+                <Toolbar>
 
                     <LogoWrapper> <LogoImage src={Logoimage}/> </LogoWrapper>
+                  <Hidden smDown>
                     <div style={{width: '100%', float:'right'}}>
                     <Typography variant="h6" color="inherit" noWrap style={{float:'right'}}>
                         <HttpsIconSharp />Secure Checkout
                     </Typography>
                     </div>
-                </Toolbar>*/}
+                  </Hidden>
+                </Toolbar>
 
 
             <HelpPageWrapper>
