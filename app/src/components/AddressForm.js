@@ -78,7 +78,7 @@ export const AddressForm = (props) => {
                 {edit == -1 &&
                 (
                     <Grid container spacing={3}>
-                        <Grid item xs={12} sm={12}>
+                        <Grid item xs={11} sm={12}>
                             <TextField size="small"
                                        required
                                        id="alias"
@@ -90,7 +90,7 @@ export const AddressForm = (props) => {
                                        onChange={(e) => setAlias(e.target.value)}
                             />
                         </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={11} sm={6}>
                         <TextField size="small"
                             required
                             id="firstName"
@@ -103,7 +103,7 @@ export const AddressForm = (props) => {
                             onChange={(e) => setFirstName(e.target.value)}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={11} sm={6}>
                         <TextField size="small"
                             required
                             id="lastName"

@@ -7,13 +7,14 @@ import java.math.BigDecimal;
 
 @Data
 public class LineItem implements Serializable {
-    Integer productId;
+    Long productId;
     String sku;
     String unit;
     String image;
     String name;
     String ref;
     String url;
+    Long availability;
     BigDecimal price;
     BigDecimal cost;
     BigDecimal quantity;
