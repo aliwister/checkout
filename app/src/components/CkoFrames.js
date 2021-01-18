@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import './CkoFrames.css'
-import {OutlinedInput, Typography} from "@material-ui/core";
+import { OutlinedInput, Typography } from "@material-ui/core";
 
 import Loader from "./Loader";
 import HttpsIconSharp from '@material-ui/icons/Https';
 class CkoFrames extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       key: 'pk_932e59ef-2d33-448d-80cd-8668691640fe',
@@ -22,7 +22,7 @@ class CkoFrames extends Component {
   }
 
   // Initialise Frames and register the event handlers
-  componentDidMount () {
+  componentDidMount() {
     const context = this
     window.Frames.init(this.state.key)
     window.Frames.addEventHandler('cardValidationChanged', function (event) {
@@ -38,7 +38,7 @@ class CkoFrames extends Component {
   }
 
   // Handle tokenisation
-  cardTokenised (event) {
+  cardTokenised(event) {
     this.setState({
       token: event
     })
@@ -53,7 +53,7 @@ class CkoFrames extends Component {
   }
 
   // Handle card input validation changes
-  validationChanged () {
+  validationChanged() {
     // enable or disable the payment button based on the validity of the card input
     this.setState({
       payButton: !window.Frames.isCardValid()
@@ -61,7 +61,7 @@ class CkoFrames extends Component {
   }
 
   // Handle card type detection
-  paymentMethodChanged (event) {
+  paymentMethodChanged(event) {
     var pm = event.paymentMethod
     if (!pm) {
       this.setState({
@@ -76,14 +76,14 @@ class CkoFrames extends Component {
   }
 
   // Handle form submission
-  handleSubmit (event) {
+  handleSubmit(event) {
 
     //alert(this.state.submit);
-    this.setState({submit: true})
+    this.setState({ submit: true })
     event.preventDefault();
-    if(this.state.submit) return;
+    if (this.state.submit) return;
     //console.log(this.state);
-    this.setState({loading: true});
+    this.setState({ loading: true });
     let name = this.state['customerName'];
     //console.log(name);
     //return;
@@ -94,18 +94,18 @@ class CkoFrames extends Component {
     window.Frames.submitCard()
   }
 
-  render () {
+  render() {
     return (
       <div className='App'>
         <form id='payment-form' onSubmit={this.handleSubmit}>
           <label>Name on Card</label>
           <OutlinedInput
-              required
-              id="name"
-              name="name"
-              placeholder="Name on Card"
-              value={this.state.customerName}
-              onChange={event => this.setState({ customerName: event.target.value})}
+            required
+            id="name"
+            name="name"
+            placeholder="Name on Card"
+            value={this.state.customerName}
+            onChange={event => this.setState({ customerName: event.target.value })}
           />
           <label htmlFor='card-number'>Card number</label>
           <div className='input-container card-number'>
@@ -125,7 +125,7 @@ class CkoFrames extends Component {
                   alt='payment method'
                   src={require(`./card-icons/${
                     this.state.paymentMethodIcon
-                  }.svg`)}
+                    }.svg`)}
                 />
               </div>
             ) : null}
@@ -167,8 +167,8 @@ class CkoFrames extends Component {
             disabled={this.state.payButton || this.state.loading}
             onClick={this.submitFrames}
           >
-            {this.state.loading ? <Loader style={{marginLeft:50}}/> :
-                <span>PAY SECURELY</span>
+            {this.state.loading ? <Loader style={{ marginLeft: 50 }} /> :
+              <span>PAY SECURELY</span>
             }
           </button>
           <p><HttpsIconSharp /> SHA-2 256 bit Encryption SSL</p>

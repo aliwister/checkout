@@ -1,90 +1,90 @@
-import React, {useState} from 'react';
-import {Container, Grid, Paper, Typography, TextField } from '@material-ui/core';
+import React, { useState } from 'react';
+import { Container, Grid, Paper, Typography, TextField } from '@material-ui/core';
 import styled, { ThemeProvider } from 'styled-components';
 import { useForm, Controller } from "react-hook-form";
-import {useMutation, useQuery} from "@apollo/react-hooks";
-import {CARRIERS} from "../graph/CARRIERS";
-import {SET_CARRIER} from "../graph/SET_CARRIER";
-import {ButtonDiv, NavButton} from "../App.styles";
+import { useMutation, useQuery } from "@apollo/react-hooks";
+import { CARRIERS } from "../graph/CARRIERS";
+import { SET_CARRIER } from "../graph/SET_CARRIER";
+import { ButtonDiv, NavButton } from "../App.styles";
 import Loader from "./Loader";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 
 const InfoDiv = styled.div`
-  //padding: ${ props  =>  props.theme.spacing(8)}px;
-  margin-bottom: ${ props  =>  props.theme.spacing(4)}px;
+  //padding: ${ props => props.theme.spacing(8)}px;
+  margin-bottom: ${ props => props.theme.spacing(4)}px;
 `;
 
-export const CarrierStep = ({state, dispatch}) => {
-    const { register, handleSubmit } = useForm();
-    const { data, error, loading } = useQuery(CARRIERS, {
-        variables: {state: 'muscat', city:'mutrah', weight:2}
+export const CarrierStep = ({ state, dispatch }) => {
+  const { register, handleSubmit } = useForm();
+  const { data, error, loading } = useQuery(CARRIERS, {
+    variables: { state: 'muscat', city: 'mutrah', weight: 2 }
+  });
+  const [setCarrierMutation, { loading2, data2 }] = useMutation(SET_CARRIER);
+  const [carrier, setCarrier] = useState();
+
+  if (loading) {
+    return <div>loading...</div>;
+  }
+  else
+    console.log(data);
+
+  const onSubmit = async () => {
+    const {
+      data: { setCarrier },
+    } = await setCarrierMutation({
+      variables: { value: carrier, secureKey }
     });
-    const [setCarrierMutation,{loading2, data2}] = useMutation(SET_CARRIER);
-    const [carrier, setCarrier] = useState();
-
-    if (loading) {
-        return <div>loading...</div>;
+    console.log(setCarrier, 'cart_info');
+    if (setCarrier) {
+      dispatch({ type: 'SET_CARRIER', payload: data.carriers.filter(x => x.value === carrier)[0] });
     }
-    else
-        console.log(data);
+  }
+  return (
+    <React.Fragment>
+      <Typography variant="h6">Carrier Step</Typography>
+      <InfoDiv>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {data.carriers.map(x => (
+            <Grid item sm={12} key={x.value} spacing={3}>
+              <Card onClick={() => setCarrier(x.value)}>
+                <CardActions>
+                  <input name="Carrier" type="radio" value={x.value} key={x.value}
+                    ref={register({ required: true })}
+                    onChange={() => setCarrier(x.value)}
+                    checked={carrier === x.value}
+                  />
+                </CardActions>
+                <CardContent>
+                  <Typography variant="subtitle1" color="textSecondary" gutterBottom>
+                    {x.name}
+                  </Typography>
+                  <Typography variant="subtitle2" component="h2">
+                    OMR {x.cost}
+                  </Typography>
+                </CardContent>
 
-    const onSubmit = async () => {
-        const {
-            data: { setCarrier },
-        } = await setCarrierMutation({
-            variables: {value: carrier, secureKey}
-        });
-        console.log(setCarrier, 'cart_info');
-        if(setCarrier) {
-            dispatch({type: 'SET_CARRIER', payload: data.carriers.filter(x => x.value === carrier)[0]});
-        }
-    }
-    return (
-        <React.Fragment>
-            <Typography variant="h6">Carrier Step</Typography>
-            <InfoDiv>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    {data.carriers.map(x => (
-                        <Grid item sm={12} key={x.value} spacing={3}>
-                            <Card onClick={() => setCarrier(x.value)}>
-                                <CardActions>
-                                    <input name="Carrier" type="radio" value={x.value} key={x.value}
-                                           ref={register({ required: true })}
-                                           onChange={() => setCarrier(x.value)}
-                                           checked={carrier === x.value}
-                                    />
-                                </CardActions>
-                                <CardContent>
-                                    <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                                        {x.name}
-                                    </Typography>
-                                    <Typography variant="subtitle2" component="h2">
-                                        OMR {x.cost}
-                                    </Typography>
-                                </CardContent>
+              </Card>
+              <br />
+            </Grid>
+          ))}
 
-                            </Card>
-                            <br/>
-                        </Grid>
-                    ))}
+          <NavButton type="submit" variant="contained"
+            color="primary">
+            {(loading) ? <Loader /> : (
+              <span>Next</span>
+            )}
+          </NavButton>
+          <NavButton variant="contained"
+            color="secondary" onClick={() => dispatch({ type: 'PREV' })}>
+            {(loading) ? <Loader /> : (
+              <span>Back</span>
+            )}
+          </NavButton>
+        </form>
 
-                    <NavButton type="submit" variant="contained"
-                               color="primary">
-                        {(loading)?<Loader />:(
-                            <span>Next</span>
-                        )}
-                    </NavButton>
-                    <NavButton variant="contained"
-                               color="secondary" onClick={() =>  dispatch({type: 'PREV'})}>
-                        {(loading)?<Loader />:(
-                            <span>Back</span>
-                        )}
-                    </NavButton>
-                </form>
-
-            </InfoDiv>
-        </React.Fragment>
-    )
+      </InfoDiv>
+    </React.Fragment>
+  )
 }
