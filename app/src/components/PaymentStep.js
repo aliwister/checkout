@@ -1,12 +1,12 @@
-import React, {useReducer, useState} from 'react';
-import {Container, Grid, Paper, Typography, TextField, OutlinedInput} from '@material-ui/core';
+import React, { useReducer, useState } from 'react';
+import { Container, Grid, Paper, Typography, TextField, OutlinedInput } from '@material-ui/core';
 import styled, { ThemeProvider } from 'styled-components';
 import { useForm, Controller } from "react-hook-form";
 import CkoFrames from './CkoFrames';
-import {useMutation, useQuery} from "@apollo/react-hooks";
-import {PROCESS_PAYMENT} from "../graph/PROCESS_PAYMENT";
-import {PAYMENT_METHODS} from "../graph/PAYMENT_METHODS";
-import {ButtonDiv, NavButton} from "../App.styles";
+import { useMutation, useQuery } from "@apollo/react-hooks";
+import { PROCESS_PAYMENT } from "../graph/PROCESS_PAYMENT";
+import { PAYMENT_METHODS } from "../graph/PAYMENT_METHODS";
+import { ButtonDiv, NavButton } from "../App.styles";
 import Loader from "./Loader";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -16,142 +16,142 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Alert from "@material-ui/lab/Alert";
 const InfoDiv = styled.div`
-  //padding: ${ props  =>  props.theme.spacing(8)}px;
-  margin-bottom: ${ props  =>  props.theme.spacing(4)}px;
+  //padding: ${ props => props.theme.spacing(8)}px;
+  margin-bottom: ${ props => props.theme.spacing(4)}px;
 `;
 const initialState = {
-    token: false,
-    hideFrame: false
+  token: false,
+  hideFrame: false
 };
 
 const useStyles = makeStyles((theme) => ({
-    backdrop: {
-        zIndex: theme.zIndex.drawer + 1,
-        color: '#fff',
-    },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
 }));
 
 function reducer(state, action) {
-    switch (action.type) {
-        case 'PROCESS_BEGIN':;
-            console.log('PROCESS_BEGIN', action.payload);
-            return {token: action.payload};
-        case 'PROCESS_DONE':
-            console.log('done');
-            return {
-                token: false,
-                hideFrame: true
-            };
-        default:
-            throw new Error('Unknown step');
-    }
+  switch (action.type) {
+    case 'PROCESS_BEGIN': ;
+      console.log('PROCESS_BEGIN', action.payload);
+      return { token: action.payload };
+    case 'PROCESS_DONE':
+      console.log('done');
+      return {
+        token: false,
+        hideFrame: true
+      };
+    default:
+      throw new Error('Unknown step');
+  }
 
 }
 
-export const PaymentStep = ({state, dispatch}) => {
+export const PaymentStep = ({ state, dispatch }) => {
 
-    const classes = useStyles();
-    const { register, handleSubmit } = useForm();
-    //const [state, dispatch] = useReducer(reducer, initialState);
-    const { data, error, loading } = useQuery(PAYMENT_METHODS, {
-        variables: {currency: state.cart.currency}
+  const classes = useStyles();
+  const { register, handleSubmit } = useForm();
+  //const [state, dispatch] = useReducer(reducer, initialState);
+  const { data, error, loading } = useQuery(PAYMENT_METHODS, {
+    variables: { currency: state.cart.currency }
+  });
+  const [processPaymentMutation, { loading2, data2 }] = useMutation(PROCESS_PAYMENT);
+  const [paymentMethod, setPaymentMethod] = useState();
+  const [name, setName] = useState(state.cart.name);
+  const [open, setOpen] = React.useState(false);
+  const [once, setOnce] = React.useState(false);
+
+  const onSubmit = async () => {
+    console.log("In onsubmit");
+    console.log(data);
+    setOpen(true);
+    const {
+      data: { processPayment },
+    } = await processPaymentMutation({
+      variables: { token: null, ref: paymentMethod, secureKey }
     });
-    const [processPaymentMutation,{loading2, data2}] = useMutation(PROCESS_PAYMENT);
-    const [paymentMethod, setPaymentMethod] = useState();
-    const [name, setName] = useState(state.cart.name);
-    const [open, setOpen] = React.useState(false);
-    const [once, setOnce] = React.useState(false);
+    if (processPayment.redirect)
+      window.location = processPayment.redirect;
+    else
+      alert("Payment unsuccessful");
+  }
 
-    const onSubmit = async () => {
-        console.log("In onsubmit");
-        console.log(data);
-        setOpen(true);
-        const {
-            data: { processPayment },
-        } = await processPaymentMutation({
-            variables: {token: null, ref:paymentMethod, secureKey}
-        });
-        if(processPayment.redirect)
-            window.location = processPayment.redirect;
-        else
-            alert("Payment unsuccessful");
+  const handleProcessPayment = async (token) => {
+    console.log('In handleProcessPayment');
+    setOnce(true);
+    if (once)
+      return;
+    const {
+      data: { processPayment },
+    } = await processPaymentMutation({
+      variables: { token, ref: paymentMethod, secureKey }
+    });
+    if (processPayment.status == 'REDIRECT')
+      window.location = processPayment.redirect;
+    else if (processPayment.status == 'DECLINED') {
+      alert(processPayment.message);
+      window.location.reload();
     }
 
-    const handleProcessPayment = async (token) => {
-        console.log('In handleProcessPayment');
-        setOnce(true);
-        if(once)
-            return;
-        const {
-            data: { processPayment },
-        } = await processPaymentMutation({
-            variables: {token, ref:paymentMethod, secureKey}
-        });
-        if(processPayment.status == 'REDIRECT')
-            window.location = processPayment.redirect;
-        else if(processPayment.status == 'DECLINED') {
-            alert(processPayment.message);
-            window.location.reload();
-        }
 
+    //   dispatch({type: 'PROCESS_DONE'});
+    //sendTokenToServer(formData.email);
+    return false;
+  }
+  if (loading)
+    return "loading";
 
-         //   dispatch({type: 'PROCESS_DONE'});
-        //sendTokenToServer(formData.email);
-        return false;
-    }
-    if(loading)
-        return "loading";
-
-    return (
-        <React.Fragment>
-            <Backdrop className={classes.backdrop} open={open} >
-                <CircularProgress color="inherit" />
-            </Backdrop>
-            <Typography variant="h6">Payment Step</Typography>
-            <InfoDiv>
-{/*                <Alert severity="success">We are now back live with secure Debit Card processing!</Alert>
+  return (
+    <React.Fragment>
+      <Backdrop className={classes.backdrop} open={open} >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Typography variant="h6">Payment Step</Typography>
+      <InfoDiv>
+        {/*                <Alert severity="success">We are now back live with secure Debit Card processing!</Alert>
                 <Alert severity="success">الآن يمكنكم استخدام بطاقات الدفع المباشر بشكل آمن!</Alert>*/}
-                {data.paymentMethods.map(x => (
-                    <Grid item sm={12} key={x.ref}>
+        {data.paymentMethods.map(x => (
+          <Grid item sm={12} key={x.ref}>
 
-                        <Card onClick={() => setPaymentMethod(x.ref)}>
-                            <CardContent>
-                                <CardActions>
-                                    <input name="pm" type="radio" value={x.ref} key={x.ref}
-                                           ref={register({ required: true })}
-                                           onChange={() => setPaymentMethod(x.ref)}
-                                           checked={paymentMethod === x.ref}
-                                    />
-                                </CardActions>
-                                {x.image && (<img src={require('../assets/'+x.image)}/>)}
-                                {!x.image &&(<span>{x.name} </span>)}
-                                {(x.ref == 'checkoutcom' && paymentMethod === x.ref) && (
+            <Card onClick={() => setPaymentMethod(x.ref)}>
+              <CardContent>
+                <CardActions>
+                  <input name="pm" type="radio" value={x.ref} key={x.ref}
+                    ref={register({ required: true })}
+                    onChange={() => setPaymentMethod(x.ref)}
+                    checked={paymentMethod === x.ref}
+                  />
+                </CardActions>
+                {x.image && (<img src={require('../assets/' + x.image)} />)}
+                {!x.image && (<span>{x.name} </span>)}
+                {(x.ref == 'checkoutcom' && paymentMethod === x.ref) && (
 
-                                    <CkoFrames handleProcessPayment={handleProcessPayment} customerName={name}/>
+                  <CkoFrames handleProcessPayment={handleProcessPayment} customerName={name} />
 
-                                )}
-                            </CardContent>
-                        </Card>
-<br/>
+                )}
+              </CardContent>
+            </Card>
+            <br />
 
 
-                    </Grid>
-                ))}
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    {(paymentMethod != 'checkoutcom') && (<><NavButton type="submit" variant="contained"
-                           color="primary">
-                    Complete Order
+          </Grid>
+        ))}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {(paymentMethod != 'checkoutcom') && (<><NavButton type="submit" variant="contained"
+            color="primary">
+            Complete Order
                 </NavButton>
-                        <NavButton variant="contained"
-                        color="secondary" onClick={() =>  dispatch({type: 'PREV'})}>
-                    {(loading)?<Loader />:(
-                        <span>Back</span>
-                        )}
-                        </NavButton>
-                    </>
-                    )}
-                </form>
-            </InfoDiv>
-        </React.Fragment>
-    )
+            <NavButton variant="contained"
+              color="secondary" onClick={() => dispatch({ type: 'PREV' })}>
+              {(loading) ? <Loader /> : (
+                <span>Back</span>
+              )}
+            </NavButton>
+          </>
+          )}
+        </form>
+      </InfoDiv>
+    </React.Fragment>
+  )
 }

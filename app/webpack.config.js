@@ -102,7 +102,7 @@ module.exports = env => {
       proxy: {
         "/graphql":
             {
-              target: 'http://localhost:8081/graphql',
+              target: 'https://checkout.badals.com/graphql',
               secure: false,
               prependPath: false
             }
