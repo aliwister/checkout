@@ -18,7 +18,6 @@ export const Title = styled.h1`
 `;
 
 export const RootGrid = styled(Grid)`
-  height: 100vh;
   width: 100%;
   padding:  ${ props  =>  props.theme.spacing(0)}px;
 `;
@@ -57,14 +56,21 @@ export const Wrapper = styled.section`
 export const NavButton = styled(Button)`
   margin-top: ${ props  =>  props.theme.spacing(3)}px;
   margin-bottom: ${ props  =>  props.theme.spacing(3)}px;
-  padding-left: ${ props  =>  props.theme.spacing(1)}px;
+  padding: 24px 20px;
   float: right;
+  background-color: #373737;
+  color: white;
+  font-weight: 500;
+  font-size: 13px;
+  :hover {
+    color: white;
+    background-color: #404040;
+  }
 `;
 
 export const ButtonDiv = styled.div`
   display: 'flex';
   justifyContent: 'flex-end';
-  
 `;
 
 export const Address = styled.span`

@@ -37,7 +37,7 @@ const InfoDiv = styled.div`
 
 const RadioDiv = styled.div`
    width : 100%;
-   border: 1px solid #000;
+   border: 1px solid #e6e6e6;
    padding: 5px;
    padding-left: 15px;
 `;
@@ -45,6 +45,17 @@ const RadioDiv = styled.div`
 const HeadingInformation = styled(Heading)`
     margin-bottom: 15px;
     margin-top: 40px;
+`;
+
+const CheckControl = styled(Control)`
+  margin-top: 15px;
+  label {
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: 300;
+  }
 `;
 
 const RadioWapper = styled(Radio)`
@@ -63,6 +74,7 @@ const schema = object().shape({
   lastName: string().required("Last name is required and should be between 2 and 15 characters"),
   line1: string().required("Address is required and should be between 2 and 15 characters"),
   mobile: string().matches(/(968[7,9]{1}[0-9]{7})/, "A valid mobile number is required"),
+
   //password: string().matches(/(?=.*[\w])(?=.*[\W])[\w\W]{6,}/),
   //password: string().matches(/([\w\W]{6,})/, intl.formatMessage(messages.password)),
 });
@@ -141,11 +153,11 @@ export const InfoStep = (props) => {
           <InfoForm register={register} email={state.cart.email} />
         </InfoDiv>
         <Field>
-          <Control>
+          <CheckControl>
             <Checkbox name="save">
               &nbsp;&nbsp;&nbsp;Keep me up to date on news and exclusive offers
             </Checkbox>
-          </Control>
+          </CheckControl>
         </Field>
         <HeadingInformation subtitle size={6} >Delivery method</HeadingInformation>
         <RadioDiv style={{ borderBottom: "none", borderRadius: "5px 5px 0 0" }}>
@@ -164,16 +176,17 @@ export const InfoStep = (props) => {
             Pick up
             </RadioWapper>
         </RadioDiv>
-        <HeadingInformation size={6}>
+        <HeadingInformation subtitle size={6}>
           Shipping address
         </HeadingInformation>
         <AddressForm addresses={state.cart.addresses} address={state.cart.deliveryAddress} register={register} />
+        
         <ButtonDiv>
           {(!state.cart.items || !state.cart.items.length) ?
             <NavButton type="submit" variant="contained" disabled color="primary">Next</NavButton> :
 
             <NavButton type="submit" variant="contained"
-              color="primary">
+              >
               {(loading) ? <Loader /> : (
                 <span>Contiune to shipping</span>
               )}
