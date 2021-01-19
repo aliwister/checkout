@@ -139,21 +139,18 @@ const App = (props) => {
   }
   return (
     <>
-
       <CssBaseline />
-
       <Toolbar>
-
         <LogoWrapper> <LogoImage src={Logoimage} /> </LogoWrapper>
         <Hidden smDown>
           <div style={{ width: '100%', float: 'right' }}>
             <Typography variant="h6" color="inherit" noWrap style={{ float: 'right' }}>
-              <HttpsIconSharp />Secure Checkout
-                    </Typography>
+              <HttpsIconSharp />
+              Secure Checkout
+            </Typography>
           </div>
         </Hidden>
       </Toolbar>
-
 
       <HelpPageWrapper>
         <HelpPageContainer>
@@ -178,7 +175,7 @@ const App = (props) => {
                     <div style={{ textAlign: 'center' }}> <ShoppingBasketIcon fontSize="large" onClick={toggleDrawer(true)} /></div>
                     <Drawer anchor="right" open={drawer} onClose={toggleDrawer(false)}>
                       <div>
-                        <span> <IconButton onClick={toggleDrawer(false)} ><CloseIcon /></IconButton></span>
+                        <span> <IconButton onClick={toggleDrawer(false)} ><CloseIcon /></IconButton></span>s
                         <CartSummary products={data.cart.items} carrier={state.carrier} />
                       </div>
                     </Drawer>

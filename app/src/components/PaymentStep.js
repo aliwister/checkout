@@ -8,13 +8,15 @@ import { PROCESS_PAYMENT } from "../graph/PROCESS_PAYMENT";
 import { PAYMENT_METHODS } from "../graph/PAYMENT_METHODS";
 import { ButtonDiv, NavButton } from "../App.styles";
 import Loader from "./Loader";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Alert from "@material-ui/lab/Alert";
+
+import { Card } from 'react-bulma-components';
+import 'react-bulma-components/dist/react-bulma-components.min.css';
+
 const InfoDiv = styled.div`
   //padding: ${ props => props.theme.spacing(8)}px;
   margin-bottom: ${ props => props.theme.spacing(4)}px;
@@ -115,7 +117,7 @@ export const PaymentStep = ({ state, dispatch }) => {
           <Grid item sm={12} key={x.ref}>
 
             <Card onClick={() => setPaymentMethod(x.ref)}>
-              <CardContent>
+              <Card.Content>
                 <CardActions>
                   <input name="pm" type="radio" value={x.ref} key={x.ref}
                     ref={register({ required: true })}
@@ -130,7 +132,7 @@ export const PaymentStep = ({ state, dispatch }) => {
                   <CkoFrames handleProcessPayment={handleProcessPayment} customerName={name} />
 
                 )}
-              </CardContent>
+              </Card.Content>
             </Card>
             <br />
 

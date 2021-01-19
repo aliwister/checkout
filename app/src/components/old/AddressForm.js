@@ -1,9 +1,11 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+
+import { Form } from 'react-bulma-components';
+const { Checkbox, Input } = Form;
+import 'react-bulma-components/dist/react-bulma-components.min.css';
 
 export default function AddressForm() {
 
@@ -14,7 +16,7 @@ export default function AddressForm() {
             </Typography>
             <Grid container spacing={3}>
                 <Grid item xs={12} sm={6}>
-                    <TextField
+                    <Input
                         required
                         id="firstName"
                         name="firstName"
@@ -24,7 +26,7 @@ export default function AddressForm() {
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TextField
+                    <Input
                         required
                         id="lastName"
                         name="lastName"
@@ -34,7 +36,7 @@ export default function AddressForm() {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField
+                    <Input
                         required
                         id="address1"
                         name="address1"
@@ -44,7 +46,7 @@ export default function AddressForm() {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField
+                    <Input
                         id="address2"
                         name="address2"
                         label="Address line 2"
@@ -53,7 +55,7 @@ export default function AddressForm() {
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TextField
+                    <Input
                         required
                         id="city"
                         name="city"
@@ -63,10 +65,10 @@ export default function AddressForm() {
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TextField id="state" name="state" label="State/Province/Region" fullWidth />
+                    <Input id="state" name="state" label="State/Province/Region" fullWidth />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TextField
+                    <Input
                         required
                         id="zip"
                         name="zip"
@@ -76,7 +78,7 @@ export default function AddressForm() {
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TextField
+                    <Input
                         required
                         id="country"
                         name="country"

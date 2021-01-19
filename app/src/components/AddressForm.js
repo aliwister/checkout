@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import { Container, Grid, Paper, Typography, Input, TextField } from '@material-ui/core';
+import { Container, Grid, Paper, Typography } from '@material-ui/core';
 import styled, { ThemeProvider } from 'styled-components';
 import { useForm, Controller } from "react-hook-form";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { Form } from 'react-bulma-components';
-const { Checkbox, Label } = Form;
-
 import startsWith from 'lodash.startswith';
 import {
   RootGrid,
@@ -19,6 +16,9 @@ import {
   NavButton,
   ButtonDiv, Address
 } from '../App.styles'
+
+import { Form } from 'react-bulma-components';
+const { Checkbox, Label, Input } = Form;
 import { Card } from 'react-bulma-components';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 
@@ -59,7 +59,7 @@ export const AddressForm = (props) => {
   return (
     <>
       <Grid container spacing={3}>
-        {addresses && addresses.map(x => (
+        {/* {addresses && addresses.map(x => (
 
           <Grid item xs={12} sm={6} key={x.id}>
             <Card onClick={() => setEdit(x.id)}>
@@ -76,7 +76,7 @@ export const AddressForm = (props) => {
             </Card>
           </Grid>
         ))
-        }
+        } */}
         <Grid item xs={12} sm={12}>
           <input name="Address" type="radio" value="-1" ref={register({ required: true })} onChange={() => setEdit(-1)} checked={edit === -1} />
           Add a new address:
@@ -84,20 +84,8 @@ export const AddressForm = (props) => {
         {edit == -1 &&
           (
             <Grid container spacing={3}>
-              <Grid item xs={11} sm={12}>
-                <TextField size="small"
-                  required
-                  id="alias"
-                  name="alias"
-                  placeholder="Address Name, e.g. Home or Work"
-                  fullWidth
-                  inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
-                  value={alias}
-                  onChange={(e) => setAlias(e.target.value)}
-                />
-              </Grid>
               <Grid item xs={11} sm={6}>
-                <TextField size="small"
+                <Input size="small"
                   required
                   id="firstName"
                   name="firstName"
@@ -110,7 +98,7 @@ export const AddressForm = (props) => {
                 />
               </Grid>
               <Grid item xs={11} sm={6}>
-                <TextField size="small"
+                <Input size="small"
                   required
                   id="lastName"
                   name="lastName"
@@ -122,8 +110,20 @@ export const AddressForm = (props) => {
                   onChange={(e) => setLastName(e.target.value)}
                 />
               </Grid>
+              <Grid item xs={11} sm={12}>
+                <Input size="small"
+                  required
+                  id="alias"
+                  name="alias"
+                  placeholder="Address Name, e.g. Home or Work"
+                  fullWidth
+                  inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
+                  value={alias}
+                  onChange={(e) => setAlias(e.target.value)}
+                />
+              </Grid>
               <Grid item xs={12}>
-                <TextField size="small"
+                <Input size="small"
                   required
                   id="line1"
                   name="line1"
@@ -135,8 +135,8 @@ export const AddressForm = (props) => {
                   onChange={(e) => setLine1(e.target.value)}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField size="small"
+              <Grid item xs={12}>
+                <Input size="small"
                   id="line2"
                   name="line2"
                   placeholder="Address line 2"
@@ -147,7 +147,49 @@ export const AddressForm = (props) => {
                   onChange={(e) => setLine2(e.target.value)}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              {/* <Grid item xs={12}>
+                <Input size="small" id="state" name="state" placeholder="State/Province/Region" fullWidth
+                  inputRef={register} />
+              </Grid> */}
+              <Grid item xs={12}>
+                <Input size="small"
+                  required
+                  id="postalCode"
+                  name="postalCode"
+                  placeholder="Zip / Postal code"
+                  fullWidth
+                  autoComplete="billing postal-code"
+                  inputRef={register}
+                  onChange={(e) => setPostalcode(e.target.value)}
+                  value={postalCode}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Input size="small"
+                  required
+                  id="city"
+                  name="city"
+                  placeholder="City"
+                  fullWidth
+                  autoComplete="billing address-level2"
+                  inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Input size="small"
+                  required
+                  id="country"
+                  name="country"
+                  placeholder="Country"
+                  fullWidth
+                  autoComplete="billing country"
+                  inputRef={register}
+                  value={country}
+                />
+              </Grid>
+              <Grid item xs={12}>
                 <PhoneInput
                   type='text'
                   country={'om'}
@@ -167,49 +209,6 @@ export const AddressForm = (props) => {
                 />
                 <input type="hidden" name="mobile" value={mobile} ref={register} />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField size="small"
-                  required
-                  id="city"
-                  name="city"
-                  placeholder="City"
-                  fullWidth
-                  autoComplete="billing address-level2"
-                  inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField size="small" id="state" name="state" placeholder="State/Province/Region" fullWidth
-                  inputRef={register} />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField size="small"
-                  required
-                  id="postalCode"
-                  name="postalCode"
-                  placeholder="Zip / Postal code"
-                  fullWidth
-                  autoComplete="billing postal-code"
-                  inputRef={register}
-                  onChange={(e) => setPostalcode(e.target.value)}
-                  value={postalCode}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField size="small"
-                  required
-                  id="country"
-                  name="country"
-                  placeholder="Country"
-                  fullWidth
-                  autoComplete="billing country"
-                  inputRef={register}
-                  value={country}
-
-                />
-              </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox color="secondary" name="save" />}
@@ -218,7 +217,6 @@ export const AddressForm = (props) => {
               </Grid>
             </Grid>
           )}
-
       </Grid>
     </>
   )

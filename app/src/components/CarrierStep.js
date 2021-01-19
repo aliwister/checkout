@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Grid, Paper, Typography, TextField } from '@material-ui/core';
+import { Container, Grid, Paper, Typography } from '@material-ui/core';
 import styled, { ThemeProvider } from 'styled-components';
 import { useForm, Controller } from "react-hook-form";
 import { useMutation, useQuery } from "@apollo/react-hooks";
@@ -7,9 +7,13 @@ import { CARRIERS } from "../graph/CARRIERS";
 import { SET_CARRIER } from "../graph/SET_CARRIER";
 import { ButtonDiv, NavButton } from "../App.styles";
 import Loader from "./Loader";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
+
+import { Card } from 'react-bulma-components';
+import 'react-bulma-components/dist/react-bulma-components.min.css';
+import { Form } from 'react-bulma-components';
+const { Checkbox, Input } = Form;
+
 
 const InfoDiv = styled.div`
   //padding: ${ props => props.theme.spacing(8)}px;
@@ -56,14 +60,14 @@ export const CarrierStep = ({ state, dispatch }) => {
                     checked={carrier === x.value}
                   />
                 </CardActions>
-                <CardContent>
+                <Card.Content>
                   <Typography variant="subtitle1" color="textSecondary" gutterBottom>
                     {x.name}
                   </Typography>
                   <Typography variant="subtitle2" component="h2">
                     OMR {x.cost}
                   </Typography>
-                </CardContent>
+                </Card.Content>
 
               </Card>
               <br />
