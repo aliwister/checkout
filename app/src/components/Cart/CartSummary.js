@@ -24,7 +24,7 @@ import {
 import CardActionArea from "@material-ui/core/CardActionArea";
 import Hidden from "@material-ui/core/Hidden";
 
-import { Card } from 'react-bulma-components';
+import { Card, Heading } from 'react-bulma-components';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 
 
@@ -108,7 +108,7 @@ const CartItem = ({ product, update }) => {
 
 
 const CartListItem = styled(ListItem)`
-  padding: ${ props => props.theme.spacing(0, 0)}px;
+  padding: ${props => props.theme.spacing(0, 0)}px;
 `;
 
 const TotalText = styled(Typography)`
@@ -124,9 +124,9 @@ export const CartSummary = ({ products, carrier }) => {
       <List disablePadding>
         <Card.Content style={{ minHeight: '95vh' }}>
 
-          <Typography variant="h6" gutterBottom>
+          <Heading subtitle size={6}>
             Order Summary
-                </Typography>
+          </Heading>
 
           <CartListItem >
             <ItemWrapper>

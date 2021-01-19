@@ -6,7 +6,7 @@ import { Form, Columns, Container } from 'react-bulma-components';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import styled from 'styled-components';
 
-const { Checkbox, Field, Input, Control, Select } = Form;
+const { Checkbox, Field, Input, Control, Select, Label } = Form;
 
 const SelectBox = styled(Select)`
   width: 100%;
@@ -14,6 +14,8 @@ const SelectBox = styled(Select)`
   select {
     width: 100%;
     height: 2.9em;
+    font-size: 15px;
+    padding-top: 15px;
   }
 `;
 
@@ -25,6 +27,24 @@ const CheckControl = styled(Control)`
     align-items: center;
     font-weight: 300;
   }
+`;
+
+const InsideInputLabel = styled(Label)`
+  position: absolute;
+  z-index: 10;
+  font-size: 13px;
+  font-weight: 200;
+  margin-left: 12px;
+`;
+
+const InputColumns = styled(Columns.Column)`
+  position: relative;
+`;
+
+const InfoInput = styled(Input)`
+  font-size: 15px;
+  padding-top: ${props => props.insideLabel ? "30px" : "22px"} !important;
+  padding-bottom: ${props => props.insideLabel ? "15px" : "22px"} !important;
 `;
 
 export const AddressForm = (props) => {
@@ -67,8 +87,8 @@ export const AddressForm = (props) => {
       <Container>
         <>
           <Columns>
-            <Columns.Column>
-              <Input size="normal"
+            <InputColumns>
+              <InfoInput size="normal"
                 required
                 id="firstName"
                 name="firstName"
@@ -79,9 +99,9 @@ export const AddressForm = (props) => {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
               />
-            </Columns.Column>
-            <Columns.Column>
-              <Input size="normal"
+            </InputColumns>
+            <InputColumns>
+              <InfoInput size="normal"
                 required
                 id="lastName"
                 name="lastName"
@@ -92,11 +112,11 @@ export const AddressForm = (props) => {
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
               />
-            </Columns.Column>
+            </InputColumns>
           </Columns>
           <Columns>
-            <Columns.Column>
-              <Input size="normal"
+            <InputColumns>
+              <InfoInput size="normal"
                 required
                 id="company"
                 name="company"
@@ -106,11 +126,13 @@ export const AddressForm = (props) => {
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
               />
-            </Columns.Column>
+            </InputColumns>
           </Columns>
           <Columns>
-            <Columns.Column>
-              <Input size="normal"
+            <InputColumns>
+              <InsideInputLabel>Address</InsideInputLabel>
+              <InfoInput size="normal"
+                insideLabel
                 required
                 id="line1"
                 name="line1"
@@ -121,11 +143,13 @@ export const AddressForm = (props) => {
                 value={line1}
                 onChange={(e) => setLine1(e.target.value)}
               />
-            </Columns.Column>
+            </InputColumns>
           </Columns>
           <Columns>
-            <Columns.Column>
-              <Input size="normal"
+            <InputColumns>
+              <InsideInputLabel>Apartment, suite, etc. (optional)</InsideInputLabel>
+              <InfoInput size="normal"
+                insideLabel
                 id="line2"
                 name="line2"
                 placeholder="Address line 2"
@@ -135,26 +159,28 @@ export const AddressForm = (props) => {
                 value={line2}
                 onChange={(e) => setLine2(e.target.value)}
               />
-            </Columns.Column>
+            </InputColumns>
           </Columns>
           <Columns>
-            <Columns.Column>
-              <Input size="normal"
+            <InputColumns>
+              <InfoInput size="normal"
                 required
                 id="postalCode"
                 name="postalCode"
-                placeholder="Zip / Postal code"
+                placeholder="Postal code"
                 fullWidth
                 autoComplete="billing postal-code"
                 inputRef={register}
                 onChange={(e) => setPostalcode(e.target.value)}
                 value={postalCode}
               />
-            </Columns.Column>
+            </InputColumns>
           </Columns>
           <Columns>
-            <Columns.Column>
-              <Input size="normal"
+            <InputColumns>
+              <InsideInputLabel>City</InsideInputLabel>
+              <InfoInput size="normal"
+                insideLabel
                 required
                 id="city"
                 name="city"
@@ -165,11 +191,13 @@ export const AddressForm = (props) => {
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
               />
-            </Columns.Column>
+            </InputColumns>
           </Columns>
           <Columns>
-            <Columns.Column>
+            <InputColumns>
+              <InsideInputLabel>Country/Region</InsideInputLabel>
               <SelectBox
+                insideLabel
                 id="country"
                 name="country"
                 size="normal"
@@ -182,10 +210,10 @@ export const AddressForm = (props) => {
                 <option value="Nigeria">Nigeria</option>
                 <option value="Kenya">Kenya</option>
               </SelectBox>
-            </Columns.Column>
+            </InputColumns>
           </Columns>
-          <Columns style={{marginBottom: "0px"}}>
-            <Columns.Column>
+          <Columns style={{ marginBottom: "0px" }}>
+            <InputColumns>
 
               <PhoneInput
                 type='text'
@@ -205,7 +233,7 @@ export const AddressForm = (props) => {
                 }}
               />
               <input type="hidden" name="mobile" value={mobile} ref={register} />
-            </Columns.Column>
+            </InputColumns>
           </Columns>
           <Field>
             <CheckControl>
