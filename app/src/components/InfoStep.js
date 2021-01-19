@@ -1,28 +1,25 @@
 import React, { useState } from 'react';
-import { Container, Grid, Paper } from '@material-ui/core';
-import styled, { ThemeProvider } from 'styled-components';
-import { useForm, Controller } from "react-hook-form";
+import styled from 'styled-components';
+import { useForm } from "react-hook-form";
 
-import { useMutation, useQuery } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/react-hooks';
 import { SET_INFO } from '../graph/setInfo';
 
 import { InfoForm } from './InfoForm';
 import { AddressForm } from './AddressForm';
-import { CreditCardForm } from './CreditCardForm';
-import { PaymentStep } from './PaymentStep';
 import { ButtonDiv, NavButton } from "../App.styles";
 import Loader from "./Loader";
 import { string, object } from 'yup';
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from '@material-ui/lab/Alert';
 
-import { Form } from 'react-bulma-components';
-const { Checkbox, Input, Field, Control, Radio, Label } = Form;
+import { Form, Container, Button } from 'react-bulma-components';
+const { Checkbox, Field, Control, Radio } = Form;
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { Heading } from 'react-bulma-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Icon } from 'react-bulma-components';
-import { faTruck } from '@fortawesome/fontawesome-free-solid';
+import { faAngleLeft, faTruck } from '@fortawesome/fontawesome-free-solid';
 import { faBoxOpen } from '@fortawesome/fontawesome-free-solid';
 
 
@@ -31,8 +28,8 @@ function Alert(props) {
 }
 
 const InfoDiv = styled.div`
-  //padding: ${ props => props.theme.spacing(8)}px;
-  // margin-bottom: ${ props => props.theme.spacing(4)}px;
+  //padding: ${props => props.theme.spacing(8)}px;
+  // margin-bottom: ${props => props.theme.spacing(4)}px;
 `;
 
 const RadioDiv = styled.div`
@@ -66,6 +63,38 @@ const RadioWapper = styled(Radio)`
     font-weight: 400; 
     font-size: 15px;
 `;
+
+const ButtonsRowContainer = styled(Container)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;
+
+const ReturnToCartButton = styled(Button)`
+  border: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #999999;
+  padding: 0px;
+`;
+
+const LoginButtonWrapper = styled.p`
+  color: #999999;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const LoginLinkButton = styled.span`
+  color: blue;
+  font-size: 14px;
+  cursor: pointer;
+`;
+
 
 //{[{id:1,address1:"address1"},{id:0,address1:"address2"}]} address={{id:1, name:"Ali",line1:"Line1"}}
 const schema = object().shape({
@@ -147,7 +176,13 @@ export const InfoStep = (props) => {
   return (
     <React.Fragment>
       {loading && <p>Loading...</p>}
-      <Heading subtitle size={6}>Contact Information</Heading>
+      <ButtonsRowContainer>
+        <Heading subtitle size={6} style={{margin: "0px"}}>Contact Information</Heading>
+        <LoginButtonWrapper>
+          Already have an account?&nbsp;
+          <LoginLinkButton>Log in</LoginLinkButton>
+        </LoginButtonWrapper>
+      </ButtonsRowContainer>
       <form onSubmit={handleSubmit(onSubmit)}>
         <InfoDiv>
           <InfoForm register={register} email={state.cart.email} />
@@ -180,19 +215,26 @@ export const InfoStep = (props) => {
           Shipping address
         </HeadingInformation>
         <AddressForm addresses={state.cart.addresses} address={state.cart.deliveryAddress} register={register} />
-        
-        <ButtonDiv>
-          {(!state.cart.items || !state.cart.items.length) ?
-            <NavButton type="submit" variant="contained" disabled color="primary">Next</NavButton> :
+        <ButtonsRowContainer>
+          <ReturnToCartButton>
+            <Icon>
+              <FontAwesomeIcon icon={faAngleLeft} />
+            </Icon>
+            &nbsp;Return to cart
+          </ReturnToCartButton>
+          <ButtonDiv>
+            {(!state.cart.items || !state.cart.items.length) ?
+              <NavButton type="submit" variant="contained" disabled color="primary">Next</NavButton> :
 
-            <NavButton type="submit" variant="contained"
+              <NavButton type="submit" variant="contained"
               >
-              {(loading) ? <Loader /> : (
-                <span>Contiune to shipping</span>
-              )}
-            </NavButton>
-          }
-        </ButtonDiv>
+                {(loading) ? <Loader /> : (
+                  <span>Contiune to shipping</span>
+                )}
+              </NavButton>
+            }
+          </ButtonDiv>
+        </ButtonsRowContainer>
       </form>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
