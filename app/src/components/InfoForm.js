@@ -13,7 +13,7 @@ const InfoDiv = styled.div`
 
 const FormInput = styled(Input)`
   &:focus {
-    border-color: #ff0000;
+    border-color: #6f8f9d;
     box-shadow: none;
   }
 `;

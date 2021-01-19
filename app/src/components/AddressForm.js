@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Container, Grid, Paper, Typography } from '@material-ui/core';
+import { Grid, Paper, Typography } from '@material-ui/core';
 import styled, { ThemeProvider } from 'styled-components';
 import { useForm, Controller } from "react-hook-form";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import startsWith from 'lodash.startswith';
 import {
   RootGrid,
@@ -17,8 +16,8 @@ import {
   ButtonDiv, Address
 } from '../App.styles'
 
-import { Form } from 'react-bulma-components';
-const { Checkbox, Label, Input } = Form;
+import { Form, Columns, Container } from 'react-bulma-components';
+const { Checkbox, Label, Field, Input, Control } = Form;
 import { Card } from 'react-bulma-components';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 
@@ -58,166 +57,146 @@ export const AddressForm = (props) => {
   }
   return (
     <>
-      <Grid container spacing={3}>
-        {/* {addresses && addresses.map(x => (
-
-          <Grid item xs={12} sm={6} key={x.id}>
-            <Card onClick={() => setEdit(x.id)}>
-              <Card.Content>
-                <input name="Address" type="radio" value={x.id} key={x.id}
-                  ref={register({ required: true })}
-                  onChange={() => setEdit(x.id)}
-                  checked={edit !== 0 && edit === x.id}
-                />
-                <Address>
-                  {x.firstName} {x.lastName} <div>{x.line1}</div><div>{x.line2}</div><div>{x.city}</div><div>{x.phone}</div>
-                </Address>
-              </Card.Content>
-            </Card>
-          </Grid>
-        ))
-        } */}
-        <Grid item xs={12} sm={12}>
-          <input name="Address" type="radio" value="-1" ref={register({ required: true })} onChange={() => setEdit(-1)} checked={edit === -1} />
-          Add a new address:
-        </Grid>
-        {edit == -1 &&
-          (
-            <Grid container spacing={3}>
-              <Grid item xs={11} sm={6}>
-                <Input size="small"
-                  required
-                  id="firstName"
-                  name="firstName"
-                  placeholder="First name"
-                  fullWidth
-                  autoComplete="fname"
-                  inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                />
+      <Container>
+            <>
+              <Columns>
+                <Columns.Column>
+                  <Input size="normal"
+                    required
+                    id="firstName"
+                    name="firstName"
+                    placeholder="First name"
+                    fullWidth
+                    autoComplete="fname"
+                    inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </Columns.Column>
+                <Columns.Column>
+                  <Input size="normal"
+                    required
+                    id="lastName"
+                    name="lastName"
+                    placeholder="Last name"
+                    fullWidth
+                    autoComplete="lname"
+                    inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </Columns.Column>
+              </Columns>
+              <Columns>
+                <Columns.Column>
+                  <Input size="normal"
+                    required
+                    id="alias"
+                    name="alias"
+                    placeholder="Address Name, e.g. Home or Work"
+                    fullWidth
+                    inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
+                    value={alias}
+                    onChange={(e) => setAlias(e.target.value)}
+                  />
+                </Columns.Column>
+              </Columns>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <Input size="normal"
+                    required
+                    id="line1"
+                    name="line1"
+                    placeholder="Address line 1"
+                    fullWidth
+                    autoComplete="billing address-line1"
+                    inputRef={register({ required: true, maxLength: 50, minLength: 2 })}
+                    value={line1}
+                    onChange={(e) => setLine1(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Input size="normal"
+                    id="line2"
+                    name="line2"
+                    placeholder="Address line 2"
+                    fullWidth
+                    autoComplete="billing address-line2"
+                    inputRef={register({ maxLength: 50, minLength: 2 })}
+                    value={line2}
+                    onChange={(e) => setLine2(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Input size="normal"
+                    required
+                    id="postalCode"
+                    name="postalCode"
+                    placeholder="Zip / Postal code"
+                    fullWidth
+                    autoComplete="billing postal-code"
+                    inputRef={register}
+                    onChange={(e) => setPostalcode(e.target.value)}
+                    value={postalCode}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Input size="normal"
+                    required
+                    id="city"
+                    name="city"
+                    placeholder="City"
+                    fullWidth
+                    autoComplete="billing address-level2"
+                    inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Input size="normal"
+                    required
+                    id="country"
+                    name="country"
+                    placeholder="Country"
+                    fullWidth
+                    autoComplete="billing country"
+                    inputRef={register}
+                    value={country}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <PhoneInput
+                    type='text'
+                    country={'om'}
+                    value={mobile}
+                    onChange={mobile => setMobile(mobile.replace(/[^0-9]+/g, ''))}
+                    onlyCountries={['om']}
+                    masks={{ om: '+... ....-....' }}
+                    copyNumbersOnly={true}
+                    containerStyle={{ direction: 'ltr', marginBottom: '10px' }}
+                    inputStyle={{ width: '100%', height: '30px', paddingRight: '48px' }}
+                    countryCodeEditable={false}
+                    isValid={(inputNumber, onlyCountries) => {
+                      return onlyCountries.some((country) => {
+                        return startsWith(inputNumber, country.dialCode) || startsWith(country.dialCode, inputNumber);
+                      });
+                    }}
+                  />
+                  <input type="hidden" name="mobile" value={mobile} ref={register} />
+                </Grid>
+                <Grid item xs={12}>
+                  <Field>
+                    <Control>
+                      <Checkbox name="save">
+                        &nbsp;&nbsp;&nbsp;Save this information for next time
+                      </Checkbox>
+                    </Control>
+                  </Field>
+                </Grid>
               </Grid>
-              <Grid item xs={11} sm={6}>
-                <Input size="small"
-                  required
-                  id="lastName"
-                  name="lastName"
-                  placeholder="Last name"
-                  fullWidth
-                  autoComplete="lname"
-                  inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={11} sm={12}>
-                <Input size="small"
-                  required
-                  id="alias"
-                  name="alias"
-                  placeholder="Address Name, e.g. Home or Work"
-                  fullWidth
-                  inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
-                  value={alias}
-                  onChange={(e) => setAlias(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Input size="small"
-                  required
-                  id="line1"
-                  name="line1"
-                  placeholder="Address line 1"
-                  fullWidth
-                  autoComplete="billing address-line1"
-                  inputRef={register({ required: true, maxLength: 50, minLength: 2 })}
-                  value={line1}
-                  onChange={(e) => setLine1(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Input size="small"
-                  id="line2"
-                  name="line2"
-                  placeholder="Address line 2"
-                  fullWidth
-                  autoComplete="billing address-line2"
-                  inputRef={register({ maxLength: 50, minLength: 2 })}
-                  value={line2}
-                  onChange={(e) => setLine2(e.target.value)}
-                />
-              </Grid>
-              {/* <Grid item xs={12}>
-                <Input size="small" id="state" name="state" placeholder="State/Province/Region" fullWidth
-                  inputRef={register} />
-              </Grid> */}
-              <Grid item xs={12}>
-                <Input size="small"
-                  required
-                  id="postalCode"
-                  name="postalCode"
-                  placeholder="Zip / Postal code"
-                  fullWidth
-                  autoComplete="billing postal-code"
-                  inputRef={register}
-                  onChange={(e) => setPostalcode(e.target.value)}
-                  value={postalCode}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Input size="small"
-                  required
-                  id="city"
-                  name="city"
-                  placeholder="City"
-                  fullWidth
-                  autoComplete="billing address-level2"
-                  inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Input size="small"
-                  required
-                  id="country"
-                  name="country"
-                  placeholder="Country"
-                  fullWidth
-                  autoComplete="billing country"
-                  inputRef={register}
-                  value={country}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <PhoneInput
-                  type='text'
-                  country={'om'}
-                  value={mobile}
-                  onChange={mobile => setMobile(mobile.replace(/[^0-9]+/g, ''))}
-                  onlyCountries={['om']}
-                  masks={{ om: '+... ....-....' }}
-                  copyNumbersOnly={true}
-                  containerStyle={{ direction: 'ltr', marginBottom: '10px' }}
-                  inputStyle={{ width: '100%', height: '30px', paddingRight: '48px' }}
-                  countryCodeEditable={false}
-                  isValid={(inputNumber, onlyCountries) => {
-                    return onlyCountries.some((country) => {
-                      return startsWith(inputNumber, country.dialCode) || startsWith(country.dialCode, inputNumber);
-                    });
-                  }}
-                />
-                <input type="hidden" name="mobile" value={mobile} ref={register} />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox color="secondary" name="save" />}
-                  label="Save address in account"
-                />
-              </Grid>
-            </Grid>
-          )}
-      </Grid>
+            </>
+      </Container>
     </>
   )
 }
