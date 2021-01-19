@@ -5,7 +5,7 @@ import Step from "@material-ui/core/Step";
 import Stepper from "@material-ui/core/Stepper";
 import StepLabel from "@material-ui/core/StepLabel";
 
-import Toolbar from "@material-ui/core/Toolbar";
+// import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { useCookies } from 'react-cookie';
 import Grid from "@material-ui/core/Grid";
@@ -30,19 +30,24 @@ import {
   Wrapper,
   NavButton,
   ButtonDiv,
-  ContainerGrid, LogoImage, LogoWrapper, HelpPageWrapper, HelpPageContainer
+  ContainerGrid,
+  LogoImage,
+  LogoWrapper,
+  HelpPageWrapper,
+  HelpPageContainer,
+  Header,
 } from './App.styles'
 import { CART } from './graph/cart';
 import Loader from "./components/Loader";
 import Logoimage from './assets/logo.svg';
 import Hidden from "@material-ui/core/Hidden";
-import Button from "@material-ui/core/Button";
 import Drawer from "@material-ui/core/Drawer";
 import IconButton from "@material-ui/core/IconButton";
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Backdrop from "@material-ui/core/Backdrop";
 
+import { Navbar } from 'react-bulma-components';
 
 const steps = ['Shipping address', 'Payment details', 'Review your order'];
 function reducer(state, action) {
@@ -140,7 +145,7 @@ const App = (props) => {
   return (
     <>
       <CssBaseline />
-      <Toolbar>
+      <Header>
         <LogoWrapper> <LogoImage src={Logoimage} /> </LogoWrapper>
         <Hidden smDown>
           <div style={{ width: '100%', float: 'right' }}>
@@ -150,7 +155,7 @@ const App = (props) => {
             </Typography>
           </div>
         </Hidden>
-      </Toolbar>
+      </Header>
 
       <HelpPageWrapper>
         <HelpPageContainer>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Grid, Paper, Typography } from '@material-ui/core';
+import { Container, Grid, Paper } from '@material-ui/core';
 import styled, { ThemeProvider } from 'styled-components';
 import { useForm, Controller } from "react-hook-form";
 
@@ -18,8 +18,9 @@ import MuiAlert from '@material-ui/lab/Alert';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { Form } from 'react-bulma-components';
-const { Checkbox, Input } = Form;
+const { Checkbox, Input, Field, Control } = Form;
 import 'react-bulma-components/dist/react-bulma-components.min.css';
+import { Heading } from 'react-bulma-components';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -108,20 +109,22 @@ export const InfoStep = (props) => {
   return (
     <React.Fragment>
       {loading && <p>Loading...</p>}
-      <Typography variant="h6">Contact Information</Typography>
+      <Heading subtitle size={6}>Contact Information</Heading>
       <form onSubmit={handleSubmit(onSubmit)}>
         <InfoDiv>
           <InfoForm register={register} email={state.cart.email} />
         </InfoDiv>
-        <Grid item xs={12}>
-          <FormControlLabel
-            control={<Checkbox color="secondary" name="save" />}
-            label="Keep me up to date on news and exclusive offers"
-          />
-        </Grid>
-        <Typography variant="h6" gutterBottom>
+        <Field>
+          <Control>
+            <Checkbox name="save">
+              &nbsp;&nbsp;&nbsp;Keep me up to date on news and exclusive offers
+            </Checkbox>
+          </Control>
+        </Field>
+        <Heading subtitle size={6}>Delivery method</Heading>
+        <Heading size={16}>
           Shipping address
-        </Typography>
+        </Heading>
         <AddressForm addresses={state.cart.addresses} address={state.cart.deliveryAddress} register={register} />
         <ButtonDiv>
           {(!state.cart.items || !state.cart.items.length) ?

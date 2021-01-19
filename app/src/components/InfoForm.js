@@ -11,18 +11,25 @@ const InfoDiv = styled.div`
   // margin-bottom: ${ props => props.theme.spacing(4)}px;
 `;
 
+const FormInput = styled(Input)`
+  &:focus {
+    border-color: #ff0000;
+    box-shadow: none;
+  }
+`;
+
 export const InfoForm = (props) => {
   const { register } = props;
   const [email, setEmail] = useState(props.email);
   return (
     <React.Fragment>
       <InfoDiv>
-        <Input
+        <FormInput
           id="filled-full-width"
           name="email"
           placeholder="Email"
           //helperText="Please Enter Your E-mail!"
-          size="small"
+          size="normal"
           fullWidth
           label="Email"
           InputLabelProps={{
