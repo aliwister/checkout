@@ -90,9 +90,12 @@ const LoginButtonWrapper = styled.p`
 `;
 
 const LoginLinkButton = styled.span`
-  color: blue;
+  color: #bae8ff;
   font-size: 14px;
   cursor: pointer;
+  :hover {
+    color: #33bbff;
+  }
 `;
 
 
