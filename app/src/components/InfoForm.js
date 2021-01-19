@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { Container, Grid, Paper, Typography, TextField } from '@material-ui/core';
 import styled, { ThemeProvider } from 'styled-components';
 import { useForm, Controller } from "react-hook-form";
 
+import { Form } from 'react-bulma-components';
+const { Checkbox, Input } = Form;
+import 'react-bulma-components/dist/react-bulma-components.min.css';
+
 const InfoDiv = styled.div`
   //padding: ${ props => props.theme.spacing(8)}px;
-  margin-bottom: ${ props => props.theme.spacing(4)}px;
+  // margin-bottom: ${ props => props.theme.spacing(4)}px;
 `;
 
 export const InfoForm = (props) => {
@@ -14,7 +17,7 @@ export const InfoForm = (props) => {
   return (
     <React.Fragment>
       <InfoDiv>
-        <TextField
+        <Input
           id="filled-full-width"
           name="email"
           placeholder="Email"

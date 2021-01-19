@@ -1,9 +1,11 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+
+import { Form } from 'react-bulma-components';
+const { Checkbox, Input } = Form;
+import 'react-bulma-components/dist/react-bulma-components.min.css';
 
 export default function PaymentForm() {
     return (
@@ -13,16 +15,16 @@ export default function PaymentForm() {
             </Typography>
             <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
-                    <TextField required id="cardName" label="Name on card" fullWidth />
+                    <Input required id="cardName" label="Name on card" fullWidth />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <TextField required id="cardNumber" label="Card number" fullWidth />
+                    <Input required id="cardNumber" label="Card number" fullWidth />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <TextField required id="expDate" label="Expiry date" fullWidth />
+                    <Input required id="expDate" label="Expiry date" fullWidth />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <TextField
+                    <Input
                         required
                         id="cvv"
                         label="CVV"

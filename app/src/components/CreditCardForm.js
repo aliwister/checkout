@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { Container, Grid, Paper, Typography, TextField } from '@material-ui/core';
+import { Container, Grid, Paper, Typography } from '@material-ui/core';
 import styled, { ThemeProvider } from 'styled-components';
 import { useForm, Controller } from "react-hook-form";
 import Alert from "@material-ui/lab/Alert";
+
+import { Form } from 'react-bulma-components';
+const { Checkbox, Input } = Form;
+import 'react-bulma-components/dist/react-bulma-components.min.css';
 
 const InfoDiv = styled.div`
   //padding: ${ props => props.theme.spacing(8)}px;
@@ -32,7 +36,7 @@ export const CreditCardForm = (props) => {
         </Grid>
       ))
       }
-      <TextField
+      <Input
         id="filled-full-width"
         name="cc"
         placeholder="Credit Card #"
@@ -47,7 +51,7 @@ export const CreditCardForm = (props) => {
         value={cc}
         onChange={e => setCc(e.target.value)}
       />
-      <TextField
+      <Input
         id="filled-full-width"
         name="cvv"
         placeholder="CVV #"
@@ -61,7 +65,7 @@ export const CreditCardForm = (props) => {
         value={cvv}
         onChange={e => setCvv(e.target.value)}
       />
-      <TextField
+      <Input
         id="filled-full-width"
         name="expiration"
         placeholder="Credit Card Expiration"

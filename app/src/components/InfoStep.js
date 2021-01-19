@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Grid, Paper, Typography, TextField } from '@material-ui/core';
+import { Container, Grid, Paper, Typography } from '@material-ui/core';
 import styled, { ThemeProvider } from 'styled-components';
 import { useForm, Controller } from "react-hook-form";
 
@@ -15,6 +15,11 @@ import Loader from "./Loader";
 import { string, object } from 'yup';
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from '@material-ui/lab/Alert';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
+import { Form } from 'react-bulma-components';
+const { Checkbox, Input } = Form;
+import 'react-bulma-components/dist/react-bulma-components.min.css';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -22,7 +27,7 @@ function Alert(props) {
 
 const InfoDiv = styled.div`
   //padding: ${ props => props.theme.spacing(8)}px;
-  margin-bottom: ${ props => props.theme.spacing(4)}px;
+  // margin-bottom: ${ props => props.theme.spacing(4)}px;
 `;
 
 //{[{id:1,address1:"address1"},{id:0,address1:"address2"}]} address={{id:1, name:"Ali",line1:"Line1"}}
@@ -108,6 +113,12 @@ export const InfoStep = (props) => {
         <InfoDiv>
           <InfoForm register={register} email={state.cart.email} />
         </InfoDiv>
+        <Grid item xs={12}>
+          <FormControlLabel
+            control={<Checkbox color="secondary" name="save" />}
+            label="Keep me up to date on news and exclusive offers"
+          />
+        </Grid>
         <Typography variant="h6" gutterBottom>
           Shipping address
         </Typography>
