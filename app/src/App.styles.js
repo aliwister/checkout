@@ -1,7 +1,15 @@
 // Create a <Title> react component that renders an <h1> which is
 // centered, palevioletred and sized at 1.5em
 import styled from "styled-components";
-import {Container, Grid, Paper, Button} from "@material-ui/core";
+import { Container, Grid, Paper } from "@material-ui/core";
+
+import { Button, Navbar } from 'react-bulma-components';
+
+export const Header = styled(Navbar)`
+  align-items: center;
+  padding: 0 20px;
+  height: 80px;
+`
 
 export const Title = styled.h1`
   font-size: 1.5em;
@@ -107,7 +115,7 @@ export const HelpPageContainer = styled.div`
 
   position: relative;
   @media (min-width: 990px) {
-    width: 870px;
+    width: 950px;
     margin-left: auto;
     margin-right: auto;
   }

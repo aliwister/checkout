@@ -21,7 +21,6 @@ import {
   NoProductMsg,
   ItemWrapper,
 } from './CartItemCard.style';
-import CardHeader from "@material-ui/core/CardHeader";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import Hidden from "@material-ui/core/Hidden";
 
