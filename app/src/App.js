@@ -14,6 +14,7 @@ import { InfoStep } from './components/InfoStep';
 import { PaymentStep } from './components/PaymentStep';
 import { CarrierStep } from './components/CarrierStep';
 import { CartSummary } from './components/Cart/CartSummary';
+import { CartCheckout } from './components/cart-checkout/CartCheckout';
 
 
 import { useQuery } from '@apollo/react-hooks';
@@ -202,9 +203,10 @@ const App = (props) => {
               <Hidden smDown>
                 <LeftGrid item md={5} xs={12}>
 
-                  <Wrapper>
+                  {/* <Wrapper>
                     <CartSummary products={data.cart.items} carrier={state.carrier} />
-                  </Wrapper>
+                  </Wrapper> */}
+                  <CartCheckout products={data.cart.items} />
 
                 </LeftGrid>
               </Hidden>

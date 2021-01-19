@@ -39,6 +39,7 @@ export const LeftGrid = styled(Grid)`
 export const InfoContainer = styled(Container)`
   padding-top: ${ props  =>  props.theme.spacing(1)}px;
   padding-left: ${ props  =>  props.theme.spacing(2)}px !important;
+  border-right: 1px solid #bfbfbf;
 `;
 
 export const CheckoutPaper = styled(Paper)`
@@ -54,8 +55,6 @@ export const Wrapper = styled.section`
 `;
 
 export const NavButton = styled(Button)`
-  margin-top: ${ props  =>  props.theme.spacing(3)}px;
-  margin-bottom: ${ props  =>  props.theme.spacing(3)}px;
   padding: 24px 20px;
   float: right;
   background-color: #373737;
