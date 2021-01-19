@@ -15,12 +15,16 @@ import Loader from "./Loader";
 import { string, object } from 'yup';
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from '@material-ui/lab/Alert';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { Form } from 'react-bulma-components';
-const { Checkbox, Input, Field, Control } = Form;
+const { Checkbox, Input, Field, Control, Radio, Label } = Form;
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { Heading } from 'react-bulma-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Icon } from 'react-bulma-components';
+import { faTruck } from '@fortawesome/fontawesome-free-solid';
+import { faBoxOpen } from '@fortawesome/fontawesome-free-solid';
+
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -29,6 +33,27 @@ function Alert(props) {
 const InfoDiv = styled.div`
   //padding: ${ props => props.theme.spacing(8)}px;
   // margin-bottom: ${ props => props.theme.spacing(4)}px;
+`;
+
+const RadioDiv = styled.div`
+   width : 100%;
+   border: 1px solid #000;
+   padding: 5px;
+   padding-left: 15px;
+`;
+
+const HeadingInformation = styled(Heading)`
+    margin-bottom: 15px;
+    margin-top: 40px;
+`;
+
+const RadioWapper = styled(Radio)`
+    height: auto;
+    display: flex; 
+    flex-direction: row; 
+    align-items: center; 
+    font-weight: 400; 
+    font-size: 15px;
 `;
 
 //{[{id:1,address1:"address1"},{id:0,address1:"address2"}]} address={{id:1, name:"Ali",line1:"Line1"}}
@@ -47,6 +72,7 @@ export const InfoStep = (props) => {
   const { state, dispatch } = props;
   const [open, setOpen] = React.useState(false);
   const [error, setError] = React.useState("");
+  const [ship, setShip] = useState({ value: "ship" });
 
 
   const handleClick = () => {
@@ -121,10 +147,26 @@ export const InfoStep = (props) => {
             </Checkbox>
           </Control>
         </Field>
-        <Heading subtitle size={6}>Delivery method</Heading>
-        <Heading size={16}>
+        <HeadingInformation subtitle size={6} >Delivery method</HeadingInformation>
+        <RadioDiv style={{ borderBottom: "none", borderRadius: "5px 5px 0 0" }}>
+          <RadioWapper name="ship" onChange={(e) => setShip({ value: "ship" })} checked={ship.value === "ship"} style={{ color: ship.value === "ship" ? "#6f8f9d" : "black" }}>
+            <Icon style={{ marginLeft: "5px", marginRight: "5px" }}>
+              <FontAwesomeIcon icon={faTruck} />
+            </Icon>
+            Ship
+            </RadioWapper>
+        </RadioDiv>
+        <RadioDiv style={{ borderRadius: "0 0 5px 5px" }}>
+          <RadioWapper name="ship" onChange={(e) => setShip({ value: "pick" })} checked={ship.value === "pick"} style={{ color: ship.value === "pick" ? "#6f8f9d" : "black" }}>
+            <Icon style={{ marginLeft: "5px", marginRight: "5px" }}>
+              <FontAwesomeIcon icon={faBoxOpen} />
+            </Icon>
+            Pick up
+            </RadioWapper>
+        </RadioDiv>
+        <HeadingInformation size={6}>
           Shipping address
-        </Heading>
+        </HeadingInformation>
         <AddressForm addresses={state.cart.addresses} address={state.cart.deliveryAddress} register={register} />
         <ButtonDiv>
           {(!state.cart.items || !state.cart.items.length) ?
@@ -133,7 +175,7 @@ export const InfoStep = (props) => {
             <NavButton type="submit" variant="contained"
               color="primary">
               {(loading) ? <Loader /> : (
-                <span>Next</span>
+                <span>Contiune to shipping</span>
               )}
             </NavButton>
           }
