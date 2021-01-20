@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
-import { useForm, Controller } from "react-hook-form";
 
 import { Form } from 'react-bulma-components';
-const { Checkbox, Input } = Form;
+const { Input } = Form;
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 
 const InfoDiv = styled.div`
@@ -29,8 +28,6 @@ export const InfoForm = (props) => {
           name="email"
           placeholder="Email"
           //helperText="Please Enter Your E-mail!"
-          size="normal"
-          fullWidth
           label="Email"
           InputLabelProps={{
             shrink: true,

@@ -143,6 +143,7 @@ const App = (props) => {
   else {
     //console.log(data);
   }
+  console.log("Data", data);
   return (
     <>
       <CssBaseline />
@@ -206,7 +207,7 @@ const App = (props) => {
                   {/* <Wrapper>
                     <CartSummary products={data.cart.items} carrier={state.carrier} />
                   </Wrapper> */}
-                  <CartCheckout products={data.cart.items} />
+                  <CartCheckout products={data.cart.items} carrier={state.carrier} />
 
                 </LeftGrid>
               </Hidden>
