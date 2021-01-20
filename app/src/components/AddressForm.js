@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import startsWith from 'lodash.startswith';
-import { Form, Columns, Container } from 'react-bulma-components';
+import { Form, Columns, Container, Card, Dropdown, Box } from 'react-bulma-components';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import styled from 'styled-components';
+import { Address } from '../App.styles';
 
-const { Checkbox, Field, Input, Control, Select, Label } = Form;
+const { Checkbox, Field, Input, Control, Select, Label, Radio } = Form;
 
 const SelectBox = styled(Select)`
   width: 100%;
@@ -41,6 +42,40 @@ const InputColumns = styled(Columns.Column)`
   position: relative;
 `;
 
+const AddressDropDown = styled(Dropdown)`
+  width: 100%;
+  border: 1px solid #a6a6a6;
+  border-radius: 5px;
+
+  .dropdown-trigger {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .dropdown-menu {
+    width: 100%;
+  }
+`;
+
+const AddAddressRadio = styled(Radio)`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border: none;
+  padding: 0px !important;
+  justify-content: flex-start;
+  :focus {
+    outline: none;
+  }
+`;
+
 const InfoInput = styled(Input)`
   font-size: 15px;
   padding-top: ${props => props.insideLabel ? "30px" : "22px"} !important;
@@ -54,14 +89,13 @@ export const AddressForm = (props) => {
   const { addresses, register } = props;
   let address;
   if (!props.address) {
-    console.log("!props.address");
     address = { firstName: '', lastName: '', line1: '', line2: '', city: '', postalCode: '', country: 'Oman', mobile: '', state: '' }
     console.log(address)
   }
   else
     address = props.address;
 
-  const [edit, setEdit] = useState((!props.address || (!address.id && address.firstName)) ? -1 : 0);
+  const [edit, setEdit] = useState((!props.address || (!address.id && address.firstName))?-1:0);
   const [alias, setAlias] = useState(edit ? address.firstName : "");
   const [firstName, setFirstName] = useState(edit ? address.firstName : "");
   const [lastName, setLastName] = useState(edit ? address.lastName : "");
@@ -74,175 +108,186 @@ export const AddressForm = (props) => {
   const [country, setCountry] = useState("Oman");
   const [postalCode, setPostalcode] = useState(edit ? address.postalCode : "");
   const [save, setSave] = useState(edit ? address.save : false);
-
-
+  const [addressSelect, setAddressSelect] = useState(addresses[0]);
   //const [,] = useState(!props.address.id && props.address.);
   // console.log(edit);
 
-  const setAddress = (id) => {
+  const setAddress = (selected) => {
     //console.log(id);
+    setAddressSelect(selected);
+    setEdit(selected.id);
   }
   return (
     <>
       <Container>
-        <>
-          <Columns>
-            <InputColumns>
-              <InfoInput size="normal"
-                required
-                id="firstName"
-                name="firstName"
-                placeholder="First name"
-                fullWidth
-                autoComplete="fname"
-                inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
-            </InputColumns>
-            <InputColumns>
-              <InfoInput size="normal"
-                required
-                id="lastName"
-                name="lastName"
-                placeholder="Last name"
-                fullWidth
-                autoComplete="lname"
-                inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              />
-            </InputColumns>
-          </Columns>
-          <Columns>
-            <InputColumns>
-              <InfoInput size="normal"
-                required
-                id="company"
-                name="company"
-                placeholder="Company (optional)"
-                fullWidth
-                inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
-              />
-            </InputColumns>
-          </Columns>
-          <Columns>
-            <InputColumns>
-              <InsideInputLabel>Address</InsideInputLabel>
-              <InfoInput size="normal"
-                insideLabel
-                required
-                id="line1"
-                name="line1"
-                placeholder="Address line 1"
-                fullWidth
-                autoComplete="billing address-line1"
-                inputRef={register({ required: true, maxLength: 50, minLength: 2 })}
-                value={line1}
-                onChange={(e) => setLine1(e.target.value)}
-              />
-            </InputColumns>
-          </Columns>
-          <Columns>
-            <InputColumns>
-              <InsideInputLabel>Apartment, suite, etc. (optional)</InsideInputLabel>
-              <InfoInput size="normal"
-                insideLabel
-                id="line2"
-                name="line2"
-                placeholder="Address line 2"
-                fullWidth
-                autoComplete="billing address-line2"
-                inputRef={register({ maxLength: 50, minLength: 2 })}
-                value={line2}
-                onChange={(e) => setLine2(e.target.value)}
-              />
-            </InputColumns>
-          </Columns>
-          <Columns>
-            <InputColumns>
-              <InfoInput size="normal"
-                required
-                id="postalCode"
-                name="postalCode"
-                placeholder="Postal code"
-                fullWidth
-                autoComplete="billing postal-code"
-                inputRef={register}
-                onChange={(e) => setPostalcode(e.target.value)}
-                value={postalCode}
-              />
-            </InputColumns>
-          </Columns>
-          <Columns>
-            <InputColumns>
-              <InsideInputLabel>City</InsideInputLabel>
-              <InfoInput size="normal"
-                insideLabel
-                required
-                id="city"
-                name="city"
-                placeholder="City"
-                fullWidth
-                autoComplete="billing address-level2"
-                inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-              />
-            </InputColumns>
-          </Columns>
-          <Columns>
-            <InputColumns>
-              <InsideInputLabel>Country/Region</InsideInputLabel>
-              <SelectBox
-                insideLabel
-                id="country"
-                name="country"
-                size="normal"
-                onChange={(e) => setCountry(e.target.value)}
-                name="country"
-                fullWidth
-                value={country}
-              >
-                <option value="Oman">Oman</option>
-                <option value="Nigeria">Nigeria</option>
-                <option value="Kenya">Kenya</option>
-              </SelectBox>
-            </InputColumns>
-          </Columns>
-          <Columns style={{ marginBottom: "0px" }}>
-            <InputColumns>
+        <AddressDropDown
+          value={addressSelect}
+          onChange={setAddress}
+        >
+          {addresses && addresses.map(x => (
 
-              <PhoneInput
-                type='text'
-                country={'ke'}
-                value={mobile}
-                onChange={mobile => setMobile(mobile.replace(/[^0-9]+/g, ''))}
-                onlyCountries={['ke']}
-                masks={{ om: '+... ....-....' }}
-                copyNumbersOnly={true}
-                containerStyle={{ direction: 'ltr' }}
-                inputStyle={{ width: '100%', height: '40px', paddingRight: '48px' }}
-                countryCodeEditable={false}
-                isValid={(inputNumber, onlyCountries) => {
-                  return onlyCountries.some((country) => {
-                    return startsWith(inputNumber, country.dialCode) || startsWith(country.dialCode, inputNumber);
-                  });
-                }}
-              />
-              <input type="hidden" name="mobile" value={mobile} ref={register} />
-            </InputColumns>
-          </Columns>
-          <Field>
-            <CheckControl>
-              <Checkbox name="save">
-                &nbsp;&nbsp;&nbsp;Save this information for next time
+            <Dropdown.Item value={x.id} key={x.id}>
+              {x.firstName} {x.lastName} - {x.line1} {x.line2} {x.city} {x.phone}
+            </Dropdown.Item>
+          ))
+          }
+        </AddressDropDown>
+      </Container>
+      <Container>
+        <AddAddressRadio  checked={edit === -1} onChange={() => setEdit(-1)}>
+          Add a new address:
+        </AddAddressRadio>
+        {edit == -1 &&
+          (
+            <>
+              <Columns>
+                <InputColumns>
+                  <InfoInput
+                    required
+                    id="firstName"
+                    name="firstName"
+                    placeholder="First name"
+                    autoComplete="fname"
+                    inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </InputColumns>
+                <InputColumns>
+                  <InfoInput
+                    required
+                    id="lastName"
+                    name="lastName"
+                    placeholder="Last name"
+                    autoComplete="lname"
+                    inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </InputColumns>
+              </Columns>
+              <Columns>
+                <InputColumns>
+                  <InfoInput
+                    required
+                    id="company"
+                    name="company"
+                    placeholder="Company (optional)"
+                    inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                  />
+                </InputColumns>
+              </Columns>
+              <Columns>
+                <InputColumns>
+                  <InsideInputLabel>Address</InsideInputLabel>
+                  <InfoInput
+                    insideLabel
+                    required
+                    id="line1"
+                    name="line1"
+                    placeholder="Unnamed Road"
+                    autoComplete="billing address-line1"
+                    inputRef={register({ required: true, maxLength: 50, minLength: 2 })}
+                    value={line1}
+                    onChange={(e) => setLine1(e.target.value)}
+                  />
+                </InputColumns>
+              </Columns>
+              <Columns>
+                <InputColumns>
+                  <InsideInputLabel>Apartment, suite, etc. (optional)</InsideInputLabel>
+                  <InfoInput
+                    insideLabel
+                    id="line2"
+                    name="line2"
+                    placeholder="GPS Coordinates: 23.577 "
+                    autoComplete="billing address-line2"
+                    inputRef={register({ maxLength: 50, minLength: 2 })}
+                    value={line2}
+                    onChange={(e) => setLine2(e.target.value)}
+                  />
+                </InputColumns>
+              </Columns>
+              <Columns>
+                <InputColumns>
+                  <InfoInput
+                    required
+                    id="postalCode"
+                    name="postalCode"
+                    placeholder="Postal code"
+                    autoComplete="billing postal-code"
+                    inputRef={register}
+                    onChange={(e) => setPostalcode(e.target.value)}
+                    value={postalCode}
+                  />
+                </InputColumns>
+              </Columns>
+              <Columns>
+                <InputColumns>
+                  <InsideInputLabel>City</InsideInputLabel>
+                  <InfoInput
+                    insideLabel
+                    required
+                    id="city"
+                    name="city"
+                    placeholder="City"
+                    autoComplete="billing address-level2"
+                    inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                  />
+                </InputColumns>
+              </Columns>
+              <Columns>
+                <InputColumns>
+                  <InsideInputLabel>Country/Region</InsideInputLabel>
+                  <SelectBox
+                    insideLabel
+                    id="country"
+                    name="country"
+                    onChange={(e) => setCountry(e.target.value)}
+                    name="country"
+                    value={country}
+                  >
+                    <option value="Oman">Oman</option>
+                    <option value="Nigeria">Nigeria</option>
+                    <option value="Kenya">Kenya</option>
+                  </SelectBox>
+                </InputColumns>
+              </Columns>
+              <Columns style={{ marginBottom: "0px" }}>
+                <InputColumns>
+                  <PhoneInput
+                    type='text'
+                    country={'om'}
+                    value={mobile}
+                    onChange={mobile => setMobile(mobile.replace(/[^0-9]+/g, ''))}
+                    onlyCountries={['om']}
+                    masks={{ om: '+... ....-....' }}
+                    copyNumbersOnly={true}
+                    containerStyle={{ direction: 'ltr' }}
+                    inputStyle={{ width: '100%', height: '40px', paddingRight: '48px' }}
+                    countryCodeEditable={false}
+                    isValid={(inputNumber, onlyCountries) => {
+                      return onlyCountries.some((country) => {
+                        return startsWith(inputNumber, country.dialCode) || startsWith(country.dialCode, inputNumber);
+                      });
+                    }}
+                  />
+                  <input type="hidden" name="mobile" value={mobile} ref={register} />
+                </InputColumns>
+              </Columns>
+              <Field>
+                <CheckControl>
+                  <Checkbox name="save">
+                    &nbsp;&nbsp;&nbsp;Save this information for next time
                       </Checkbox>
-            </CheckControl>
-          </Field>
-        </>
+                </CheckControl>
+              </Field>
+            </>
+          )}
       </Container>
     </>
   )

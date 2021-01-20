@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import {
-    Section,
-    Container,
-    Image,
-    Heading,
-    Form,
-    Button
+  Section,
+  Container,
+  Image,
+  Heading,
+  Form,
+  Button
 } from "react-bulma-components";
 
 const { Field, Control } = Form;
@@ -64,6 +64,10 @@ export const ProductHeadingContainer = styled.div`
 
 export const ProductHeading = styled(Heading)`
   font-size: 13px;
+  width: 145px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const ProductPrice = styled.p`
