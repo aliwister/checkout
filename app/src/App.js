@@ -53,14 +53,13 @@ import { Navbar } from 'react-bulma-components';
 const steps = ['Shipping address', 'Payment details', 'Review your order'];
 function reducer(state, action) {
   switch (action.type) {
-    case 'NEXT': ;
-      return { step: state.step + 1 }
+    case 'NEXT': 
+      return { ...state, step: state.step + 1 }
     case 'PREV':
-      return { step: state.step - 1 };
+      return { state, step: state.step - 1 };
     case 'SET_CARRIER':
       return {
         ...state,
-        step: state.step + 1,
         carrier: action.payload
       }
     default:
@@ -125,6 +124,7 @@ const App = (props) => {
     fetchPolicy: "network-only"
   });
   if (error) {
+    console.log("error",  secureKey, error)
     return (
       <div>
         <a href="https://www.badals.com">
@@ -143,7 +143,7 @@ const App = (props) => {
   else {
     //console.log(data);
   }
-  console.log("Data", data);
+
   return (
     <>
       <CssBaseline />
@@ -203,12 +203,10 @@ const App = (props) => {
               </RightGrid>
               <Hidden smDown>
                 <LeftGrid item md={5} xs={12}>
-
                   {/* <Wrapper>
                     <CartSummary products={data.cart.items} carrier={state.carrier} />
                   </Wrapper> */}
-                  <CartCheckout products={data.cart.items} carrier={state.carrier} />
-
+                  <CartCheckout products={data.cart.items} carrier={state.carrier} step={state.step} />
                 </LeftGrid>
               </Hidden>
 

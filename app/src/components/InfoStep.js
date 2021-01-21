@@ -180,7 +180,7 @@ export const InfoStep = (props) => {
     <React.Fragment>
       {loading && <p>Loading...</p>}
       <ButtonsRowContainer>
-        <Heading subtitle size={6} style={{margin: "0px"}}>Contact Information</Heading>
+        <Heading subtitle size={6} style={{ margin: "0px" }}>Contact Information</Heading>
         <LoginButtonWrapper>
           Already have an account?&nbsp;
           <LoginLinkButton>Log in</LoginLinkButton>
@@ -199,7 +199,12 @@ export const InfoStep = (props) => {
         </Field>
         <HeadingInformation subtitle size={6} >Delivery method</HeadingInformation>
         <RadioDiv style={{ borderBottom: "none", borderRadius: "5px 5px 0 0" }}>
-          <RadioWapper name="ship" onChange={(e) => setShip({ value: "ship" })} checked={ship.value === "ship"} style={{ color: ship.value === "ship" ? "#6f8f9d" : "black" }}>
+          <RadioWapper
+            name="ship"
+            onChange={(e) => setShip({ value: "ship" })}
+            checked={ship.value === "ship"}
+            style={{ color: ship.value === "ship" ? "#6f8f9d" : "black" }}
+          >
             <Icon style={{ marginLeft: "5px", marginRight: "5px" }}>
               <FontAwesomeIcon icon={faTruck} />
             </Icon>
@@ -207,7 +212,12 @@ export const InfoStep = (props) => {
             </RadioWapper>
         </RadioDiv>
         <RadioDiv style={{ borderRadius: "0 0 5px 5px" }}>
-          <RadioWapper name="ship" onChange={(e) => setShip({ value: "pick" })} checked={ship.value === "pick"} style={{ color: ship.value === "pick" ? "#6f8f9d" : "black" }}>
+          <RadioWapper
+            name="ship"
+            onChange={(e) => setShip({ value: "pick" })}
+            checked={ship.value === "pick"}
+            style={{ color: ship.value === "pick" ? "#6f8f9d" : "black" }}
+          >
             <Icon style={{ marginLeft: "5px", marginRight: "5px" }}>
               <FontAwesomeIcon icon={faBoxOpen} />
             </Icon>

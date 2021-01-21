@@ -22,7 +22,6 @@ export const RootGrid = styled(Grid)`
   padding:  ${ props  =>  props.theme.spacing(0)}px;
 `;
 export const ContainerGrid = styled(Grid)`
-  height: 100vh;
   width: 100%;
   margin-top:  ${ props  =>  props.theme.spacing(0)}px;
 `;

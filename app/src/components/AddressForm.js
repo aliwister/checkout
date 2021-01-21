@@ -135,7 +135,7 @@ export const AddressForm = (props) => {
         </AddressDropDown>
       </Container>
       <Container>
-        <AddAddressRadio checked={edit === -1} onChange={() => setEdit(-1)}>
+        <AddAddressRadio name="add-address" checked={edit === -1} onChange={() => setEdit(-1)}>
           &nbsp;Add a new address:
         </AddAddressRadio>
         {edit == -1 &&
