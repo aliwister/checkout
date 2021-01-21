@@ -34,6 +34,11 @@ export const CarrierStep = ({ state, dispatch }) => {
   else
     console.log(data);
 
+  const clickCarrier = async (carrier) => {
+    await setCarrier(carrier.value);
+    dispatch({ type: 'SET_CARRIER', payload: carrier });
+  }
+
   const onSubmit = async () => {
     const {
       data: { setCarrier },
@@ -42,8 +47,9 @@ export const CarrierStep = ({ state, dispatch }) => {
     });
     console.log(setCarrier, 'cart_info');
     if (setCarrier) {
-      dispatch({ type: 'SET_CARRIER', payload: data.carriers.filter(x => x.value === carrier)[0] });
+      dispatch({ type: 'NEXT' });
     }
+    
   }
   return (
     <React.Fragment>
@@ -51,12 +57,12 @@ export const CarrierStep = ({ state, dispatch }) => {
       <InfoDiv>
         <form onSubmit={handleSubmit(onSubmit)}>
           {data.carriers.map(x => (
-            <Grid item sm={12} key={x.value} spacing={3}>
-              <Card onClick={() => setCarrier(x.value)}>
+            <Grid item sm={12} key={x.value}>
+              <Card onClick={() => clickCarrier(x)}>
                 <CardActions>
                   <input name="Carrier" type="radio" value={x.value} key={x.value}
                     ref={register({ required: true })}
-                    onChange={() => setCarrier(x.value)}
+                    onChange={() => clickCarrier(x)}
                     checked={carrier === x.value}
                   />
                 </CardActions>
@@ -75,13 +81,13 @@ export const CarrierStep = ({ state, dispatch }) => {
           ))}
 
           <NavButton type="submit" variant="contained"
-            color="primary">
+            style = {{margin: "0px"}}>
             {(loading) ? <Loader /> : (
               <span>Next</span>
             )}
           </NavButton>
           <NavButton variant="contained"
-            color="secondary" onClick={() => dispatch({ type: 'PREV' })}>
+            onClick={() => dispatch({ type: 'PREV' })}>
             {(loading) ? <Loader /> : (
               <span>Back</span>
             )}

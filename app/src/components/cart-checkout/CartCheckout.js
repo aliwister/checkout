@@ -64,14 +64,14 @@ const CartItem = ({ product }) => {
       </ProductImageContainer>
       <ProductHeadingContainer>
         <ProductHeading>{product.name}</ProductHeading>
-        {/* <ProductHeading subtitle>500GM</ProductHeading> */}
       </ProductHeadingContainer>
       <ProductPrice>{productPrice}&nbsp;{CURRENCY}</ProductPrice>
     </ProductContainer>
   )
 }
 
-export const CartCheckout = ({ products, carrier }) => {
+
+export const CartCheckout = ({ products, carrier, step }) => {
   const [cardInfo, setCardInfo] = useState("");
   const finalPrices = calculateTotalPrice(products, carrier);
   return (
@@ -98,7 +98,7 @@ export const CartCheckout = ({ products, carrier }) => {
         </ProductInfoRowContainer>
         <ProductInfoRowContainer>
           <ProductInfoTitle>Shipping</ProductInfoTitle>
-          <ProductInfoSubTitle subtitle>Calculated at next step</ProductInfoSubTitle>
+          <ProductInfoSubTitle subtitle>{step === 0 ? "Calculated at next step" : carrier !== undefined && carrier.cost ? carrier.cost + " " + CURRENCY : "-"}</ProductInfoSubTitle>
         </ProductInfoRowContainer>
       </ProductInfosSection>
       <ProductInfoRowContainer padding="20px 0px 0px 0px">

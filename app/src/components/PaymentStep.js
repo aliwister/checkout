@@ -124,7 +124,6 @@ export const PaymentStep = ({ state, dispatch }) => {
   }
   if (loading)
     return "loading";
-  console.log("data", data);
 
   return (
     <React.Fragment>
@@ -133,15 +132,15 @@ export const PaymentStep = ({ state, dispatch }) => {
       </Backdrop>
       <Heading size={5}>Payment Step</Heading>
       <Container>
-        {data.paymentMethods.map(x => (
-          <PaymentItemCard onClick={() => setPaymentMethod(x.ref)}>
+        {data.paymentMethods.map((x, i) => (
+          <PaymentItemCard key={i} onClick={() => setPaymentMethod(x.ref)}>
             <Card.Content>
               <PaymentSelectRadio
                 checked={paymentMethod === x.ref}
                 onChange={() => setPaymentMethod(x.ref)}
-                ref={register({ required: true })}
                 value={x.ref}
                 key={x.ref}
+                name={x.name}
               >
                 &nbsp;&nbsp;
                 {x.image && (<Image src={require('../assets/' + x.image)} />)}
@@ -160,11 +159,11 @@ export const PaymentStep = ({ state, dispatch }) => {
       <CheckoutButtonContainer>
         <form onSubmit={handleSubmit(onSubmit)}>
           {(paymentMethod != 'checkoutcom') && (<><NavButton type="submit" variant="contained"
-            color="primary">
+            >
             Complete Order
                 </NavButton>
             <NavButton variant="contained"
-              color="secondary" onClick={() => dispatch({ type: 'PREV' })}>
+              onClick={() => dispatch({ type: 'PREV' })}>
               {(loading) ? <Loader /> : (
                 <span>Back</span>
               )}
