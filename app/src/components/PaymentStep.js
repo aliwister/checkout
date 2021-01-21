@@ -1,26 +1,47 @@
-import React, { useReducer, useState } from 'react';
-import { Container, Grid, Paper, Typography, TextField, OutlinedInput } from '@material-ui/core';
-import styled, { ThemeProvider } from 'styled-components';
-import { useForm, Controller } from "react-hook-form";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { useForm } from "react-hook-form";
 import CkoFrames from './CkoFrames';
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { PROCESS_PAYMENT } from "../graph/PROCESS_PAYMENT";
 import { PAYMENT_METHODS } from "../graph/PAYMENT_METHODS";
-import { ButtonDiv, NavButton } from "../App.styles";
+import { NavButton } from "../App.styles";
 import Loader from "./Loader";
-import CardActions from "@material-ui/core/CardActions";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import Alert from "@material-ui/lab/Alert";
+import { Form, Heading, Container, Card, Image } from "react-bulma-components";
 
-import { Card } from 'react-bulma-components';
-import 'react-bulma-components/dist/react-bulma-components.min.css';
+const { Radio } = Form;
 
 const InfoDiv = styled.div`
-  //padding: ${ props => props.theme.spacing(8)}px;
-  margin-bottom: ${ props => props.theme.spacing(4)}px;
+  //padding: ${props => props.theme.spacing(8)}px;
+  margin-bottom: ${props => props.theme.spacing(4)}px;
 `;
+
+const PaymentSelectRadio = styled(Radio)`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const CheckoutButtonContainer = styled(Container)`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: row;
+  justify-content: flex-end;
+  padding: 15px 0px;
+`;
+
+const PaymentItemCard = styled(Card)`
+  border: 1px solid #999999;
+  :nth-child(2) {
+    border-top: none;
+  }
+`;
+
 const initialState = {
   token: false,
   hideFrame: false
@@ -103,42 +124,40 @@ export const PaymentStep = ({ state, dispatch }) => {
   }
   if (loading)
     return "loading";
+  console.log("data", data);
 
   return (
     <React.Fragment>
       <Backdrop className={classes.backdrop} open={open} >
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Typography variant="h6">Payment Step</Typography>
-      <InfoDiv>
-        {/*                <Alert severity="success">We are now back live with secure Debit Card processing!</Alert>
-                <Alert severity="success">الآن يمكنكم استخدام بطاقات الدفع المباشر بشكل آمن!</Alert>*/}
+      <Heading size={5}>Payment Step</Heading>
+      <Container>
         {data.paymentMethods.map(x => (
-          <Grid item sm={12} key={x.ref}>
-
-            <Card onClick={() => setPaymentMethod(x.ref)}>
-              <Card.Content>
-                <CardActions>
-                  <input name="pm" type="radio" value={x.ref} key={x.ref}
-                    ref={register({ required: true })}
-                    onChange={() => setPaymentMethod(x.ref)}
-                    checked={paymentMethod === x.ref}
-                  />
-                </CardActions>
-                {x.image && (<img src={require('../assets/' + x.image)} />)}
+          <PaymentItemCard onClick={() => setPaymentMethod(x.ref)}>
+            <Card.Content>
+              <PaymentSelectRadio
+                checked={paymentMethod === x.ref}
+                onChange={() => setPaymentMethod(x.ref)}
+                ref={register({ required: true })}
+                value={x.ref}
+                key={x.ref}
+              >
+                &nbsp;&nbsp;
+                {x.image && (<Image src={require('../assets/' + x.image)} />)}
                 {!x.image && (<span>{x.name} </span>)}
-                {(x.ref == 'checkoutcom' && paymentMethod === x.ref) && (
+              </PaymentSelectRadio>
+              {(x.ref == 'checkoutcom' && paymentMethod === x.ref) && (
 
-                  <CkoFrames handleProcessPayment={handleProcessPayment} customerName={name} />
+                <CkoFrames handleProcessPayment={handleProcessPayment} customerName={name} />
 
-                )}
-              </Card.Content>
-            </Card>
-            <br />
-
-
-          </Grid>
+              )}
+            </Card.Content>
+          </PaymentItemCard>
         ))}
+      </Container>
+      
+      <CheckoutButtonContainer>
         <form onSubmit={handleSubmit(onSubmit)}>
           {(paymentMethod != 'checkoutcom') && (<><NavButton type="submit" variant="contained"
             color="primary">
@@ -153,7 +172,7 @@ export const PaymentStep = ({ state, dispatch }) => {
           </>
           )}
         </form>
-      </InfoDiv>
+      </CheckoutButtonContainer>
     </React.Fragment>
   )
 }
