@@ -37,8 +37,10 @@ const CheckoutButtonContainer = styled(Container)`
 
 const PaymentItemCard = styled(Card)`
   border: 1px solid #999999;
+  border-radius: 5px 5px 0 0;
   :nth-child(2) {
     border-top: none;
+    border-radius: 0 0 5px 5px;
   }
 `;
 
