@@ -1,1 +1,14 @@
 npm run start:dev
+
+//target: 'http://localhost:8081/graphql',
+target: 'https://checkout.badals.com/graphql',
+
+
+<script>
+    window.secureKey = "87612553-3571-4652-9b97-0a77b7040f1";
+    window.guid = "sdald";
+</script>
+
+http://localhost:3003/test.html
+
+npm run dev
