@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import startsWith from 'lodash.startswith';
-import { Form, Columns, Container, Card, Dropdown, Button, Box, Modal, Section, Heading, Navbar } from 'react-bulma-components';
+import { Form, Columns, Container, Image, Dropdown, Button, Modal, Section, Heading } from 'react-bulma-components';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import styled from 'styled-components';
 import { Address } from '../App.styles';
@@ -10,6 +10,7 @@ import { MapModal } from "./map-modal/mapModal";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Icon } from 'react-bulma-components';
 import { faMapMarkerAlt } from '@fortawesome/fontawesome-free-solid';
+// import mapIocn from '../assets/map-icon';
 
 const { Checkbox, Field, Input, Control, Select, Label, Radio } = Form;
 
@@ -104,15 +105,12 @@ const MapModalContainer = styled(Modal.Content)`
 
 const ModalHeadContainer = styled(Container)`
   width: 100%;
-  height: 70px;
+  height: 10px;
   background-color: white;
   display: flex;
   align-items: center;
   flex-direction: row;
   justify-content: flex-start;
-  position: absolute;
-  top: 0;
-  z-index: 10;
 `;
 
 const ModalHeading = styled(Heading)`
@@ -130,10 +128,11 @@ const ModalLink = styled.a`
 `;
 
 const MapSearchContainer = styled(Container)`
-  width: 100%;
+  width: 80%;
   padding: 0px 20px;
   position: absolute;
-  top: 90px;
+  margin: 0 10%;
+  top: 10px;
   z-index: 10;
 `;
 
@@ -168,14 +167,71 @@ const ComfirmContainer = styled(Container)`
    justify-content: flex-end;
 `;
 
-const ComfirmButton = styled(Button)`
-  boder: none;
-  margin-right: 20px;
+const ComfirmDiv = styled.div`
+    margin-right: 20px;
+    border: 1px solid;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
 `;
 
 const MapViewContainer = styled(Container)`
   width: 100%;
   flex: 10;
+`;
+
+const PositionSection = styled(Section)`
+  width: 100%;
+  border: 1px solid #a6a6a6;
+  border-radius: 5px;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const LeftContainer = styled(Container)`
+  flex: 1;
+`;
+
+const AddressDiv = styled.div`
+  font-size: 20px;
+  font-weight: 400;
+  padding-left: 5px;
+  padding-top: 5px;
+`;
+
+const AddressMarkerDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 500;
+`;
+
+const EditDiv = styled.div`
+  width: 80px;
+  height: auto;
+  position: relative;
+`;
+
+const EditMapDiv = styled.div`
+  position: absolute;
+  width: 100%;
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0.5;
+  background-color: #363636;
+  bottom: 0;
+  text-align: center;
+  padding: 5px;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  :hover {
+    color: white;
+  }
 `;
 
 
@@ -205,17 +261,59 @@ export const AddressForm = (props) => {
   const [postalCode, setPostalcode] = useState(edit ? address.postalCode : "");
   const [save, setSave] = useState(edit ? address.save : false);
   const [addressSelect, setAddressSelect] = useState(addresses[0]);
+  const [mapAddresses, setMapAddresses] = useState("");
   const [mapModal, setMapModal] = useState(false);
+  const [addressPosition, setAddressPosition] = useState();
 
   const [mapSearch, setMapSearch] = useState("");
+  const [clickedPosition, setClickedPosition] = useState({
+    latClick: 0,
+    lngClick: 0,
+    markers: []
+  });
   //const [,] = useState(!props.address.id && props.address.);
   // console.log(edit);
+
+  // useEffect(() => {
+  //   setClickedPosition(mapSearch)
+  // }, [mapSearch])
 
   const setAddress = (selected) => {
     //console.log(id);
     setAddressSelect(selected);
     setEdit(selected.id);
   }
+
+  const positionClick = (e) => {
+    const lat = e.latLng.lat();
+    const lng = e.latLng.lng();
+    let url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyDVHEfgaxWeseBO21SI3r3gkJzfk9JzvIc`
+    axios.get(url).then(response => {
+      setClickedPosition({
+        googleReverseGeolocation: response.data.results[0].formatted_address,
+        markers: [{ position: { lat: e.latLng.lat(), lng: e.latLng.lng() } }],
+      });
+      setMapAddresses(response.data.results[0].formatted_address);
+      setAddressPosition(response.data.results[0].geometry.location);
+      setMapSearch(response.data.results[0].formatted_address);
+    });
+  }
+
+  const handleMapSearch = (e) => {
+    if (e.key === 'Enter') {
+      let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${e.target.value}&key=AIzaSyDVHEfgaxWeseBO21SI3r3gkJzfk9JzvIc`
+      axios.get(url).then(response => {
+        console.log("Response", response)
+        setAddressPosition(response.data.results[0].geometry.location);
+
+        setClickedPosition({
+          googleReverseGeolocation: response.data.results[0].formatted_address,
+          markers: [{ position: response.data.results[0].geometry.location }],
+        });
+      });
+    }
+  }
+
   return (
     <>
       <Container>
@@ -241,11 +339,11 @@ export const AddressForm = (props) => {
               <ModalHeading>
                 Add a New address
               </ModalHeading>
-              <ModalLink href="#">Enter address manually instead</ModalLink>
+              <ModalLink href="#" onClick={() => {setMapModal(false); setEdit(-1)}}>Enter address manually instead</ModalLink>
             </ModalHeadContainer>
             <MapViewContainer>
               <MapSearchContainer>
-                <InputSearch value={mapSearch} onChange={(e) => setMapSearch(e.target.value)} placeholder="Search for your location" />
+                <InputSearch value={mapSearch} onChange={(e) => setMapSearch(e.target.value)} onKeyDown={handleMapSearch} placeholder="Search for your location" />
               </MapSearchContainer>
               <LocateButton>
                 <Icon>
@@ -253,31 +351,37 @@ export const AddressForm = (props) => {
                 </Icon>
               &nbsp;&nbsp;&nbsp;Locate Me
             </LocateButton>
-              <MapModal />
+              <MapModal clickedPosition={clickedPosition} searchedPosition={addressPosition} positionClick={(e) => positionClick(e)} />
             </MapViewContainer>
             <ComfirmContainer>
-              <ComfirmButton>COMFIRM LOCATION</ComfirmButton>
+              <ComfirmDiv onClick={() => { setMapModal(false); setEdit(-1) }} >COMFIRM LOCATION</ComfirmDiv>
             </ComfirmContainer>
           </ModalSection>
         </MapModalContainer>
       </Modal>
       <Container>
-        <AddAddressRadio name="add-address" checked={edit === -1} onChange={() => setMapModal(true)}>
+        <AddAddressRadio name="add-address" onChange={() => setMapModal(true)} checked={edit === -1} >
           &nbsp;Add a new address:
         </AddAddressRadio>
         {edit == -1 &&
           (
             <>
-              {/* <InfoInput
-                insideLabel
-                required
-                id="alias"
-                name="alias"
-                placeholder="Address Name, e.g. Home or Work"
-                inputRef={register({ required: true, maxLength: 50, minLength: 2 })}
-                value={alias}
-                onChange={(e) => setAlias(e.target.value)}
-              /> */}
+              <PositionSection>
+                <LeftContainer>
+                  <AddressMarkerDiv>
+                    <Icon>
+                      <FontAwesomeIcon icon={faMapMarkerAlt} />
+                    </Icon>Set from map
+                  </AddressMarkerDiv>
+                  <AddressDiv>
+                    {mapAddresses}
+                  </AddressDiv>
+                </LeftContainer>
+                <EditDiv>
+                  <img src={require(`../assets/map-icon.svg`)} />
+                  <EditMapDiv onClick={() => setMapModal(true)}>Edit</EditMapDiv>
+                </EditDiv>
+              </PositionSection>
               <Columns style={{ marginTop: '0px', marginBottom: '0px' }}>
                 <InputColumns>
                   <InfoInput
@@ -315,59 +419,6 @@ export const AddressForm = (props) => {
                 value={line1}
                 onChange={(e) => setLine1(e.target.value)}
               />
-              {/* <InfoInput
-                insideLabel
-                id="line2"
-                name="line2"
-                placeholder="Address line 2 "
-                autoComplete="billing address-line2"
-                inputRef={register({ maxLength: 50, minLength: 2 })}
-                value={line2}
-                onChange={(e) => setLine2(e.target.value)}
-              /> */}
-              {/* <InfoInput
-                insideLabel
-                required
-                id="city"
-                name="city"
-                placeholder="City"
-                autoComplete="billing address-level2"
-                inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-              /> */}
-              {/* <InfoInput
-                required
-                id="postalCode"
-                name="postalCode"
-                placeholder="Zip / Postal code"
-                autoComplete="billing postal-code"
-                inputRef={register}
-                onChange={(e) => setPostalcode(e.target.value)}
-                value={postalCode}
-              /> */}
-              {/* <InfoInput
-                required
-                id="state"
-                name="state"
-                placeholder="State/Province/Region"
-                autoComplete="billing postal-code"
-                inputRef={register}
-                onChange={(e) => setState(e.target.value)}
-                value={state}
-              /> */}
-              {/* <SelectBox
-                insideLabel
-                id="country"
-                name="country"
-                onChange={(e) => setCountry(e.target.value)}
-                name="country"
-                value={country}
-              >
-                <option value="Oman">Oman</option>
-                <option value="Nigeria">Nigeria</option>
-                <option value="Kenya">Kenya</option>
-              </SelectBox> */}
               <PhoneInput
                 type='text'
                 country={'om'}

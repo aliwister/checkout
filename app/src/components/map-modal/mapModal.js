@@ -1,30 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { compose, withProps } from "recompose";
 import {
   withScriptjs,
   withGoogleMap,
   GoogleMap,
-  Marker
+  Marker,
+  GroundOverlay
 } from "react-google-maps";
 
 export const MapModal = compose(
   withProps({
-    /**
-     * Note: create and replace your own key in the Google console.
-     * https://console.developers.google.com/apis/dashboard
-     * The key "AIzaSyBkNaAGLEVq0YLQMi-PYEMabFeREadYe1Q" can be ONLY used in this sandbox (no forked).
-     */
     googleMapURL:
-      "https://maps.googleapis.com/maps/api/js?key=AIzaSyCJ_35G7XTuVQ7UojZ2_8UK7uuxQBaSGQQ&v=3.exp&libraries=geometry,visualization,drawing,places",
+      "https://maps.googleapis.com/maps/api/js?key=AIzaSyDVHEfgaxWeseBO21SI3r3gkJzfk9JzvIc&v=3.exp&libraries=geometry,visualization,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `100%` }} />,
     mapElement: <div style={{ height: `100%` }} />
   }),
   withScriptjs,
   withGoogleMap
-)(props => (
-  <GoogleMap defaultZoom={8} defaultCenter={{ lat: 21.4735, lng: 55.9754 }}
-  >
-      <Marker defaultPosition={{ lat: 21.4735, lng: 55.9754 }} />
-  </GoogleMap>
-));
+)(props => {
+  const [mapPosition, setMapPosition] = useState({ lat: 21.4735, lng: 55.9754 });
+
+  useEffect(() => {
+    if(props.searchedPosition !== undefined) {
+      setMapPosition(props.searchedPosition)
+    }
+  }, [props.searchedPosition]);
+  return (
+    <GoogleMap
+      defaultZoom={8}
+      center={mapPosition}
+      onClick={props.positionClick}
+    >
+      {!!props.clickedPosition.markers && props.clickedPosition.markers.map((marker, index) => {
+        return <Marker key={index} title={marker.googleReverseGeolocation} position={{ lat: marker.position.lat, lng: marker.position.lng }} />
+      })
+      }
+
+    </GoogleMap>
+  )
+
+});
+
