@@ -48,8 +48,6 @@ import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Backdrop from "@material-ui/core/Backdrop";
 
-import { Navbar } from 'react-bulma-components';
-
 const steps = ['Shipping address', 'Payment details', 'Review your order'];
 function reducer(state, action) {
   switch (action.type) {
@@ -146,7 +144,7 @@ const App = (props) => {
 
   return (
     <>
-      <CssBaseline />
+      {/* <CssBaseline /> */}
       <Header>
         <LogoWrapper> <LogoImage src={Logoimage} /> </LogoWrapper>
         <Hidden smDown>
@@ -182,7 +180,7 @@ const App = (props) => {
                     <div style={{ textAlign: 'center' }}> <ShoppingBasketIcon fontSize="large" onClick={toggleDrawer(true)} /></div>
                     <Drawer anchor="right" open={drawer} onClose={toggleDrawer(false)}>
                       <div>
-                        <span> <IconButton onClick={toggleDrawer(false)} ><CloseIcon /></IconButton></span>s
+                        <span> <IconButton onClick={toggleDrawer(false)} ><CloseIcon /></IconButton></span>
                         <CartSummary products={data.cart.items} carrier={state.carrier} />
                       </div>
                     </Drawer>

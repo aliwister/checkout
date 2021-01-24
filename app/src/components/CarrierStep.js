@@ -6,9 +6,8 @@ import { CARRIERS } from "../graph/CARRIERS";
 import { SET_CARRIER } from "../graph/SET_CARRIER";
 import { ButtonDiv, NavButton } from "../App.styles";
 import Loader from "./Loader";
-import CardActions from "@material-ui/core/CardActions";
 
-import { Card, Heading, Container } from 'react-bulma-components';
+import { Heading, Container } from 'react-bulma-components';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { Form } from 'react-bulma-components';
 const { Radio } = Form;
@@ -24,7 +23,7 @@ const RadioDiv = styled.div`
 `;
 
 const CerrierContainer = styled(Container)`
-  border: 1px solid #999999;
+  border: 1px solid #dbdbdb;
   display: flex;
   flex-direction: row;
   align-items: center;

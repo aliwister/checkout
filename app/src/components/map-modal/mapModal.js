@@ -11,7 +11,7 @@ import {
 export const MapModal = compose(
   withProps({
     googleMapURL:
-      "https://maps.googleapis.com/maps/api/js?key=AIzaSyDVHEfgaxWeseBO21SI3r3gkJzfk9JzvIc&v=3.exp&libraries=geometry,visualization,drawing,places",
+      `https://maps.googleapis.com/maps/api/js?key=AIzaSyCJ_35G7XTuVQ7UojZ2_8UK7uuxQBaSGQQ&v=3.exp&libraries=geometry,visualization,drawing,places`,
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `100%` }} />,
     mapElement: <div style={{ height: `100%` }} />
@@ -19,7 +19,7 @@ export const MapModal = compose(
   withScriptjs,
   withGoogleMap
 )(props => {
-  const [mapPosition, setMapPosition] = useState({ lat: 21.4735, lng: 55.9754 });
+  const [mapPosition, setMapPosition] = useState({ lat: 23.5886235, lng: 58.3884731 });
 
   useEffect(() => {
     if(props.searchedPosition !== undefined) {
@@ -28,7 +28,7 @@ export const MapModal = compose(
   }, [props.searchedPosition]);
   return (
     <GoogleMap
-      defaultZoom={8}
+      defaultZoom={14}
       center={mapPosition}
       onClick={props.positionClick}
     >
