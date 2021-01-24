@@ -1,29 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import startsWith from 'lodash.startswith';
-import { Form, Columns, Container, Image, Dropdown, Button, Modal, Section, Heading } from 'react-bulma-components';
+import { Form, Columns, Container, Dropdown, Button, Modal, Section, Heading } from 'react-bulma-components';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import styled from 'styled-components';
-import { Address } from '../App.styles';
 import { MapModal } from "./map-modal/mapModal";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Icon } from 'react-bulma-components';
 import { faMapMarkerAlt } from '@fortawesome/fontawesome-free-solid';
-// import mapIocn from '../assets/map-icon';
 
-const { Checkbox, Field, Input, Control, Select, Label, Radio } = Form;
-
-const SelectBox = styled(Select)`
-  width: 100%;
-  height: auto !important;
-  margin: 10px 0px;
-  select {
-    width: 100%;
-    height: 2.9em;
-    font-size: 15px;
-  }
-`;
+const { Checkbox, Field, Input, Control, Radio } = Form;
 
 const CheckControl = styled(Control)`
   label {
@@ -35,14 +22,6 @@ const CheckControl = styled(Control)`
   }
 `;
 
-const InsideInputLabel = styled(Label)`
-  position: absolute;
-  z-index: 10;
-  font-size: 13px;
-  font-weight: 200;
-  margin-left: 12px;
-`;
-
 const InputColumns = styled(Columns.Column)`
   position: relative;
   padding-top: 0px !important;
@@ -51,7 +30,6 @@ const InputColumns = styled(Columns.Column)`
 
 const AddressDropDown = styled(Dropdown)`
   width: 100%;
-  border: 1px solid #a6a6a6;
   border-radius: 5px;
 
   .dropdown-trigger {
@@ -128,10 +106,10 @@ const ModalLink = styled.a`
 `;
 
 const MapSearchContainer = styled(Container)`
-  width: 80%;
+  width: 60%;
   padding: 0px 20px;
   position: absolute;
-  margin: 0 10%;
+  margin: 0 20%;
   top: 10px;
   z-index: 10;
 `;
@@ -146,15 +124,15 @@ const InputSearch = styled(Input)`
 
 const LocateButton = styled(Button)` 
    position: absolute;
-   top: 150px;
-   right: 20px;
+   top: 50px;
+   right: 10px;
    z-index: 10;
    border-radius: 27px;
    padding: 0 20px;
    font-size: 20px;
    font-weight: 700;
    box-shadow: 1px 3px 12px #999999;
-   border: 2px solid #999999;
+   border: 2px solid #151313;;
 `;
 
 const ComfirmContainer = styled(Container)`
@@ -234,6 +212,7 @@ const EditMapDiv = styled.div`
   }
 `;
 
+export const apiKey = "AIzaSyCJ_35G7XTuVQ7UojZ2_8UK7uuxQBaSGQQ";
 
 export const AddressForm = (props) => {
   //const { register, handleSubmit, watch, errors } = useForm();
@@ -287,7 +266,8 @@ export const AddressForm = (props) => {
   const positionClick = (e) => {
     const lat = e.latLng.lat();
     const lng = e.latLng.lng();
-    let url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyDVHEfgaxWeseBO21SI3r3gkJzfk9JzvIc`
+    console.log("position", lat, lng)
+    let url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`
     axios.get(url).then(response => {
       setClickedPosition({
         googleReverseGeolocation: response.data.results[0].formatted_address,
@@ -301,9 +281,8 @@ export const AddressForm = (props) => {
 
   const handleMapSearch = (e) => {
     if (e.key === 'Enter') {
-      let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${e.target.value}&key=AIzaSyDVHEfgaxWeseBO21SI3r3gkJzfk9JzvIc`
+      let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${e.target.value}&key=${apiKey}`
       axios.get(url).then(response => {
-        console.log("Response", response)
         setAddressPosition(response.data.results[0].geometry.location);
 
         setClickedPosition({
@@ -312,6 +291,29 @@ export const AddressForm = (props) => {
         });
       });
     }
+  };
+
+  const getGeolocation = () => {
+    const url = `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey}`;
+
+    axios.post(url, {}).then(response => {
+      getLocation(response.data.location);
+    })
+  };
+
+  const getLocation = (location) => {
+    const lat = location.lat;
+    const lng = location.lng;
+    let url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`
+    axios.get(url).then(response => {
+      setClickedPosition({
+        googleReverseGeolocation: response.data.results[0].formatted_address,
+        markers: [{ position: { lat: lat, lng: lng } }],
+      });
+      setMapAddresses(response.data.results[0].formatted_address);
+      setAddressPosition(response.data.results[0].geometry.location);
+      setMapSearch(response.data.results[0].formatted_address);
+    });
   }
 
   return (
@@ -345,7 +347,7 @@ export const AddressForm = (props) => {
               <MapSearchContainer>
                 <InputSearch value={mapSearch} onChange={(e) => setMapSearch(e.target.value)} onKeyDown={handleMapSearch} placeholder="Search for your location" />
               </MapSearchContainer>
-              <LocateButton>
+              <LocateButton onClick = {() => getGeolocation()}>
                 <Icon>
                   <FontAwesomeIcon icon={faMapMarkerAlt} />
                 </Icon>
