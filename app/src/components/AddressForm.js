@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import startsWith from 'lodash.startswith';
-import { Form, Columns, Container, Dropdown, Button, Modal, Section, Heading } from 'react-bulma-components';
+import { Form, Columns, Container, Card, Dropdown, Button, Box, Modal, Section, Heading, Navbar } from 'react-bulma-components';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import styled from 'styled-components';
 import { MapModal } from "./map-modal/mapModal";
@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Icon } from 'react-bulma-components';
 import { faMapMarkerAlt } from '@fortawesome/fontawesome-free-solid';
 
-const { Checkbox, Field, Input, Control, Radio } = Form;
+const { Checkbox, Field, Input, Control, Radio, Select } = Form;
 
 const CheckControl = styled(Control)`
   label {
@@ -163,6 +163,7 @@ const PositionSection = styled(Section)`
   border: 1px solid #a6a6a6;
   border-radius: 5px;
   padding: 10px;
+  margin-bottom: 10px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -212,13 +213,24 @@ const EditMapDiv = styled.div`
   }
 `;
 
+
 export const apiKey = "AIzaSyBY_OmJQPkU83oYc6t9SU74T3pHe9ejGpI";
+const SelectBox = styled(Select)`
+  width: 100%;
+  height: auto !important;
+  margin: 10px 0px;
+  select {
+    width: 100%;
+    height: 2.9em;
+    font-size: 15px;
+  }
+`;
 
 export const AddressForm = (props) => {
   //const { register, handleSubmit, watch, errors } = useForm();
   //const onSubmit = data => { console.log(data); }
 
-  const { addresses, register } = props;
+  const { addresses, register, setAddressFromMap } = props;
   let address;
   if (!props.address) {
     address = { firstName: '', lastName: '', line1: '', line2: '', city: '', postalCode: '', country: 'Oman', mobile: '', state: '' }
@@ -269,6 +281,7 @@ export const AddressForm = (props) => {
     console.log("position", lat, lng)
     let url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`
     axios.get(url).then(response => {
+      console.log("address===", response.data.results[0]);
       setClickedPosition({
         googleReverseGeolocation: response.data.results[0].formatted_address,
         markers: [{ position: { lat: e.latLng.lat(), lng: e.latLng.lng() } }],
@@ -276,7 +289,54 @@ export const AddressForm = (props) => {
       setMapAddresses(response.data.results[0].formatted_address);
       setAddressPosition(response.data.results[0].geometry.location);
       setMapSearch(response.data.results[0].formatted_address);
+      setAddressFromMap(getAddressObject(response.data.results[0].address_components));
     });
+  }
+
+  const getAddressObject = (address_components) => {
+    let ShouldBeComponent = {
+      home: ["street_number"],
+      postal_code: ["postal_code"],
+      street: ["street_address", "route"],
+      region: [
+        "administrative_area_level_1",
+        "administrative_area_level_2",
+        "administrative_area_level_3",
+        "administrative_area_level_4",
+        "administrative_area_level_5"
+      ],
+      city: [
+        "locality",
+        "sublocality",
+        "sublocality_level_1",
+        "sublocality_level_2",
+        "sublocality_level_3",
+        "sublocality_level_4"
+      ],
+      country: ["country"]
+    };
+
+    let address = {
+      home: "",
+      postal_code: "",
+      street: "",
+      region: "",
+      city: "",
+      country: ""
+    };
+    address_components.forEach(component => {
+      for (var shouldBe in ShouldBeComponent) {
+        if (ShouldBeComponent[shouldBe].indexOf(component.types[0]) !== -1) {
+          if (shouldBe === "country") {
+            address[shouldBe] = component.short_name;
+          } else {
+            address[shouldBe] = component.long_name;
+          }
+        }
+      }
+    });
+    console.log("address object", address);
+    return address;
   }
 
   const handleMapSearch = (e) => {
@@ -341,13 +401,13 @@ export const AddressForm = (props) => {
               <ModalHeading>
                 Add a New address
               </ModalHeading>
-              <ModalLink href="#" onClick={() => {setMapModal(false); setEdit(-1)}}>Enter address manually instead</ModalLink>
+              <ModalLink href="#" onClick={() => { setMapModal(false); setEdit(1) }} checked={edit === 1}>Enter address manually instead</ModalLink>
             </ModalHeadContainer>
             <MapViewContainer>
               <MapSearchContainer>
                 <InputSearch value={mapSearch} onChange={(e) => setMapSearch(e.target.value)} onKeyDown={handleMapSearch} placeholder="Search for your location" />
               </MapSearchContainer>
-              <LocateButton onClick = {() => getGeolocation()}>
+              <LocateButton onClick={() => getGeolocation()}>
                 <Icon>
                   <FontAwesomeIcon icon={faMapMarkerAlt} />
                 </Icon>
@@ -362,12 +422,12 @@ export const AddressForm = (props) => {
         </MapModalContainer>
       </Modal>
       <Container>
-        <AddAddressRadio name="add-address" onChange={() => setMapModal(true)} checked={edit === -1} >
+        <AddAddressRadio name="add-address" onChange={() => setMapModal(true)} checked={edit === -1 || edit === 1} >
           &nbsp;Add a new address:
         </AddAddressRadio>
         {edit == -1 &&
           (
-            <>
+            <div>
               <PositionSection>
                 <LeftContainer>
                   <AddressMarkerDiv>
@@ -384,6 +444,15 @@ export const AddressForm = (props) => {
                   <EditMapDiv onClick={() => setMapModal(true)}>Edit</EditMapDiv>
                 </EditDiv>
               </PositionSection>
+                  <InfoInput
+                    required
+                    id="alias"
+                    name="alias"
+                    placeholder="Address Name, e.g. Home or Work"
+                    domRef={register({ required: true, maxLength: 50, minLength: 2 })}
+                    value={alias}
+                    onChange={(e) => setAlias(e.target.value)}
+                  />
               <Columns style={{ marginTop: '0px', marginBottom: '0px' }}>
                 <InputColumns>
                   <InfoInput
@@ -392,7 +461,7 @@ export const AddressForm = (props) => {
                     name="firstName"
                     placeholder="First name"
                     autoComplete="fname"
-                    inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
+                    domRef={register({ required: true, maxLength: 15, minLength: 2 })}
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                   />
@@ -404,7 +473,7 @@ export const AddressForm = (props) => {
                     name="lastName"
                     placeholder="Last name"
                     autoComplete="lname"
-                    inputRef={register({ required: true, maxLength: 15, minLength: 2 })}
+                    domRef={register({ required: true, maxLength: 15, minLength: 2 })}
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                   />
@@ -413,13 +482,13 @@ export const AddressForm = (props) => {
               <InfoInput
                 insideLabel
                 required
-                id="line1"
-                name="line1"
-                placeholder="Address line 1"
-                autoComplete="billing address-line1"
-                inputRef={register({ required: true, maxLength: 50, minLength: 2 })}
-                value={line1}
-                onChange={(e) => setLine1(e.target.value)}
+                id="line2"
+                name="line2"
+                placeholder="Address line 2"
+                autoComplete="billing address-line2"
+                domRef={register({ required: true, maxLength: 50, minLength: 2 })}
+                value={line2}
+                onChange={(e) => setLine2(e.target.value)}
               />
               <PhoneInput
                 type='text'
@@ -447,7 +516,138 @@ export const AddressForm = (props) => {
                       </Checkbox>
                 </CheckControl>
               </Field>
-            </>
+            </div>
+          )}
+        {edit === 1 &&
+          (
+            <Control>
+              <InfoInput
+                // insideLabel
+                required
+                id="alias"
+                name="alias"
+                placeholder="Address Name, e.g. Home or Work"
+                domRef={register({ required: true, maxLength: 50, minLength: 2 })}
+                value={alias}
+                onChange={(e) => setAlias(e.target.value)}
+              />
+              <Columns style={{ marginTop: '0px', marginBottom: '0px' }}>
+                <InputColumns>
+                  <InfoInput
+                    required
+                    id="firstName"
+                    name="firstName"
+                    placeholder="First name"
+                    autoComplete="fname"
+                    domRef={register({ required: true, maxLength: 15, minLength: 2 })}
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </InputColumns>
+                <InputColumns>
+                  <InfoInput
+                    required
+                    id="lastName"
+                    name="lastName"
+                    placeholder="Last name"
+                    autoComplete="lname"
+                    domRef={register({ required: true, maxLength: 15, minLength: 2 })}
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </InputColumns>
+              </Columns>
+              <InfoInput
+                insideLabel
+                required
+                id="line1"
+                name="line1"
+                placeholder="Address line 1"
+                autoComplete="billing address-line1"
+                domRef={register({ required: true, maxLength: 50, minLength: 2 })}
+                value={line1}
+                onChange={(e) => setLine1(e.target.value)}
+              />
+              <InfoInput
+                insideLabel
+                id="line2"
+                name="line2"
+                placeholder="Address line 2 "
+                autoComplete="billing address-line2"
+                domRef={register({ maxLength: 50, minLength: 2 })}
+                value={line2}
+                onChange={(e) => setLine2(e.target.value)}
+              />
+              <InfoInput
+                insideLabel
+                required
+                id="city"
+                name="city"
+                placeholder="City"
+                autoComplete="billing address-level2"
+                domRef={register({ required: true, maxLength: 15, minLength: 2 })}
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+              />
+              <InfoInput
+                required
+                id="postalCode"
+                name="postalCode"
+                placeholder="Zip / Postal code"
+                autoComplete="billing postal-code"
+                domRef={register}
+                onChange={(e) => setPostalcode(e.target.value)}
+                value={postalCode}
+              />
+              <InfoInput
+                required
+                id="state"
+                name="state"
+                placeholder="State/Province/Region"
+                autoComplete="billing postal-code"
+                domRef={register}
+                onChange={(e) => setState(e.target.value)}
+                value={state}
+              />
+              <SelectBox
+                insideLabel
+                id="country"
+                name="country"
+                onChange={(e) => setCountry(e.target.value)}
+                name="country"
+                value={country}
+              >
+                <option value="Oman">Oman</option>
+                <option value="Nigeria">Nigeria</option>
+                <option value="Kenya">Kenya</option>
+              </SelectBox>
+              <PhoneInput
+                type='text'
+                country={'om'}
+                value={mobile}
+                onChange={mobile => setMobile(mobile.replace(/[^0-9]+/g, ''))}
+                onlyCountries={['om']}
+                masks={{ om: '+... ....-....' }}
+                copyNumbersOnly={true}
+                containerStyle={{ direction: 'ltr' }}
+                inputStyle={{ width: '100%', height: '40px', paddingRight: '48px' }}
+                style={{ margin: '10px 0px' }}
+                countryCodeEditable={false}
+                isValid={(inputNumber, onlyCountries) => {
+                  return onlyCountries.some((country) => {
+                    return startsWith(inputNumber, country.dialCode) || startsWith(country.dialCode, inputNumber);
+                  });
+                }}
+              />
+              <input type="hidden" name="mobile" value={mobile} ref={register} />
+              <Field>
+                <CheckControl>
+                  <Checkbox name="save">
+                    &nbsp;&nbsp;&nbsp;Save this information for next time
+                      </Checkbox>
+                </CheckControl>
+              </Field>
+            </Control>
           )}
       </Container>
     </>
