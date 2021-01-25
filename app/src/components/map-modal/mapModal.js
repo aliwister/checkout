@@ -11,7 +11,7 @@ import {
 export const MapModal = compose(
   withProps({
     googleMapURL:
-      `https://maps.googleapis.com/maps/api/js?key=AIzaSyCJ_35G7XTuVQ7UojZ2_8UK7uuxQBaSGQQ&v=3.exp&libraries=geometry,visualization,drawing,places`,
+      `https://maps.googleapis.com/maps/api/js?key=AIzaSyBY_OmJQPkU83oYc6t9SU74T3pHe9ejGpI&v=3.exp&libraries=geometry,visualization,drawing,places`,
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `100%` }} />,
     mapElement: <div style={{ height: `100%` }} />
