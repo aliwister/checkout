@@ -117,6 +117,11 @@ export const InfoStep = (props) => {
   const [open, setOpen] = React.useState(false);
   const [error, setError] = React.useState("");
   const [ship, setShip] = useState({ value: "ship" });
+  const [addressFromMap, setAddressFromMap] = useState({
+    country: "Oman",
+    city: "",
+    region: ""
+  });
 
 
   const handleClick = () => {
@@ -138,9 +143,9 @@ export const InfoStep = (props) => {
       id: formData.Address,
       firstName: formData.firstName,
       lastName: formData.lastName,
-      line1: formData.line1,
+      line1: addressFromMap.region !== "" ? addressFromMap.street : formData.line1,
       line2: formData.line2,
-      city: formData.city,
+      city: addressFromMap.city !== "" ? addressFromMap.city : formData.city,
       country: "Oman",
       postalCode: formData.postalCode,
       mobile: formData.mobile,
@@ -148,7 +153,6 @@ export const InfoStep = (props) => {
       alias: formData.alias
     };
     let email = formData.email;
-    console.log(formData);
     if (address.id < 0) {
       console.log("validating schema");
       await schema.validate(address).then(async function () {
@@ -227,7 +231,7 @@ export const InfoStep = (props) => {
         <HeadingInformation subtitle size={6}>
           Shipping address
         </HeadingInformation>
-        <AddressForm addresses={state.cart.addresses} address={state.cart.deliveryAddress} register={register} />
+        <AddressForm setAddressFromMap={setAddressFromMap} addresses={state.cart.addresses} address={state.cart.deliveryAddress} register={register} />
         <ButtonsRowContainer>
           <ReturnToCartButton>
             <Icon>
