@@ -123,7 +123,7 @@ const App = (props) => {
     variables: { secureKey },
     fetchPolicy: "network-only"
   });
-  console.log("data", data);
+  
   if (error) {
     console.log("Failure error",  secureKey, error)
     return (

@@ -39,6 +39,9 @@ export const InfoContainer = styled(Container)`
   padding-top: ${ props  =>  props.theme.spacing(1)}px;
   padding-left: ${ props  =>  props.theme.spacing(2)}px !important;
   border-right: 1px solid #bfbfbf;
+  @media (max-width: 987px) {
+    border-right: none;
+  }
 `;
 
 export const CheckoutPaper = styled(Paper)`

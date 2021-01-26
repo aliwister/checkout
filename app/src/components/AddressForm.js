@@ -234,7 +234,6 @@ export const AddressForm = (props) => {
   let address;
   if (!props.address) {
     address = { firstName: '', lastName: '', line1: '', line2: '', city: '', postalCode: '', country: 'Oman', mobile: '', state: '' }
-    console.log(address)
   }
   else
     address = props.address;
@@ -287,7 +286,6 @@ export const AddressForm = (props) => {
       setMapAddresses(response.data.results[0].formatted_address);
       setAddressPosition(response.data.results[0].geometry.location);
       setMapSearch(response.data.results[0].formatted_address);
-      console.log("position========", response.data)
       setAddressFromMap(getAddressObject(response.data.results[0].address_components));
     });
   }
@@ -404,7 +402,7 @@ export const AddressForm = (props) => {
               <ModalHeading>
                 Add a New address
               </ModalHeading>
-              <ModalLink href="#" onClick={() => { setMapModal(false); setEdit(1) }} checked={edit === 1}>Enter address manually instead</ModalLink>
+              <ModalLink href="#" onClick={() => { setMapModal(false); setEdit(1) }} defailtChecked={edit === 1}>Enter address manually instead</ModalLink>
             </ModalHeadContainer>
             <MapViewContainer>
               <MapSearchContainer>
@@ -425,7 +423,7 @@ export const AddressForm = (props) => {
         </MapModalContainer>
       </Modal>
       <Container>
-        <AddAddressRadio name="add-address" onChange={() => setMapModal(true)} checked={edit === -1} >
+        <AddAddressRadio name="add-address" onChange={() => setMapModal(true)} defailtChecked={edit === -1} >
           &nbsp;Add a new address:
         </AddAddressRadio>
         {edit == -1 &&
@@ -521,7 +519,7 @@ export const AddressForm = (props) => {
               </Field>
             </div>
           )}
-        <AddAddressRadio name="add-address" onClick={() => setEdit(1)} checked={edit === 1} >
+        <AddAddressRadio name="add-address" onClick={() => setEdit(1)} defailtChecked={edit === 1} >
           &nbsp;Enter address manually:
         </AddAddressRadio>
         {edit === 1 &&
@@ -575,7 +573,7 @@ export const AddressForm = (props) => {
                 onChange={(e) => setLine1(e.target.value)}
               />
               <InfoInput
-                insideLabel
+                // insideLabel
                 id="line2"
                 name="line2"
                 placeholder="Address line 2 "

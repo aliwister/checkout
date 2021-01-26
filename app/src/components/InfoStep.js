@@ -153,7 +153,6 @@ export const InfoStep = (props) => {
       alias: formData.alias
     };
     let email = formData.email;
-    console.log("email", email);
     if (address.id < 0) {
       console.log("validating schema");
       await schema.validate(address).then(async function () {
