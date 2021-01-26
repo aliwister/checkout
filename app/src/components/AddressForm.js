@@ -50,7 +50,7 @@ const AddressDropDown = styled(Dropdown)`
 
 const AddAddressRadio = styled(Radio)`
   width: 100%;
-  margin: 20px 0px 15px 0px;
+  margin: 20px 0px 15px 0px !important;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -239,7 +239,7 @@ export const AddressForm = (props) => {
   else
     address = props.address;
 
-  const [edit, setEdit] = useState((!props.address || (!address.id && address.firstName)) ? -1 : 0);
+  const [edit, setEdit] = useState(0);
   const [alias, setAlias] = useState(edit ? address.firstName : "");
   const [firstName, setFirstName] = useState(edit ? address.firstName : "");
   const [lastName, setLastName] = useState(edit ? address.lastName : "");
@@ -278,10 +278,8 @@ export const AddressForm = (props) => {
   const positionClick = (e) => {
     const lat = e.latLng.lat();
     const lng = e.latLng.lng();
-    console.log("position", lat, lng)
     let url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`
     axios.get(url).then(response => {
-      console.log("address===", response.data.results[0]);
       setClickedPosition({
         googleReverseGeolocation: response.data.results[0].formatted_address,
         markers: [{ position: { lat: e.latLng.lat(), lng: e.latLng.lng() } }],
@@ -289,6 +287,7 @@ export const AddressForm = (props) => {
       setMapAddresses(response.data.results[0].formatted_address);
       setAddressPosition(response.data.results[0].geometry.location);
       setMapSearch(response.data.results[0].formatted_address);
+      console.log("position========", response.data)
       setAddressFromMap(getAddressObject(response.data.results[0].address_components));
     });
   }
@@ -335,13 +334,14 @@ export const AddressForm = (props) => {
         }
       }
     });
-    console.log("address object", address);
     return address;
   }
 
   const handleMapSearch = (e) => {
     if (e.key === 'Enter') {
-      let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${e.target.value}&key=${apiKey}`
+      let addressText = e.target.value;
+      if (addressText.includes("+")) addressText = addressText.replace("+", "%2B");
+      let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${addressText}&key=${apiKey}`
       axios.get(url).then(response => {
         setAddressPosition(response.data.results[0].geometry.location);
 
@@ -349,6 +349,9 @@ export const AddressForm = (props) => {
           googleReverseGeolocation: response.data.results[0].formatted_address,
           markers: [{ position: response.data.results[0].geometry.location }],
         });
+
+        setMapAddresses(response.data.results[0].formatted_address);
+        setMapSearch(response.data.results[0].formatted_address);
       });
     }
   };
@@ -422,7 +425,7 @@ export const AddressForm = (props) => {
         </MapModalContainer>
       </Modal>
       <Container>
-        <AddAddressRadio name="add-address" onChange={() => setMapModal(true)} checked={edit === -1 || edit === 1} >
+        <AddAddressRadio name="add-address" onChange={() => setMapModal(true)} checked={edit === -1} >
           &nbsp;Add a new address:
         </AddAddressRadio>
         {edit == -1 &&
@@ -444,15 +447,15 @@ export const AddressForm = (props) => {
                   <EditMapDiv onClick={() => setMapModal(true)}>Edit</EditMapDiv>
                 </EditDiv>
               </PositionSection>
-                  <InfoInput
-                    required
-                    id="alias"
-                    name="alias"
-                    placeholder="Address Name, e.g. Home or Work"
-                    domRef={register({ required: true, maxLength: 50, minLength: 2 })}
-                    value={alias}
-                    onChange={(e) => setAlias(e.target.value)}
-                  />
+              <InfoInput
+                required
+                id="alias"
+                name="alias"
+                placeholder="Address Name, e.g. Home or Work"
+                domRef={register({ required: true, maxLength: 50, minLength: 2 })}
+                value={alias}
+                onChange={(e) => setAlias(e.target.value)}
+              />
               <Columns style={{ marginTop: '0px', marginBottom: '0px' }}>
                 <InputColumns>
                   <InfoInput
@@ -480,7 +483,7 @@ export const AddressForm = (props) => {
                 </InputColumns>
               </Columns>
               <InfoInput
-                insideLabel
+                // insideLabel
                 required
                 id="line2"
                 name="line2"
@@ -518,6 +521,9 @@ export const AddressForm = (props) => {
               </Field>
             </div>
           )}
+        <AddAddressRadio name="add-address" onClick={() => setEdit(1)} checked={edit === 1} >
+          &nbsp;Enter address manually:
+        </AddAddressRadio>
         {edit === 1 &&
           (
             <Control>
@@ -558,7 +564,7 @@ export const AddressForm = (props) => {
                 </InputColumns>
               </Columns>
               <InfoInput
-                insideLabel
+                // insideLabel
                 required
                 id="line1"
                 name="line1"
@@ -579,7 +585,7 @@ export const AddressForm = (props) => {
                 onChange={(e) => setLine2(e.target.value)}
               />
               <InfoInput
-                insideLabel
+                // insideLabel
                 required
                 id="city"
                 name="city"
@@ -610,7 +616,7 @@ export const AddressForm = (props) => {
                 value={state}
               />
               <SelectBox
-                insideLabel
+                // insideLabel
                 id="country"
                 name="country"
                 onChange={(e) => setCountry(e.target.value)}
