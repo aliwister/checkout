@@ -18,7 +18,9 @@ const FormInput = styled(Input)`
 `;
 
 export const InfoForm = (props) => {
+  const {register} = props;
   const [email, setEmail] = useState(props.email ? props.email : "");
+  console.log("props email", props.email);
   return (
     <React.Fragment>
       <InfoDiv>
@@ -28,9 +30,13 @@ export const InfoForm = (props) => {
           placeholder="Email"
           //helperText="Please Enter Your E-mail!"
           label="Email"
+          InputLabelProps={{
+            shrink: true,
+          }}
           variant="filled"
+          ref={register}
           value={email}
-          onChange={props.register}
+          onChange={(e) => setEmail(e.target.value)}
         />
       </InfoDiv>
     </React.Fragment>
