@@ -94,9 +94,11 @@ const App = (props) => {
   const [carrier, setCarrier] = useState();
   const { client } = props;
   const [cookies, setCookie, removeCookie] = useCookies(['nonce']);
+
   useEffect(() => {
     setCookie("nonce", guid, { path: "/", maxAge: 60 * 15 });
   }, []);
+
 
 
   const [drawer, setDrawer] = useState(false);
@@ -121,8 +123,9 @@ const App = (props) => {
     variables: { secureKey },
     fetchPolicy: "network-only"
   });
+  console.log("data", data);
   if (error) {
-    console.log("error",  secureKey, error)
+    console.log("Failure error",  secureKey, error)
     return (
       <div>
         <a href="https://www.badals.com">
@@ -144,7 +147,7 @@ const App = (props) => {
 
   return (
     <>
-      {/* <CssBaseline /> */}
+      <CssBaseline />
       <Header>
         <LogoWrapper> <LogoImage src={Logoimage} /> </LogoWrapper>
         <Hidden smDown>
