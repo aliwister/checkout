@@ -120,12 +120,15 @@ const App = (props) => {
 
 
   const { data, loading, error } = useQuery(CART, {
-    variables: { secureKey },
+    variables: { secureKey: secureKey || '' },
     fetchPolicy: "network-only"
   });
-  console.log("data", data);
-  if (error) {
-    console.log("Failure error",  secureKey, error)
+
+  if (loading || (error && !error.networkError && error.message === 'GraphQL error: No value present')) {
+    return <Backdrop open={loading} >
+      <CircularProgress color="inherit" />
+    </Backdrop>;
+  }  else if (error) {
     return (
       <div>
         <a href="https://www.badals.com">
@@ -134,15 +137,6 @@ const App = (props) => {
         <div>Failure</div>
       </div>
     )
-  }
-
-  if (loading) {
-    return <Backdrop open={loading} >
-      <CircularProgress color="inherit" />
-    </Backdrop>;
-  }
-  else {
-    //console.log(data);
   }
 
   return (
