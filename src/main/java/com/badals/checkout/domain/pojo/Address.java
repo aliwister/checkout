@@ -18,7 +18,6 @@ public class Address implements Serializable {
     String mobile;
     Boolean save;
     String alias;
-    Boolean isMap;
     String plusCode;
     String lat;
     String lng;;

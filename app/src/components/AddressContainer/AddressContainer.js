@@ -116,7 +116,7 @@ export const AddressContainer = (props) => {
 
            <CheckControl>
 
-             <input type="checkbox" value={true} name="save" id="save" ref={register("save")} />
+             <input type="checkbox" value={true} name="save" id="save" ref={register} />
                &nbsp;&nbsp;&nbsp;Save this information for next time
 
            </CheckControl>
