@@ -1,6 +1,11 @@
 import styled from "styled-components";
-import {Button, Container, Heading, Form} from "react-bulma-components";
-const { Checkbox, Field, Control, Radio } = Form;
+
+import Heading from 'react-bulma-components/lib/components/heading';
+import Container from 'react-bulma-components/lib/components/container';
+import Button from 'react-bulma-components/lib/components/button';
+
+import Control from 'react-bulma-components/lib/components/form/components/control';
+import Radio from 'react-bulma-components/lib/components/form/components/radio';
 
 export const InfoDiv = styled.div`
   //padding: ${props => props.theme.spacing(8)}px;

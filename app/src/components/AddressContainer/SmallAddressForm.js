@@ -1,5 +1,5 @@
 import {InfoInput, InputColumns} from "./AddressContainer.style";
-import {Columns} from "react-bulma-components";
+import Columns from 'react-bulma-components/lib/components/columns';
 import {Controller} from "react-hook-form";
 import React from "react";
 

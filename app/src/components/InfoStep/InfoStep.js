@@ -12,14 +12,10 @@ import { string, object } from 'yup';
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from '@material-ui/lab/Alert';
 
-import { Form, Container, Button, Columns } from 'react-bulma-components';
-const { Checkbox, Field, Control, Radio } = Form;
-
-import { Heading } from 'react-bulma-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Icon } from 'react-bulma-components';
-import { faAngleLeft, faTruck } from '@fortawesome/fontawesome-free-solid';
-import { faBoxOpen } from '@fortawesome/fontawesome-free-solid';
+import Heading from 'react-bulma-components/lib/components/heading';
+import Icon  from 'react-bulma-components/lib/components/icon';
+import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
+import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import {AddressContainer} from "../AddressContainer/AddressContainer";
 import {
   ButtonsRowContainer,
@@ -229,13 +225,13 @@ export const InfoStep = (props) => {
         <InfoDiv>
           <InfoForm state={state} dispatch={dispatch} />
         </InfoDiv>
-        <Field>
-{/*          <CheckControl>
+
+{/*          <Field> <CheckControl>
             <Checkbox name="save">
               &nbsp;&nbsp;&nbsp;Keep me up to date on news and exclusive offers
             </Checkbox>
-          </CheckControl>*/}
-        </Field>
+          </CheckControl></Field>*/}
+
         <HeadingInformation subtitle size={6} >Delivery method</HeadingInformation>
        {/* <RadioDiv style={{ borderBottom: "none", borderRadius: "5px 5px 0 0" }}>*/}
           <RadioDiv style={{borderRadius: "5px 5px 5px 5px " }}>
@@ -246,7 +242,7 @@ export const InfoStep = (props) => {
             style={{ color: ship.value === "ship" ? "#6f8f9d" : "black" }}
           >
             <Icon style={{ marginLeft: "5px", marginRight: "5px" }}>
-              <FontAwesomeIcon icon={faTruck} />
+              <LocalShippingIcon/>
             </Icon>
             Ship
             </RadioWapper>
@@ -271,9 +267,9 @@ export const InfoStep = (props) => {
         <ButtonsRowContainer>
           <ReturnToCartButton onClick={() => window.history.back()}>
             <Icon>
-              <FontAwesomeIcon icon={faAngleLeft} />
+<ArrowBackSharpIcon/>
             </Icon>
-            &nbsp;Return to cart
+            &nbsp;&nbsp;&nbsp;Return to cart
           </ReturnToCartButton>
           <ButtonDiv>
             {(!props.state.cart.items || !props.state.cart.items.length) ?

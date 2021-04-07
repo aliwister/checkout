@@ -10,9 +10,13 @@ import Loader from "./Loader/Loader";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import { Form, Heading, Container, Card, Image, Content } from "react-bulma-components";
 
-const { Radio } = Form;
+import Heading from 'react-bulma-components/lib/components/heading';
+import Container from 'react-bulma-components/lib/components/container';
+import Card from 'react-bulma-components/lib/components/card';
+import Image from 'react-bulma-components/lib/components/image';
+import Content from 'react-bulma-components/lib/components/content';
+import Radio from 'react-bulma-components/lib/components/form/components/radio';
 
 const InfoDiv = styled.div`
   //padding: ${props => props.theme.spacing(8)}px;

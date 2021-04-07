@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 
-import { Form, Columns, Container, Dropdown} from 'react-bulma-components';
-import 'react-bulma-components/dist/react-bulma-components.min.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Icon } from 'react-bulma-components';
-import { faMapMarkerAlt } from '@fortawesome/fontawesome-free-solid';
+import Icon  from 'react-bulma-components/lib/components/icon';
+import Form  from 'react-bulma-components/lib/components/form';
+import Container  from 'react-bulma-components/lib/components/container';
+import Dropdown  from 'react-bulma-components/lib/components/dropdown';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+
 import {
   AddAddressRadio,
   AddressDiv, AddressDropDown,
@@ -24,7 +25,6 @@ import {Controller} from "react-hook-form";
 import {SmallAddressForm} from "./SmallAddressForm";
 import {TYPES} from "../InfoStep/InfoStep";
 
-const { Checkbox, Field, Control } = Form;
 
 
 export const AddressContainer = (props) => {
@@ -80,7 +80,7 @@ export const AddressContainer = (props) => {
                 <LeftContainer>
                   <AddressMarkerDiv>
                     <Icon>
-                      <FontAwesomeIcon icon={faMapMarkerAlt} />
+                      <LocationOnIcon/>
                     </Icon>Set from map
                   </AddressMarkerDiv>
                   <AddressDiv>
@@ -101,7 +101,7 @@ export const AddressContainer = (props) => {
        {/* {edit === 1 && <AddressForm register={register} control={control}/>}*/}
 
         {(state.addressType === TYPES.EDIT)  &&
-       <Control>
+       <>
          <Controller as={<SelectBox><option value="Oman">Oman</option>
          </SelectBox>
          }
@@ -112,7 +112,7 @@ export const AddressContainer = (props) => {
            control={control}
            />
          <FormattedPhone mobile={state.mobile} setMobile={(mob) => dispatch({type:'SET_MOBILE', payload:mob})} />
-         <Field>
+
 
            <CheckControl>
 
@@ -120,8 +120,8 @@ export const AddressContainer = (props) => {
                &nbsp;&nbsp;&nbsp;Save this information for next time
 
            </CheckControl>
-         </Field>
-       </Control> }
+
+       </> }
       </Container>
     </>
   )
