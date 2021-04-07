@@ -2,7 +2,6 @@
 // centered, palevioletred and sized at 1.5em
 import styled from "styled-components";
 import { Container, Grid, Paper } from "@material-ui/core";
-
 import Button from 'react-bulma-components/lib/components/button';
 import Navbar from 'react-bulma-components/lib/components/navbar';
 

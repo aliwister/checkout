@@ -23,9 +23,7 @@ module.exports = env => {
         minimizer: [new TerserPlugin({ /* additional options here */ })],
 
         splitChunks: {
-          chunks: 'all',
-		  minSize: 50000,
-		  maxSize: 90000,
+          chunks: 'all'
         },
       },
       // Loaders

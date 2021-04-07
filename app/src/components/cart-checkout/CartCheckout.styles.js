@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 import Heading from 'react-bulma-components/lib/components/heading';
 import Container from 'react-bulma-components/lib/components/container';
-import Button from 'react-bulma-components/lib/components/button';
 import Section from 'react-bulma-components/lib/components/section';
 import Image from 'react-bulma-components/lib/components/image';
 
@@ -90,10 +89,13 @@ export const CardInputForm = styled(Control)`
   Justify-content: space-between;
 `;
 
-export const ApplyButton = styled(Button)`
+export const ApplyButton = styled.button`
   margin-left: 10px;
   background-color: #c8c8c8;
+  border-color: #c8c8c8;
   color: white;
+  padding: 8px;
+  border-radius: 4px;
   :hover {
     background-color: #999999;
     color: white;

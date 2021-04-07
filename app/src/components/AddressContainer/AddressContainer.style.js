@@ -5,7 +5,6 @@ import Heading from 'react-bulma-components/lib/components/heading';
 import Container from 'react-bulma-components/lib/components/container';
 import Columns from 'react-bulma-components/lib/components/columns';
 import Dropdown from 'react-bulma-components/lib/components/dropdown';
-import Button from 'react-bulma-components/lib/components/button';
 import Modal from 'react-bulma-components/lib/components/modal';
 import Section from 'react-bulma-components/lib/components/section';
 
@@ -126,7 +125,7 @@ export const InputSearch = styled(Input)`
    font-size: 17px;
 `;
 
-export const LocateButton = styled(Button)` 
+export const LocateButton = styled.button` 
    position: absolute;
    top: 50px;
    right: 10px;
