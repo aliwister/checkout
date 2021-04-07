@@ -38,6 +38,10 @@ public class Payment implements Serializable {
     @Column(name = "transaction_id")
     private String transactionId;
 
+    //ALTER TABLE shop.payment ADD track_id BIGINT NULL;
+    @Column(name = "track_id")
+    private Long trackId;
+
     @NotNull
     @Column(name = "created_date", nullable = false)
     private Instant created_date;
@@ -88,6 +92,14 @@ public class Payment implements Serializable {
     public Payment cardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
         return this;
+    }
+
+    public Long getTrackId() {
+        return trackId;
+    }
+
+    public void setTrackId(Long trackId) {
+        this.trackId = trackId;
     }
 
     public void setCardNumber(String cardNumber) {

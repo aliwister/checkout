@@ -1,16 +1,18 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import 'react-bulma-components/dist/react-bulma-components.min.css';
 
+import CssBaseline from '@material-ui/core/CssBaseline';
 import Step from "@material-ui/core/Step";
 import Stepper from "@material-ui/core/Stepper";
 import StepLabel from "@material-ui/core/StepLabel";
+
 
 // import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { useCookies } from 'react-cookie';
 import Grid from "@material-ui/core/Grid";
 
-import { InfoStep } from './components/InfoStep';
+import { InfoStep } from './components/InfoStep/InfoStep';
 import { PaymentStep } from './components/PaymentStep';
 import { CarrierStep } from './components/CarrierStep';
 import { CartSummary } from './components/Cart/CartSummary';
@@ -28,7 +30,7 @@ import {
   InfoContainer,
   RightGrid,
   LeftGrid,
-  Wrapper,
+  CartButton,
   NavButton,
   ButtonDiv,
   ContainerGrid,
@@ -39,7 +41,6 @@ import {
   Header,
 } from './App.styles'
 import { CART } from './graph/cart';
-import Loader from "./components/Loader";
 import Logoimage from './assets/logo.svg';
 import Hidden from "@material-ui/core/Hidden";
 import Drawer from "@material-ui/core/Drawer";
@@ -47,12 +48,29 @@ import IconButton from "@material-ui/core/IconButton";
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Backdrop from "@material-ui/core/Backdrop";
+import {faAngleLeft, faShoppingCart} from "@fortawesome/fontawesome-free-solid";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {ButtonsRowContainer, ReturnToCartButton} from "./components/InfoStep/InfoStep.style";
+import {Icon} from "react-bulma-components";
 
 const steps = ['Shipping address', 'Payment details', 'Review your order'];
 function reducer(state, action) {
+  console.log(state,action)
   switch (action.type) {
     case 'NEXT': 
-      return { ...state, step: state.step + 1 }
+      return {
+        ...state,
+        step: state.step + 1
+      }
+    case 'SAVE_INFO':
+      return {
+        ...state,
+        step: state.step + 1,
+        cart: {
+          ...state.cart,
+          ...action.payload
+        }
+      }
     case 'PREV':
       return { state, step: state.step - 1 };
     case 'SET_CARRIER':
@@ -82,7 +100,8 @@ function getStepContent(step, dataAsState, dispatch, setCarrier) {
 
 const App = (props) => {
   const initialState = {
-    step: 0
+    step: 0,
+    carrier: false
   }
 
   const steps = ['Customer Information', 'Select Carrier', 'Select Payment']
@@ -174,7 +193,15 @@ const App = (props) => {
                         <ArrowBackSharpIcon/>
                     </a>*/}
                   <Hidden mdUp>
-                    <div style={{ textAlign: 'center' }}> <ShoppingBasketIcon fontSize="large" onClick={toggleDrawer(true)} /></div>
+                    <div style={{ textAlign: 'center' }}>
+                      <CartButton onClick={toggleDrawer(true)}>
+                        <Icon>
+                          <FontAwesomeIcon icon={faShoppingCart} />
+                        </Icon>
+                        &nbsp;&nbsp;&nbsp;Show Cart
+                      </CartButton>
+
+                    </div>
                     <Drawer anchor="right" open={drawer} onClose={toggleDrawer(false)}>
                       <div>
                         <span> <IconButton onClick={toggleDrawer(false)} ><CloseIcon /></IconButton></span>

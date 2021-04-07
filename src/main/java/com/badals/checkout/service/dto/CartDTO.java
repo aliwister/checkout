@@ -21,6 +21,8 @@ public class CartDTO {
     private Address deliveryAddress;
     private Address invoiceAddress;
 
+    private Long deliveryAddressId;
+
     List<Address> addresses;
     List<PaymentMethod> paymentMethods;
 

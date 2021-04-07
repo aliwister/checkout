@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import './CkoFrames.css'
 import { OutlinedInput, Typography } from "@material-ui/core";
 
-import Loader from "./Loader";
+import Loader from "./Loader/Loader";
 import HttpsIconSharp from '@material-ui/icons/Https';
 
 class CkoFrames extends Component {

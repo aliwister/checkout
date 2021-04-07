@@ -8,8 +8,10 @@ export const CART = gql`
         phone
         email
         secureKey
+        deliveryAddressId
         deliveryAddress {
-
+alias
+save
              firstName
              lastName
              line1
@@ -17,6 +19,11 @@ export const CART = gql`
              city
              country
              postalCode
+mobile
+                lng
+                lat
+                plusCode
+         
         }
         invoiceAddress {
             id
@@ -37,6 +44,11 @@ export const CART = gql`
              city
              country
              postalCode
+          
+                lng
+                lat
+                plusCode
+           
         }
         paymentMethods {
             ref

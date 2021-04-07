@@ -23,6 +23,7 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class CartService {
@@ -45,6 +46,8 @@ public class CartService {
 
     @Autowired
     private OrderMapper orderMapper;
+
+    public static int ORDER_REF_SIZE = 7;
 
     @Transactional(readOnly = true)
     public CartDTO findBySecureKey(String secureKey) {
@@ -72,7 +75,7 @@ public class CartService {
         }
         else {
             cart.setDeliveryAddressId(address.getId());
-            cart.setDeliveryAddress(null);
+            //cart.setDeliveryAddress(null);
         }
         cart.setEmail(email);
         cart = cartRepository.save(cart);
@@ -118,7 +121,10 @@ public class CartService {
         if(isPaid) order.setOrderState(OrderState.PAYMENT_ACCEPTED);
         else order.setOrderState(OrderState.AWAITING_PAYMENT);
 
-        String orderRef = generateOrderId();
+        String orderRef = generateOrderId(1);
+
+
+
         String uiud = createUIUD();
 
         order.setReference(orderRef);
@@ -155,11 +161,26 @@ public class CartService {
         return order;
     }
 
-    private String generateOrderId() {
-        Random generator = new Random();
-        int num = generator. nextInt(8999999) + 1000000;
-        return String.valueOf(num);
+    public String generateOrderId(int attempt) {
+        String ret =  orderRepository.getFirstUnused(generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber());
+        if (ret == null) {
+            log.error("ORDER ID is null");
+            if(attempt > 3) {
+                ORDER_REF_SIZE++;
+            }
+            return generateOrderId(++attempt);
+        }
+        return ret;
     }
+
+    private String generateRandomNumber() {
+        //Random generator = new Random();
+        //int num = generator. nextInt(8999999) + 1000000;
+        long min = (long) Math.pow(10, ORDER_REF_SIZE - 1);
+        Long rand = ThreadLocalRandom.current().nextLong(min, min * 10);
+        return String.valueOf(rand);
+    }
+
     public static String createUIUD() {
         // Creating a random UUID (Universally unique identifier).
         UUID uuid = UUID.randomUUID();
@@ -178,6 +199,7 @@ public class CartService {
         payment.setPaymentMethod("checkoutcom");
         payment.setTransactionId(paymentKey);
         payment.setCreated_date(Instant.now());
+        payment.setTrackId(cart.getId());
         paymentRepository.save(payment);
         cart.setCheckedOut(true);
         cartRepository.save(cart);

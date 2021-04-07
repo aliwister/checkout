@@ -67,6 +67,20 @@ export const NavButton = styled(Button)`
     color: white;
     background-color: #404040;
   }
+  :disabled {
+   background-color: #a7a7a7;
+  }
+`;
+
+export const CartButton = styled(Button)`
+  background-color: #404040;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  :hover {
+    color: white;
+    background-color: #3a58ff;
+  }
 `;
 
 export const ButtonDiv = styled.div`

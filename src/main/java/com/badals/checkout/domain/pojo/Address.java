@@ -18,6 +18,11 @@ public class Address implements Serializable {
     String mobile;
     Boolean save;
     String alias;
+    Boolean isMap;
+    String plusCode;
+    String lat;
+    String lng;;
+
     public Address(Long id, String firstName, String lastName, String line1, String line2, String city, String state, String country, String postalCode, String mobile, Boolean save, String alias) {
         this.id = id;
         this.firstName = firstName;
@@ -31,5 +36,6 @@ public class Address implements Serializable {
         this.mobile = mobile;
         this.save = save;
         this.alias = alias;
+
     }
 }
