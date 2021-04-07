@@ -3,7 +3,8 @@
 import styled from "styled-components";
 import { Container, Grid, Paper } from "@material-ui/core";
 
-import { Button, Navbar } from 'react-bulma-components';
+import Button from 'react-bulma-components/lib/components/button';
+import Navbar from 'react-bulma-components/lib/components/navbar';
 
 export const Header = styled(Navbar)`
   align-items: center;

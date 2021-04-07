@@ -1,14 +1,14 @@
 import styled from "styled-components";
-import {
-  Section,
-  Container,
-  Image,
-  Heading,
-  Form,
-  Button
-} from "react-bulma-components";
 
-const { Field, Control } = Form;
+import Heading from 'react-bulma-components/lib/components/heading';
+import Container from 'react-bulma-components/lib/components/container';
+import Button from 'react-bulma-components/lib/components/button';
+import Section from 'react-bulma-components/lib/components/section';
+import Image from 'react-bulma-components/lib/components/image';
+
+import Control from 'react-bulma-components/lib/components/form/components/control';
+import Field from 'react-bulma-components/lib/components/form/components/field';
+
 
 export const CartCheckoutSection = styled(Section)`
     width: 100%;

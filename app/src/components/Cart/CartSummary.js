@@ -7,10 +7,6 @@ import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import Currency from 'currency.js';
 import {
-  CartPopupBody,
-  PopupHeader,
-  PopupItemCount,
-  CloseButton,
   ItemCards,
   ItemImgWrapper,
   ItemDetails,
@@ -24,8 +20,8 @@ import {
 import CardActionArea from "@material-ui/core/CardActionArea";
 import Hidden from "@material-ui/core/Hidden";
 
-import { Card, Heading } from 'react-bulma-components';
-import 'react-bulma-components/dist/react-bulma-components.min.css';
+import Heading from 'react-bulma-components/lib/components/heading';
+import Card from 'react-bulma-components/lib/components/card';
 
 
 const CURRENCY = 'OMR'

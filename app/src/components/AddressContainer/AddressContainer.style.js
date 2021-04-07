@@ -1,11 +1,19 @@
 import React from 'react';
 import 'react-phone-input-2/lib/style.css';
-import { Form, Columns, Container, Dropdown, Button, Modal, Section, Heading } from 'react-bulma-components';
-import 'react-bulma-components/dist/react-bulma-components.min.css';
+
+import Heading from 'react-bulma-components/lib/components/heading';
+import Container from 'react-bulma-components/lib/components/container';
+import Columns from 'react-bulma-components/lib/components/columns';
+import Dropdown from 'react-bulma-components/lib/components/dropdown';
+import Button from 'react-bulma-components/lib/components/button';
+import Modal from 'react-bulma-components/lib/components/modal';
+import Section from 'react-bulma-components/lib/components/section';
+
 import styled from 'styled-components';
-
-
-const { Input, Control, Radio, Select } = Form;
+import Control from 'react-bulma-components/lib/components/form/components/control';
+import Radio from 'react-bulma-components/lib/components/form/components/radio';
+import Select from 'react-bulma-components/lib/components/form/components/select';
+import Input from 'react-bulma-components/lib/components/form/components/input';
 
 export const CheckControl = styled(Control)`
   label {

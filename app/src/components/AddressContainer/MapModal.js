@@ -1,5 +1,6 @@
 import React, {useState} from "react";
-import {Icon, Modal} from "react-bulma-components";
+import Modal  from 'react-bulma-components/lib/components/modal';
+import Icon  from 'react-bulma-components/lib/components/icon';
 import {
   ComfirmContainer, ComfirmDiv,
   InputSearch, LocateButton,
@@ -10,8 +11,7 @@ import {
   ModalHeading, ModalLink,
   ModalSection
 } from "./AddressContainer.style";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faMapMarkerAlt} from "@fortawesome/fontawesome-free-solid";
+import LocationOnIcon from '@material-ui/icons/LocationOn';
 import {GMapModal} from "../map-modal/mapModal";
 import axios from "axios";
 
@@ -180,7 +180,7 @@ export const MapModal = (props) => {
               </MapSearchContainer>
               <LocateButton onClick={() => getGeolocation()}>
                 <Icon>
-                  <FontAwesomeIcon icon={faMapMarkerAlt} />
+                  <LocationOnIcon/>
                 </Icon>
                 &nbsp;&nbsp;&nbsp;Locate Me
               </LocateButton>

@@ -2,6 +2,8 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // installed via npm
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const TerserPlugin = require('terser-webpack-plugin');
 
 // Webpack Configuration
 // Exports
@@ -18,10 +20,12 @@ module.exports = env => {
         filename: 'app.[chunkhash].js',
       },
       optimization: {
+        minimizer: [new TerserPlugin({ /* additional options here */ })],
+
         splitChunks: {
           chunks: 'all',
-		  minSize: 30000,
-		  maxSize: 50000,
+		  minSize: 50000,
+		  maxSize: 90000,
         },
       },
       // Loaders
@@ -48,14 +52,26 @@ module.exports = env => {
           {
             test: /\.css$/,
             use: ['style-loader', 'css-loader'],
+          },
+          {
+            test: /\.s[ac]ss$/i,
+            use: ['style-loader', 'css-loader','sass-loader'],
           }
         ]
       },
+      resolve: {
+        modules: ['node_modules', 'src'],
+        // ...
+      },
+      mode: 'production',
+
       // Plugins
       plugins: [new HtmlWebpackPlugin({
         template: '!!html-loader!../src/main/resources/templates/checkout.template.html',
         filename: '../templates/checkout.html'
-      })]
+      }),
+        new BundleAnalyzerPlugin()
+      ]
     }
   }
 
@@ -65,6 +81,10 @@ module.exports = env => {
     output: {
       path: path.resolve(__dirname, './'),
       filename: 'app.js',
+    },
+    resolve: {
+      modules: ['node_modules', 'src'],
+      // ...
     },
     // Loaders
     module: {
@@ -90,6 +110,10 @@ module.exports = env => {
         {
           test: /\.css$/,
           use: ['style-loader', 'css-loader'],
+        },
+        {
+          test: /\.s[ac]ss$/i,
+          use: ['style-loader', 'css-loader','sass-loader'],
         }
       ]
     },
