@@ -1,7 +1,8 @@
 import React from "react";
-import PhoneInput from 'react-phone-input-2';
 import startsWith from "lodash.startswith";
-import 'react-phone-input-2/lib/style.css';
+import loadable from '@loadable/component'
+const PhoneInput = loadable(() => import('react-phone-input-2'));
+
 
 export const FormattedPhone = ({mobile, setMobile}) => (<PhoneInput
     type='text'

@@ -11,6 +11,14 @@ import Typography from "@material-ui/core/Typography";
 import { useCookies } from 'react-cookie';
 import Grid from "@material-ui/core/Grid";
 
+import loadable from '@loadable/component'
+/*const InfoStep = loadable(() => import('./components/InfoStep/InfoStep'));
+const PaymentStep = loadable(() => import('./components/PaymentStep'));
+const CarrierStep = loadable(() => import('./components/CarrierStep'));
+const CartSummary = loadable(() => import('./components/Cart/CartSummary'));
+const CartCheckout = loadable(() => import('./components/cart-checkout/CartCheckout'));*/
+
+
 import { InfoStep } from './components/InfoStep/InfoStep';
 import { PaymentStep } from './components/PaymentStep';
 import { CarrierStep } from './components/CarrierStep';
@@ -190,7 +198,7 @@ const App = (props) => {
                   <Hidden mdUp>
                     <div style={{ textAlign: 'center' }}>
                       <CartButton onClick={toggleDrawer(true)}>
-                        <ShoppingBasketIcon fontSize="large"/>
+                        <ShoppingBasketIcon fontSize="small"/>
                         &nbsp;&nbsp;&nbsp;Show Cart
                       </CartButton>
 

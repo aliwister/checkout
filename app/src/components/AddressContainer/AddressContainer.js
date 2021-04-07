@@ -114,12 +114,10 @@ export const AddressContainer = (props) => {
          <FormattedPhone mobile={state.mobile} setMobile={(mob) => dispatch({type:'SET_MOBILE', payload:mob})} />
 
 
-           <CheckControl>
 
              <input type="checkbox" value={true} name="save" id="save" ref={register} />
                &nbsp;&nbsp;&nbsp;Save this information for next time
 
-           </CheckControl>
 
        </> }
       </Container>

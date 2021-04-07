@@ -12,7 +12,8 @@ import {
   ModalSection
 } from "./AddressContainer.style";
 import LocationOnIcon from '@material-ui/icons/LocationOn';
-import {GMapModal} from "../map-modal/mapModal";
+import loadable from '@loadable/component'
+const GMapModal = loadable(() => import('../map-modal/mapModal'));
 import axios from "axios";
 
 const apiKey = "AIzaSyBY_OmJQPkU83oYc6t9SU74T3pHe9ejGpI";
