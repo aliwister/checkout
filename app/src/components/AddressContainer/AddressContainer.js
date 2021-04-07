@@ -25,6 +25,7 @@ import {Controller} from "react-hook-form";
 import {SmallAddressForm} from "./SmallAddressForm";
 import {TYPES} from "../InfoStep/InfoStep";
 
+import img from '../../assets/map-icon.png';
 
 
 export const AddressContainer = (props) => {
@@ -88,7 +89,7 @@ export const AddressContainer = (props) => {
                   </AddressDiv>
                 </LeftContainer>
                 <EditDiv>
-                  <img src={require(`../../assets/map-icon.svg`)} />
+                  <img src={img} />
                   <EditMapDiv onClick={() => dispatch({type:'MAP_ADDRESS_START'})}>Edit</EditMapDiv>
                 </EditDiv>
               </PositionSection>
