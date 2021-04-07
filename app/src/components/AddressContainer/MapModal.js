@@ -13,7 +13,7 @@ import {
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMapMarkerAlt} from "@fortawesome/fontawesome-free-solid";
 import {GMapModal} from "../map-modal/mapModal";
-
+import axios from "axios";
 
 const apiKey = "AIzaSyBY_OmJQPkU83oYc6t9SU74T3pHe9ejGpI";
 const getAddressObject = (address_components) => {

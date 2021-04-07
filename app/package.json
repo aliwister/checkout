@@ -23,6 +23,7 @@
     "@material-ui/lab": "^4.0.0-alpha.48",
     "@styled-system/theme-get": "^5.1.2",
     "apollo-boost": "^0.4.7",
+    "axios": "^0.21.1",
     "bulma": "^0.9.1",
     "bulma-components": "0.0.5",
     "currency.js": "^1.2.2",
