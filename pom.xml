@@ -165,7 +165,7 @@
 			<groupId>com.trust2</groupId>
 			<artifactId>checkoutcom</artifactId>
 			<version>1.0</version>
-			<!--<scope>system</scope>
+<!--			<scope>system</scope>
 			<systemPath>${basedir}/lib/checkout-java-v1.20.jar</systemPath>-->
 		</dependency>
 
@@ -203,6 +203,11 @@
 		<repository>
 			<id>jcenter</id>
 			<url>https://jcenter.bintray.com/</url>
+		</repository>
+		<repository>
+			<id>project.local</id>
+			<name>project</name>
+			<url>file:${project.basedir}/repo</url>
 		</repository>
 	</repositories>
 
