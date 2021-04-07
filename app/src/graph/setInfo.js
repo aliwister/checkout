@@ -8,6 +8,7 @@ export const SET_INFO = gql`
         phone
         email
         secureKey
+        deliveryAddressId
         deliveryAddress {
 
              firstName
@@ -17,6 +18,11 @@ export const SET_INFO = gql`
              city
              country
              postalCode
+save
+                lng
+                lat
+                plusCode
+     
         }
         invoiceAddress {
             id
@@ -37,6 +43,7 @@ export const SET_INFO = gql`
              city
              country
              postalCode
+
         }
         paymentMethods {
             ref
@@ -53,6 +60,7 @@ export const SET_INFO = gql`
             subTotal
         }
         tenantId
+        
     }
   }
 `;

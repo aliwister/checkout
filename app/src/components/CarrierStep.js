@@ -5,7 +5,7 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import { CARRIERS } from "../graph/CARRIERS";
 import { SET_CARRIER } from "../graph/SET_CARRIER";
 import { ButtonDiv, NavButton } from "../App.styles";
-import Loader from "./Loader";
+import Loader from "./Loader/Loader";
 
 import { Heading, Container } from 'react-bulma-components';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
@@ -102,7 +102,7 @@ export const CarrierStep = ({ state, dispatch }) => {
               </RadioDiv>
             </CerrierContainer>
           ))}
-          <NavButton type="submit" variant="contained"
+          <NavButton type="submit" variant="contained" disabled={!carrier}
             style={{ margin: "0px", marginTop: "20px" }}>
             {(loading) ? <Loader /> : (
               <span>Next</span>

@@ -6,11 +6,11 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import { PROCESS_PAYMENT } from "../graph/PROCESS_PAYMENT";
 import { PAYMENT_METHODS } from "../graph/PAYMENT_METHODS";
 import { NavButton } from "../App.styles";
-import Loader from "./Loader";
+import Loader from "./Loader/Loader";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import { Form, Heading, Container, Card, Image } from "react-bulma-components";
+import { Form, Heading, Container, Card, Image, Content } from "react-bulma-components";
 
 const { Radio } = Form;
 
@@ -151,6 +151,19 @@ export const PaymentStep = ({ state, dispatch }) => {
               {(x.ref == 'checkoutcom' && paymentMethod === x.ref) && (
 
                 <CkoFrames handleProcessPayment={handleProcessPayment} customerName={name} />
+
+              )}
+              {(x.ref == 'bankwire' && paymentMethod === x.ref) && (
+
+                  <Content>
+                    <br/>
+                    Please transfer your payment to our Bank Muscat Account
+                    <br/>
+                    <code>0333015845260014 (Name: BADAL TRAD)</code>
+                    <br/>
+                    Then confirm by sending us your Bank receipt with your order number to <a href="mailto:help@badals.com">help@badals.com</a>
+
+                  </Content>
 
               )}
             </Card.Content>

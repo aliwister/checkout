@@ -6,7 +6,9 @@ import com.badals.checkout.domain.pojo.PaymentStatus;
 import com.badals.checkout.service.dto.CartDTO;
 import com.checkout.APIClient;
 import com.checkout.api.services.charge.request.CardTokenCharge;
+import com.checkout.api.services.charge.request.ChargeRefund;
 import com.checkout.api.services.charge.response.Charge;
+import com.checkout.api.services.charge.response.Refund;
 import com.checkout.api.services.shared.Product;
 import com.checkout.api.services.shared.Response;
 
@@ -52,6 +54,43 @@ public class CheckoutPaymentService {
    //public CheckoutPaymentService(CheckoutApi checkoutApi) {
     //   this.api = checkoutApi;
   // }
+
+   public synchronized PaymentResponsePayload refundPayment(String chargeId) throws Exception {
+      ChargeRefund refundPayload =new ChargeRefund();
+      refundPayload.value = "100";
+      refundPayload.trackId = "TRK12345";
+      refundPayload.description =  "Sample product";
+
+      refundPayload.metadata = new HashMap<String,String>();
+      refundPayload.metadata.put("testKey", "value");
+
+      refundPayload.products = new ArrayList<Product>();
+      Product product1 =new Product();
+      product1.description= "Tablet 2 gold limited";
+      product1.name="Tablet 32gb cellular";
+      product1.price=90.0;
+      product1.quantity=1;
+      product1.shippingCost=10.0;
+      product1.sku= "1aab";
+      product1.trackingUrl="https://www.tracker.com";
+      refundPayload.products.add(product1);
+
+      try {
+         // Create APIClient instance with your secret key
+         APIClient ckoAPIClient= new APIClient("sk_test_55aedccc-7f53-4ccc-b0a6-d943decc3c31",Environment.LIVE);
+         // Submit your request and receive an apiResponse
+         Response<Refund> apiResponse = ckoAPIClient.chargeService.refundRequest(chargeId,refundPayload);
+
+         if(!apiResponse.hasError){
+            // Access the response object retrieved from the api
+            Refund refund = apiResponse.model;
+         } else {
+            // Api has returned an error object. You can access the details in the error property of the apiResponse.
+            // apiResponse.error
+         }
+      } catch (Exception e) {}
+      return null;
+   }
 
    public synchronized PaymentResponsePayload processPayment(String cardToken, String secureKey) throws InvalidCartException {
       //String cardToken = "card_tok_CB9C10E3-24CC-4A82-B50A-4DEFDCB15580";

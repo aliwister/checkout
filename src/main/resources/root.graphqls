@@ -22,6 +22,7 @@ type Carrier {
 
 type Address {
     id: Long
+    alias: String
     firstName: String
     lastName: String
     line1: String
@@ -31,6 +32,11 @@ type Address {
     country: String
     postalCode: String
     mobile: String
+    save: Boolean
+        lng: String
+        lat: String
+        plusCode: String
+
 }
 type PaymentMethod {
     ref: String
@@ -54,6 +60,7 @@ type Cart {
     email: String
     secureKey: String
     deliveryAddress: Address
+    deliveryAddressId: Long
     invoiceAddress: Address
     addresses: [Address]
     paymentMethods: [PaymentMethod]
@@ -75,6 +82,9 @@ input AddressInput {
      mobile: String
      save: Boolean
      alias: String
+         lng: String
+         lat: String
+         plusCode: String
 }
 type Query {
     test(param: String): String
