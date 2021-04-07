@@ -1,1 +1,1 @@
-web: java -Dserver.port=5000 -jar checkout-0.0.1.jar -Xmx896M
+web: java -Dserver.port=$PORT -jar target/*.jar -Xmx896M
