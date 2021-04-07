@@ -4,6 +4,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // installed via
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const TerserPlugin = require('terser-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+
 
 // Webpack Configuration
 // Exports
@@ -23,7 +25,9 @@ module.exports = env => {
         minimizer: [new TerserPlugin({ /* additional options here */ })],
 
         splitChunks: {
-          chunks: 'all'
+          chunks: 'all',
+          minSize: 100000,
+          maxSize: 200000,
         },
       },
       // Loaders
@@ -54,7 +58,15 @@ module.exports = env => {
           {
             test: /\.s[ac]ss$/i,
             use: ['style-loader', 'css-loader','sass-loader'],
-          }
+          },
+          {
+            test: /\.(png|jpe?g|gif)$/i,
+            use: [
+              {
+                loader: 'file-loader',
+              },
+            ],
+          },
         ]
       },
       resolve: {
@@ -68,7 +80,12 @@ module.exports = env => {
         template: '!!html-loader!../src/main/resources/templates/checkout.template.html',
         filename: '../templates/checkout.html'
       }),
-        new BundleAnalyzerPlugin()
+        new CompressionPlugin({
+          test: /\.js(\?.*)?$/i,
+          algorithm: "gzip",
+        }),
+        new BundleAnalyzerPlugin(),
+
       ]
     }
   }
@@ -112,7 +129,15 @@ module.exports = env => {
         {
           test: /\.s[ac]ss$/i,
           use: ['style-loader', 'css-loader','sass-loader'],
-        }
+        },
+        {
+          test: /\.(png|jpe?g|gif)$/i,
+          use: [
+            {
+              loader: 'file-loader',
+            },
+          ],
+        },
       ]
     },
     // Plugins
