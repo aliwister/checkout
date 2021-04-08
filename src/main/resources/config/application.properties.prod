@@ -29,3 +29,6 @@ checkoutcom.pk=pk_932e59ef-2d33-448d-80cd-8668691640fe
 
 app.baseurl=https://checkout.badals.com/
 app.faceurl=https://www.badals.com/
+
+server.compression.enabled=true
+server.compression.mime-types=text/html,text/css,application/javascript,application/json
