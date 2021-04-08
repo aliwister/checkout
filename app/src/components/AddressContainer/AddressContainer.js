@@ -29,7 +29,7 @@ import img from '../../assets/map-icon.png';
 
 
 export const AddressContainer = (props) => {
-  const { register, control, state, dispatch } = props;
+  const { register, control, errors, state, dispatch } = props;
 
   //const [edit, setEdit] = useState(!props.address || (!address.id && address.plusCode)?-1:(!address.id && address.firstName)?1:0);
   //const [edit, setEdit] = useState((props.address && props.address.id)?0:props.address && props.address.map && props.address.map.plusCode?-1:-2);
@@ -63,7 +63,7 @@ export const AddressContainer = (props) => {
         >
           {state.addresses && state.addresses.map(x => (
             <Dropdown.Item value={x.id} key={x.id} >
-              {x.firstName} {x.lastName} - {x.line1} {x.line2} {x.city} {x.phone}
+              ({x.alias}) {x.firstName}, {x.city} - {x.mobile}
             </Dropdown.Item>
           ))
           }
@@ -93,7 +93,7 @@ export const AddressContainer = (props) => {
                   <EditMapDiv onClick={() => dispatch({type:'MAP_ADDRESS_START'})}>Edit</EditMapDiv>
                 </EditDiv>
               </PositionSection>
-              <SmallAddressForm register={register} control={control}/>
+              <SmallAddressForm register={register} control={control} errors={errors}/>
             </div>
           )}
 {/*        <AddAddressRadio name="add-address" onClick={() => setEdit(1)} checked={edit === 1} >
@@ -113,13 +113,8 @@ export const AddressContainer = (props) => {
            control={control}
            />
          <FormattedPhone mobile={state.mobile} setMobile={(mob) => dispatch({type:'SET_MOBILE', payload:mob})} />
-
-
-
              <input type="checkbox" value={true} name="save" id="save" ref={register} />
                &nbsp;&nbsp;&nbsp;Save this information for next time
-
-
        </> }
       </Container>
     </>
