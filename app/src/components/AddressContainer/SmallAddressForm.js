@@ -3,7 +3,7 @@ import Columns from 'react-bulma-components/lib/components/columns';
 import {Controller} from "react-hook-form";
 import React from "react";
 
-export const SmallAddressForm = ({register, control}) => (
+export const SmallAddressForm = ({register, control, errors}) => (
     <>
       <Controller as={<InfoInput />}
           register={register}
@@ -11,9 +11,11 @@ export const SmallAddressForm = ({register, control}) => (
           required
           id="alias"
           name="alias"
+                  maxlength="10"
           placeholder="Address Name, e.g. Home or Work"
           rules={{ required: true, maxLength: 10, minLength: 2 }}
       />
+      {errors.alias && errors.alias.type === "maxLength" && <Alert>Address Nickname can only be 10 characters or less</Alert>}
       <Columns style={{ marginTop: '0px', marginBottom: '0px' }}>
         <InputColumns>
           <Controller as={<InfoInput />}

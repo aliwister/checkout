@@ -36,6 +36,8 @@ save
         }
         addresses {
             id
+            alias
+            mobile
              firstName
              lastName
              line1

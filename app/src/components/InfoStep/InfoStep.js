@@ -55,7 +55,6 @@ function reducer(state, action) {
     case 'SELECT_NEW_ADDRESS':
       return {
         ...state,
-        addressType: TYPES.EDIT,
         showMap: true
       }
     case 'SELECT_SAVED_ADDRESS':
@@ -70,17 +69,29 @@ function reducer(state, action) {
         showMap: true
       }
     case 'MAP_ADDRESS_END':
+      if(action.payload)
       return {
         ...state,
         showMap: false,
+        addressType: TYPES.EDIT,
         addressFromMap: {
           ...action.payload
         }
+      }
+      return {
+          ...state,
+          showMap: false,
       }
     case 'SHOW_ERROR':
       return {
         ...state,
         error: true,
+        errMsg: action.payload
+      }
+    case 'HIDE_ERROR':
+      return {
+        ...state,
+        error: false,
         errMsg: action.payload
       }
     case 'SET_MOBILE':
@@ -138,7 +149,6 @@ export const InfoStep = (props) => {
   });
 
   const [setInfoMutation, { loading, data2 }] = useMutation(SET_INFO);
-  const [open, setOpen] = React.useState(false);
   const [ship, setShip] = useState({ value: "ship" });
 
   //console.log("addressFromMap", addressFromMap);
@@ -150,12 +160,12 @@ export const InfoStep = (props) => {
     if (reason === 'clickaway') {
       return;
     }
-    setOpen(false);
+    dispatch({type:'HIDE_ERROR'});
   };
 
   const onSubmit = async (formData) => {
-/*    console.log("InfoStep: Submit");
-    console.log("formData:",formData);
+    console.log("InfoStep: Submit");
+/*    console.log("formData:",formData);
     console.log("state:",state);*/
     if (loading) return;
     let address = {
@@ -263,7 +273,7 @@ export const InfoStep = (props) => {
         <HeadingInformation subtitle size={6}>
           Shipping address
         </HeadingInformation>
-        <AddressContainer state={state} dispatch={dispatch} register={register} control={control}/>
+        <AddressContainer state={state} dispatch={dispatch} register={register} errors={errors} control={control}/>
         <ButtonsRowContainer>
           <ReturnToCartButton onClick={() => window.history.back()}>
             <Icon>
@@ -278,14 +288,14 @@ export const InfoStep = (props) => {
               <NavButton type="submit" variant="contained"
               >
                 {(loading) ? <Loader /> : (
-                  <span>Contiune to shipping</span>
+                  <span>Continue to shipping</span>
                 )}
               </NavButton>
             }
           </ButtonDiv>
         </ButtonsRowContainer>
       </form>
-      <Snackbar open={state.error} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={state.error} autoHideDuration={4000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
           {state.errMsg}
         </Alert>
