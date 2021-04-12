@@ -85,7 +85,7 @@ export const AddressContainer = (props) => {
                     </Icon>Set from map
                   </AddressMarkerDiv>
                   <AddressDiv>
-                    {state.addressFromMap?state.addressFromMap.plusCode:""}
+                    {state.addressFromMap?`${state.addressFromMap.address} ${state.addressFromMap.plusCode}` :""}
                   </AddressDiv>
                 </LeftContainer>
                 <EditDiv>
@@ -93,7 +93,7 @@ export const AddressContainer = (props) => {
                   <EditMapDiv onClick={() => dispatch({type:'MAP_ADDRESS_START'})}>Edit</EditMapDiv>
                 </EditDiv>
               </PositionSection>
-              <SmallAddressForm register={register} control={control} errors={errors}/>
+              <SmallAddressForm register={register} control={control} errors={errors} state={state} dispatch={dispatch}/>
             </div>
           )}
 {/*        <AddAddressRadio name="add-address" onClick={() => setEdit(1)} checked={edit === 1} >

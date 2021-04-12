@@ -13,6 +13,25 @@ import Control from 'react-bulma-components/lib/components/form/components/contr
 import Radio from 'react-bulma-components/lib/components/form/components/radio';
 import Select from 'react-bulma-components/lib/components/form/components/select';
 import Input from 'react-bulma-components/lib/components/form/components/input';
+import Label from 'react-bulma-components/lib/components/form/components/label';
+
+export const InlineLabel = styled(Label)`
+  display: inline-flex;
+`
+export const InlineRadio = styled(Radio)`
+  display: inline-flex;
+  margin-left: 5px;
+  margin-right: 5px;
+  flex-direction: row;
+  align-items: center;
+  
+`
+export const Alias = styled(Input)`
+  font-size: 15px;
+  margin: -6px 0px;
+  display: inline-flex;
+  max-width: 155px;
+`;
 
 export const CheckControl = styled(Control)`
   label {
@@ -67,7 +86,9 @@ export const AddAddressRadio = styled(Radio)`
 export const InfoInput = styled(Input)`
   font-size: 15px;
   margin: 10px 0px;
+  
 `;
+
 
 export const ModalSection = styled(Section)`
     background-color: white;
