@@ -111,7 +111,7 @@ function reducer(state, action) {
         mobile: payload.mobile?payload.mobile:"",
         initPosition: payload.lng && payload.lat?{lng: payload.lng, lat:payload.lat}:false,
         addressType: state.selectedAddress?TYPES.SELECT:payload && payload.plusCode?TYPES.EDIT:TYPES.ADD,
-        alias: state.alias != "Home" && state.alias != "Work" ? "Other": state.alias,
+        alias: payload && payload.alias != "Home" && payload.alias != "Work" ? "Other": payload ? payload.alias:false,
         addressFromMap: payload.plusCode?{
           lng: payload.lng?payload.lng:null,
           lat: payload.lat?payload.lat:null,
@@ -138,8 +138,7 @@ export const InfoStep = (props) => {
     initPosition: false,
     selectedAddress: props.state.cart.deliveryAddressId,
     addressType: props.state.cart.deliveryAddressId?TYPES.SELECT:TYPES.ADD,
-    error: false,
-    alias: dAddress.alias
+    error: false
   }
   const [state, dispatch] = useReducer(reducer, initialState);
 
