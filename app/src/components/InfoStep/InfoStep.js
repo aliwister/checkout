@@ -99,6 +99,11 @@ function reducer(state, action) {
         ...state,
         mobile: action.payload
       }
+    case 'SELECT_ALIAS':
+      return {
+        ...state,
+        alias: action.payload
+      }
     case 'INIT_ADDRESS':
       const payload = action.payload;
       return {
@@ -106,6 +111,7 @@ function reducer(state, action) {
         mobile: payload.mobile?payload.mobile:"",
         initPosition: payload.lng && payload.lat?{lng: payload.lng, lat:payload.lat}:false,
         addressType: state.selectedAddress?TYPES.SELECT:payload && payload.plusCode?TYPES.EDIT:TYPES.ADD,
+        alias: state.alias != "Home" && state.alias != "Work" ? "Other": state.alias,
         addressFromMap: payload.plusCode?{
           lng: payload.lng?payload.lng:null,
           lat: payload.lat?payload.lat:null,
@@ -133,6 +139,7 @@ export const InfoStep = (props) => {
     selectedAddress: props.state.cart.deliveryAddressId,
     addressType: props.state.cart.deliveryAddressId?TYPES.SELECT:TYPES.ADD,
     error: false,
+    alias: dAddress.alias
   }
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -179,7 +186,7 @@ export const InfoStep = (props) => {
       postalCode: formData.postalCode,
       mobile: state.mobile,
       save: formData.save,
-      alias: formData.alias,
+      alias: state.alias === "Other"?formData.alias: state.alias,
       lat: state.addressFromMap ? state.addressFromMap.lat:null,
       lng: state.addressFromMap ? state.addressFromMap.lng:null,
       plusCode: state.addressFromMap ? state.addressFromMap.plusCode:null
