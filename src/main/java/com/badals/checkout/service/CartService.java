@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
@@ -67,7 +68,7 @@ public class CartService {
         return cartMapper.toDto(cart);
     }
 
-    public CartDTO setDeliveryAddressAndEmail(Address address, String email, String secureKey) {
+    public CartDTO setDeliveryAddressAndEmail(Address address, String email, String secureKey, String carrier) {
         Cart cart = cartRepository.findBySecureKey(secureKey).get();
         if(address.getId() == null || address.getId() < 0) {
             cart.setDeliveryAddress(address);
@@ -77,6 +78,8 @@ public class CartService {
             cart.setDeliveryAddressId(address.getId());
             //cart.setDeliveryAddress(null);
         }
+        if (carrier != null)
+            cart.setCarrier(carrier);
         cart.setEmail(email);
         cart = cartRepository.save(cart);
         return cartMapper.toDto(cart);
@@ -118,7 +121,11 @@ public class CartService {
         order.setDeliveryAddress(cart.getDeliveryAddress());
         order.setEmail(cart.getEmail());
 
-        if(isPaid) order.setOrderState(OrderState.PAYMENT_ACCEPTED);
+        if(isPaid) {
+            order.setOrderState(OrderState.PAYMENT_ACCEPTED);
+            order.setInvoiceDate(LocalDate.now());
+        }
+
         else order.setOrderState(OrderState.AWAITING_PAYMENT);
 
         String orderRef = generateOrderId(1);

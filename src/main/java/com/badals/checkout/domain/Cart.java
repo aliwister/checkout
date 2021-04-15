@@ -83,7 +83,8 @@ public class Cart implements Serializable {
     @Column(name="checked_out")
     private Boolean checkedOut;
 
-
+    @Column(name="allow_pickup")
+    private Boolean allowPickup;
 
     @Override
     public boolean equals(Object o) {

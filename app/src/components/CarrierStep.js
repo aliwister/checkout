@@ -51,7 +51,7 @@ const NameSpan = styled.span`
 export const CarrierStep = ({ state, dispatch }) => {
   const { register, handleSubmit } = useForm();
   const { data, error, loading } = useQuery(CARRIERS, {
-    variables: { state: 'muscat', city: 'mutrah', weight: 2 }
+    variables: { secureKey: state.cart.secureKey }
   });
   const [setCarrierMutation, { loading2, data2 }] = useMutation(SET_CARRIER);
   const [carrier, setCarrier] = useState();

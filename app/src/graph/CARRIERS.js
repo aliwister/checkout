@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 export const CARRIERS = gql`
-  query carriers($state: String!, $city: String!, $weight: BigDecimal!) {
-    carriers(state: $state, city: $city, weight: $weight) {
+  query carriers($secureKey: String!) {
+    carriers(secureKey: $secureKey) {
         name
         value
         cost

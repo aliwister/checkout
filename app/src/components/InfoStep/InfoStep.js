@@ -16,6 +16,7 @@ import Heading from 'react-bulma-components/lib/components/heading';
 import Icon  from 'react-bulma-components/lib/components/icon';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
+import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import {AddressContainer} from "../AddressContainer/AddressContainer";
 import {
   ButtonsRowContainer,
@@ -104,6 +105,11 @@ function reducer(state, action) {
         ...state,
         alias: action.payload
       }
+    case 'SET_CARRIER':
+      return {
+        ...state,
+        carrier: action.payload
+      }
     case 'INIT_ADDRESS':
       const payload = action.payload;
       return {
@@ -138,7 +144,8 @@ export const InfoStep = (props) => {
     initPosition: false,
     selectedAddress: props.state.cart.deliveryAddressId,
     addressType: props.state.cart.deliveryAddressId?TYPES.SELECT:TYPES.ADD,
-    error: false
+    error: false,
+    carrier: props.state.cart.carrier === "PICKUP"
   }
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -155,7 +162,6 @@ export const InfoStep = (props) => {
   });
 
   const [setInfoMutation, { loading, data2 }] = useMutation(SET_INFO);
-  const [ship, setShip] = useState({ value: "ship" });
 
   //console.log("addressFromMap", addressFromMap);
   const handleClick = () => {
@@ -191,6 +197,9 @@ export const InfoStep = (props) => {
       plusCode: state.addressFromMap ? state.addressFromMap.plusCode:null
     };
     const email = state.email;
+    let carrier = null;
+    if(state.carrier)
+      carrier = state.carrier;
     const secureKey = props.state.cart.secureKey;
     if(state.addressType === TYPES.SELECT) {
       let selectedAddressId = state.selectedAddress
@@ -200,7 +209,7 @@ export const InfoStep = (props) => {
       const {
         data: { setInfo },
       } = await setInfoMutation({
-        variables: { email, address:{id: selectedAddressId}, secureKey }
+        variables: { email, address:{id: selectedAddressId}, secureKey, carrier }
       });
       console.log(setInfo);
       if (setInfo)
@@ -214,7 +223,7 @@ export const InfoStep = (props) => {
         const {
           data: { setInfo },
         } = await setInfoMutation({
-          variables: { email, address, secureKey }
+          variables: { email, address, secureKey, carrier }
         });
         if (setInfo)
           props.dispatch({ type: 'SAVE_INFO', payload: setInfo });
@@ -253,9 +262,9 @@ export const InfoStep = (props) => {
           <RadioDiv style={{borderRadius: "5px 5px 5px 5px " }}>
           <RadioWapper
             name="ship"
-            onChange={(e) => setShip({ value: "ship" })}
-            checked={ship.value === "ship"}
-            style={{ color: ship.value === "ship" ? "#6f8f9d" : "black" }}
+            onChange={(e) => dispatch({type:'SET_CARRIER'})}
+            checked={state.carrier !== "PICKUP"}
+            style={{ color: state.carrier !== "PICKUP" ? "#6f8f9d" : "black" }}
           >
             <Icon style={{ marginLeft: "5px", marginRight: "5px" }}>
               <LocalShippingIcon/>
@@ -263,19 +272,19 @@ export const InfoStep = (props) => {
             Ship
             </RadioWapper>
         </RadioDiv>
-{/*        <RadioDiv style={{ borderRadius: "0 0 5px 5px" }}>
+        {props.state.cart.allowPickup &&<RadioDiv style={{ borderRadius: "0 0 5px 5px" }}>
           <RadioWapper
-            name="ship"
-            onChange={(e) => setShip({ value: "pick" })}
-            checked={ship.value === "pick"}
-            style={{ color: ship.value === "pick" ? "#6f8f9d" : "black" }}
+            name="pickup"
+            onChange={(e) => dispatch({type:'SET_CARRIER', payload:'PICKUP'})}
+            checked={state.carrier === "PICKUP"}
+            style={{ color: state.carrier === "PICKUP" ? "#6f8f9d" : "black" }}
           >
             <Icon style={{ marginLeft: "5px", marginRight: "5px" }}>
-              <FontAwesomeIcon icon={faBoxOpen} />
+              <DirectionsWalkIcon />
             </Icon>
             Pick up
             </RadioWapper>
-        </RadioDiv>*/}
+        </RadioDiv>}
         <HeadingInformation subtitle size={6}>
           Shipping address
         </HeadingInformation>
