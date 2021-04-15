@@ -7,6 +7,7 @@ export const CART = gql`
         name
         phone
         email
+        allowPickup
         secureKey
         deliveryAddressId
         deliveryAddress {

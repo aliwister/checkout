@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 public class CarrierService {
@@ -26,7 +27,7 @@ public class CarrierService {
     @Autowired
     CartMapper cartMapper;
 
-    List<Carrier> list = new ArrayList<Carrier>(){{
+    List<Carrier> ship = new ArrayList<Carrier>(){{
         add(new Carrier("Badals.com Home Delivery -- Muscat Only", "BADALSMUSCAT", BigDecimal.valueOf(1), ""));
         //add(new Carrier("Pickup from our showroom", "PICKUP", BigDecimal.ZERO, ""));
         add(new Carrier("Dakhiliya Home Delivery", "Dakhiliya", BigDecimal.valueOf(2),""));
@@ -37,10 +38,16 @@ public class CarrierService {
         add(new Carrier("Buraymi Home Delivery", "BURAYMI", BigDecimal.valueOf(2),""));
         add(new Carrier("DHL Home Delivery (Salalah/Sohar ONLY)", "DHL", BigDecimal.valueOf(3),""));
     }};
+    List<Carrier> pickup = new ArrayList<Carrier>(){{
+        add(new Carrier("Store Pickup", "BADALSMUSCAT", BigDecimal.valueOf(0), ""));
+    }};
 
     @Transactional(readOnly = true)
-    public List<Carrier> findByStateCityWeight(String state, String city, BigDecimal weight) {
-        return list;
+    public List<Carrier> findByStateCityWeight(String state, String city, BigDecimal weight, boolean isPickup ) {
+        if(isPickup) {
+            return pickup;
+        }
+        return ship;
     }
 
     public CartDTO setCarrier(String value, String secureKey) throws InvalidCartException {
@@ -53,6 +60,17 @@ public class CarrierService {
     }
 
     public BigDecimal getCarrierCost(String ref) {
-        return list.stream().filter(x-> x.getValue().equals(ref)).findFirst().get().getCost();
+        return Stream.concat(ship.stream(),pickup.stream()).filter(x-> x.getValue().equals(ref)).findFirst().get().getCost();
+    }
+    @Transactional(readOnly = true)
+    public List<Carrier> findByStateCityWeight(String secureKey) throws InvalidCartException {
+        Cart cart = cartRepository.findBySecureKey(secureKey).orElse(null);
+        if(cart == null)
+            throw new InvalidCartException("cart invalid");
+
+        if(cart.getCarrier() != null && cart.getCarrier().equalsIgnoreCase("pickup")) {
+            return pickup;
+        }
+        return ship;
     }
 }
