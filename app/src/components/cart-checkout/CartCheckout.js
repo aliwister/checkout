@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { Form } from "react-bulma-components";
+import Input from 'react-bulma-components/lib/components/form/components/input';
+
+
 import {
   CartCheckoutSection,
   ProductsSection,
@@ -20,7 +22,6 @@ import {
 } from "./CartCheckout.styles";
 import Currency from 'currency.js';
 
-const { Input } = Form;
 
 const CURRENCY = 'OMR';
 const calculateItemPrice = (product) => {

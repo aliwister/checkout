@@ -33,6 +33,8 @@ public class CartDTO {
 
     private Long tenantId;
 
+    private Boolean allowPickup;
+
     @Override
     public String toString() {
         return "CartDTO{" +

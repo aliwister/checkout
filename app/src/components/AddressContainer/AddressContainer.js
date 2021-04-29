@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 
-import { Form, Columns, Container, Dropdown} from 'react-bulma-components';
-import 'react-bulma-components/dist/react-bulma-components.min.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Icon } from 'react-bulma-components';
-import { faMapMarkerAlt } from '@fortawesome/fontawesome-free-solid';
+import Icon  from 'react-bulma-components/lib/components/icon';
+import Form  from 'react-bulma-components/lib/components/form';
+import Container  from 'react-bulma-components/lib/components/container';
+import Dropdown  from 'react-bulma-components/lib/components/dropdown';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+
 import {
   AddAddressRadio,
   AddressDiv, AddressDropDown,
@@ -24,11 +25,11 @@ import {Controller} from "react-hook-form";
 import {SmallAddressForm} from "./SmallAddressForm";
 import {TYPES} from "../InfoStep/InfoStep";
 
-const { Checkbox, Field, Control } = Form;
+import img from '../../assets/map-icon.png';
 
 
 export const AddressContainer = (props) => {
-  const { register, control, state, dispatch } = props;
+  const { register, control, errors, state, dispatch } = props;
 
   //const [edit, setEdit] = useState(!props.address || (!address.id && address.plusCode)?-1:(!address.id && address.firstName)?1:0);
   //const [edit, setEdit] = useState((props.address && props.address.id)?0:props.address && props.address.map && props.address.map.plusCode?-1:-2);
@@ -62,7 +63,7 @@ export const AddressContainer = (props) => {
         >
           {state.addresses && state.addresses.map(x => (
             <Dropdown.Item value={x.id} key={x.id} >
-              {x.firstName} {x.lastName} - {x.line1} {x.line2} {x.city} {x.phone}
+              ({x.alias}) {x.firstName}, {x.city} - {x.mobile}
             </Dropdown.Item>
           ))
           }
@@ -80,19 +81,19 @@ export const AddressContainer = (props) => {
                 <LeftContainer>
                   <AddressMarkerDiv>
                     <Icon>
-                      <FontAwesomeIcon icon={faMapMarkerAlt} />
+                      <LocationOnIcon/>
                     </Icon>Set from map
                   </AddressMarkerDiv>
                   <AddressDiv>
-                    {state.addressFromMap?state.addressFromMap.plusCode:""}
+                    {state.addressFromMap?`${state.addressFromMap.address} ${state.addressFromMap.plusCode}` :""}
                   </AddressDiv>
                 </LeftContainer>
                 <EditDiv>
-                  <img src={require(`../../assets/map-icon.svg`)} />
+                  <img src={img} />
                   <EditMapDiv onClick={() => dispatch({type:'MAP_ADDRESS_START'})}>Edit</EditMapDiv>
                 </EditDiv>
               </PositionSection>
-              <SmallAddressForm register={register} control={control}/>
+              <SmallAddressForm register={register} control={control} errors={errors} state={state} dispatch={dispatch}/>
             </div>
           )}
 {/*        <AddAddressRadio name="add-address" onClick={() => setEdit(1)} checked={edit === 1} >
@@ -101,7 +102,7 @@ export const AddressContainer = (props) => {
        {/* {edit === 1 && <AddressForm register={register} control={control}/>}*/}
 
         {(state.addressType === TYPES.EDIT)  &&
-       <Control>
+       <>
          <Controller as={<SelectBox><option value="Oman">Oman</option>
          </SelectBox>
          }
@@ -112,16 +113,9 @@ export const AddressContainer = (props) => {
            control={control}
            />
          <FormattedPhone mobile={state.mobile} setMobile={(mob) => dispatch({type:'SET_MOBILE', payload:mob})} />
-         <Field>
-
-           <CheckControl>
-
              <input type="checkbox" value={true} name="save" id="save" ref={register} />
                &nbsp;&nbsp;&nbsp;Save this information for next time
-
-           </CheckControl>
-         </Field>
-       </Control> }
+       </> }
       </Container>
     </>
   )

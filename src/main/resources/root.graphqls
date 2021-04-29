@@ -65,6 +65,7 @@ type Cart {
     currency: String
     items: [CartItem]
     tenantId: Long
+    allowPickup: Boolean
 }
 input AddressInput {
      id: Long
@@ -86,12 +87,14 @@ input AddressInput {
 type Query {
     test(param: String): String
     cart(secureKey: String): Cart
-    carriers(state: String, city:String, weight:BigDecimal): [Carrier]
+    carriers(secureKey: String): [Carrier]
     paymentMethods(currency: String): [PaymentMethod]
 }
 type Mutation {
-    setInfo(email: String, address: AddressInput, secureKey: String): Cart
-    processPayment(token: String, paymentRef: String, secureKey: String): PaymentResponsePayload
+
+    setInfo(email: String, address: AddressInput, secureKey: String, carrier: String): Cart
+    processPayment(token: String, ref: String, secureKey: String): PaymentResponsePayload
+
     setCarrier(value: String, secureKey: String): Cart
 
     chargePayment(token: String, paymentRef: String, secureKey: String): PaymentResponsePayload

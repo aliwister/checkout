@@ -7,6 +7,7 @@ export const CART = gql`
         name
         phone
         email
+        allowPickup
         secureKey
         deliveryAddressId
         deliveryAddress {
@@ -49,6 +50,7 @@ export const CART = gql`
             lng
             lat
             plusCode
+
         }
         paymentMethods {
             ref

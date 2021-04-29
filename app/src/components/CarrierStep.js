@@ -7,10 +7,9 @@ import { SET_CARRIER } from "../graph/SET_CARRIER";
 import { ButtonDiv, NavButton } from "../App.styles";
 import Loader from "./Loader/Loader";
 
-import { Heading, Container } from 'react-bulma-components';
-import 'react-bulma-components/dist/react-bulma-components.min.css';
-import { Form } from 'react-bulma-components';
-const { Radio } = Form;
+import Heading from 'react-bulma-components/lib/components/heading';
+import Container from 'react-bulma-components/lib/components/container';
+import Radio from 'react-bulma-components/lib/components/form/components/radio';
 
 
 const InfoDiv = styled.div`
@@ -52,7 +51,7 @@ const NameSpan = styled.span`
 export const CarrierStep = ({ state, dispatch }) => {
   const { register, handleSubmit } = useForm();
   const { data, error, loading } = useQuery(CARRIERS, {
-    variables: { state: 'muscat', city: 'mutrah', weight: 2 }
+    variables: { secureKey: state.cart.secureKey }
   });
   const [setCarrierMutation, { loading2, data2 }] = useMutation(SET_CARRIER);
   const [carrier, setCarrier] = useState();

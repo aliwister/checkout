@@ -8,7 +8,7 @@ import {
   GroundOverlay
 } from "react-google-maps";
 
-export const GMapModal = compose(
+const GMapModal = compose(
   withProps({
     googleMapURL:
       `https://maps.googleapis.com/maps/api/js?key=AIzaSyBY_OmJQPkU83oYc6t9SU74T3pHe9ejGpI&v=3.exp&libraries=geometry,visualization,drawing,places`,
@@ -41,4 +41,4 @@ export const GMapModal = compose(
   )
 
 });
-
+export default GMapModal;

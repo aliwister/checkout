@@ -5,6 +5,7 @@ import com.badals.checkout.domain.pojo.Carrier;
 import com.badals.checkout.domain.pojo.PaymentMethod;
 import com.badals.checkout.service.CarrierService;
 import com.badals.checkout.service.CartService;
+import com.badals.checkout.service.InvalidCartException;
 import com.badals.checkout.service.PaymentService;
 import com.badals.checkout.service.dto.CartDTO;
 import com.badals.checkout.service.mutation.Mutation;
@@ -52,8 +53,8 @@ public class Query implements GraphQLQueryResolver {
         return cartService.findBySecureKey(secureKey);
     }
 
-    public List<Carrier> carriers(String state, String city, BigDecimal weight) {
-        return carrierService.findByStateCityWeight(state, city, weight);
+    public List<Carrier> carriers(String secureKey) throws InvalidCartException {
+        return carrierService.findByStateCityWeight(secureKey);
     }
     public List<PaymentMethod> paymentMethods(String currency) {
         return paymentService.findByCurrency(currency);

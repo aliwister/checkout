@@ -12,14 +12,11 @@ import { string, object } from 'yup';
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from '@material-ui/lab/Alert';
 
-import { Form, Container, Button, Columns } from 'react-bulma-components';
-const { Checkbox, Field, Control, Radio } = Form;
-
-import { Heading } from 'react-bulma-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Icon } from 'react-bulma-components';
-import { faAngleLeft, faTruck } from '@fortawesome/fontawesome-free-solid';
-import { faBoxOpen } from '@fortawesome/fontawesome-free-solid';
+import Heading from 'react-bulma-components/lib/components/heading';
+import Icon  from 'react-bulma-components/lib/components/icon';
+import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
+import LocalShippingIcon from '@material-ui/icons/LocalShipping';
+import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import {AddressContainer} from "../AddressContainer/AddressContainer";
 import {
   ButtonsRowContainer,
@@ -59,7 +56,6 @@ function reducer(state, action) {
     case 'SELECT_NEW_ADDRESS':
       return {
         ...state,
-        addressType: TYPES.EDIT,
         showMap: true
       }
     case 'SELECT_SAVED_ADDRESS':
@@ -74,12 +70,18 @@ function reducer(state, action) {
         showMap: true
       }
     case 'MAP_ADDRESS_END':
+      if(action.payload)
       return {
         ...state,
         showMap: false,
+        addressType: TYPES.EDIT,
         addressFromMap: {
           ...action.payload
         }
+      }
+      return {
+          ...state,
+          showMap: false,
       }
     case 'SHOW_ERROR':
       return {
@@ -87,10 +89,26 @@ function reducer(state, action) {
         error: true,
         errMsg: action.payload
       }
+    case 'HIDE_ERROR':
+      return {
+        ...state,
+        error: false,
+        errMsg: action.payload
+      }
     case 'SET_MOBILE':
       return {
         ...state,
         mobile: action.payload
+      }
+    case 'SELECT_ALIAS':
+      return {
+        ...state,
+        alias: action.payload
+      }
+    case 'SET_CARRIER':
+      return {
+        ...state,
+        carrier: action.payload
       }
     case 'INIT_ADDRESS':
       const payload = action.payload;
@@ -99,6 +117,7 @@ function reducer(state, action) {
         mobile: payload.mobile?payload.mobile:"",
         initPosition: payload.lng && payload.lat?{lng: payload.lng, lat:payload.lat}:false,
         addressType: state.selectedAddress?TYPES.SELECT:payload && payload.plusCode?TYPES.EDIT:TYPES.ADD,
+        alias: payload && payload.alias != "Home" && payload.alias != "Work" ? "Other": payload ? payload.alias:false,
         addressFromMap: payload.plusCode?{
           lng: payload.lng?payload.lng:null,
           lat: payload.lat?payload.lat:null,
@@ -126,6 +145,7 @@ export const InfoStep = (props) => {
     selectedAddress: props.state.cart.deliveryAddressId,
     addressType: props.state.cart.deliveryAddressId?TYPES.SELECT:TYPES.ADD,
     error: false,
+    carrier: props.state.cart.carrier === "PICKUP"
   }
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -142,8 +162,6 @@ export const InfoStep = (props) => {
   });
 
   const [setInfoMutation, { loading, data2 }] = useMutation(SET_INFO);
-  const [open, setOpen] = React.useState(false);
-  const [ship, setShip] = useState({ value: "ship" });
 
   //console.log("addressFromMap", addressFromMap);
   const handleClick = () => {
@@ -154,12 +172,12 @@ export const InfoStep = (props) => {
     if (reason === 'clickaway') {
       return;
     }
-    setOpen(false);
+    dispatch({type:'HIDE_ERROR'});
   };
 
   const onSubmit = async (formData) => {
-/*    console.log("InfoStep: Submit");
-    console.log("formData:",formData);
+    console.log("InfoStep: Submit");
+/*    console.log("formData:",formData);
     console.log("state:",state);*/
     if (loading) return;
     let address = {
@@ -173,12 +191,15 @@ export const InfoStep = (props) => {
       postalCode: formData.postalCode,
       mobile: state.mobile,
       save: formData.save,
-      alias: formData.alias,
+      alias: state.alias === "Other"?formData.alias: state.alias,
       lat: state.addressFromMap ? state.addressFromMap.lat:null,
       lng: state.addressFromMap ? state.addressFromMap.lng:null,
       plusCode: state.addressFromMap ? state.addressFromMap.plusCode:null
     };
     const email = state.email;
+    let carrier = null;
+    if(state.carrier)
+      carrier = state.carrier;
     const secureKey = props.state.cart.secureKey;
     if(state.addressType === TYPES.SELECT) {
       let selectedAddressId = state.selectedAddress
@@ -188,7 +209,7 @@ export const InfoStep = (props) => {
       const {
         data: { setInfo },
       } = await setInfoMutation({
-        variables: { email, address:{id: selectedAddressId}, secureKey }
+        variables: { email, address:{id: selectedAddressId}, secureKey, carrier }
       });
       console.log(setInfo);
       if (setInfo)
@@ -202,7 +223,7 @@ export const InfoStep = (props) => {
         const {
           data: { setInfo },
         } = await setInfoMutation({
-          variables: { email, address, secureKey }
+          variables: { email, address, secureKey, carrier }
         });
         if (setInfo)
           props.dispatch({ type: 'SAVE_INFO', payload: setInfo });
@@ -229,51 +250,51 @@ export const InfoStep = (props) => {
         <InfoDiv>
           <InfoForm state={state} dispatch={dispatch} />
         </InfoDiv>
-        <Field>
-{/*          <CheckControl>
+
+{/*          <Field> <CheckControl>
             <Checkbox name="save">
               &nbsp;&nbsp;&nbsp;Keep me up to date on news and exclusive offers
             </Checkbox>
-          </CheckControl>*/}
-        </Field>
+          </CheckControl></Field>*/}
+
         <HeadingInformation subtitle size={6} >Delivery method</HeadingInformation>
        {/* <RadioDiv style={{ borderBottom: "none", borderRadius: "5px 5px 0 0" }}>*/}
           <RadioDiv style={{borderRadius: "5px 5px 5px 5px " }}>
           <RadioWapper
             name="ship"
-            onChange={(e) => setShip({ value: "ship" })}
-            checked={ship.value === "ship"}
-            style={{ color: ship.value === "ship" ? "#6f8f9d" : "black" }}
+            onChange={(e) => dispatch({type:'SET_CARRIER'})}
+            checked={state.carrier !== "PICKUP"}
+            style={{ color: state.carrier !== "PICKUP" ? "#6f8f9d" : "black" }}
           >
             <Icon style={{ marginLeft: "5px", marginRight: "5px" }}>
-              <FontAwesomeIcon icon={faTruck} />
+              <LocalShippingIcon/>
             </Icon>
             Ship
             </RadioWapper>
         </RadioDiv>
-{/*        <RadioDiv style={{ borderRadius: "0 0 5px 5px" }}>
+        {props.state.cart.allowPickup &&<RadioDiv style={{ borderRadius: "0 0 5px 5px" }}>
           <RadioWapper
-            name="ship"
-            onChange={(e) => setShip({ value: "pick" })}
-            checked={ship.value === "pick"}
-            style={{ color: ship.value === "pick" ? "#6f8f9d" : "black" }}
+            name="pickup"
+            onChange={(e) => dispatch({type:'SET_CARRIER', payload:'PICKUP'})}
+            checked={state.carrier === "PICKUP"}
+            style={{ color: state.carrier === "PICKUP" ? "#6f8f9d" : "black" }}
           >
             <Icon style={{ marginLeft: "5px", marginRight: "5px" }}>
-              <FontAwesomeIcon icon={faBoxOpen} />
+              <DirectionsWalkIcon />
             </Icon>
             Pick up
             </RadioWapper>
-        </RadioDiv>*/}
+        </RadioDiv>}
         <HeadingInformation subtitle size={6}>
           Shipping address
         </HeadingInformation>
-        <AddressContainer state={state} dispatch={dispatch} register={register} control={control}/>
+        <AddressContainer state={state} dispatch={dispatch} register={register} errors={errors} control={control}/>
         <ButtonsRowContainer>
           <ReturnToCartButton onClick={() => window.history.back()}>
             <Icon>
-              <FontAwesomeIcon icon={faAngleLeft} />
+<ArrowBackSharpIcon/>
             </Icon>
-            &nbsp;Return to cart
+            &nbsp;&nbsp;&nbsp;Return to cart
           </ReturnToCartButton>
           <ButtonDiv>
             {(!props.state.cart.items || !props.state.cart.items.length) ?
@@ -282,14 +303,14 @@ export const InfoStep = (props) => {
               <NavButton type="submit" variant="contained"
               >
                 {(loading) ? <Loader /> : (
-                  <span>Contiune to shipping</span>
+                  <span>Continue to shipping</span>
                 )}
               </NavButton>
             }
           </ButtonDiv>
         </ButtonsRowContainer>
       </form>
-      <Snackbar open={state.error} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={state.error} autoHideDuration={4000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
           {state.errMsg}
         </Alert>
