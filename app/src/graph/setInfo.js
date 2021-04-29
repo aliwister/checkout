@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 export const SET_INFO = gql`
-  mutation setInfo($email: String, $address: AddressInput, $secureKey: String!) {
-    setInfo(email: $email, address:$address, secureKey: $secureKey) {
+  mutation setInfo($email: String, $address: AddressInput, $secureKey: String!, $carrier: String) {
+    setInfo(email: $email, address:$address, secureKey: $secureKey, carrier: $carrier) {
        id
         ref
         name
@@ -36,6 +36,8 @@ save
         }
         addresses {
             id
+            alias
+            mobile
              firstName
              lastName
              line1

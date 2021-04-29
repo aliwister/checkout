@@ -1,16 +1,23 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import 'react-bulma-components/dist/react-bulma-components.min.css';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Step from "@material-ui/core/Step";
 import Stepper from "@material-ui/core/Stepper";
 import StepLabel from "@material-ui/core/StepLabel";
-
+import './App.scss';
 
 // import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { useCookies } from 'react-cookie';
 import Grid from "@material-ui/core/Grid";
+
+import loadable from '@loadable/component'
+/*const InfoStep = loadable(() => import('./components/InfoStep/InfoStep'));
+const PaymentStep = loadable(() => import('./components/PaymentStep'));
+const CarrierStep = loadable(() => import('./components/CarrierStep'));
+const CartSummary = loadable(() => import('./components/Cart/CartSummary'));
+const CartCheckout = loadable(() => import('./components/cart-checkout/CartCheckout'));*/
+
 
 import { InfoStep } from './components/InfoStep/InfoStep';
 import { PaymentStep } from './components/PaymentStep';
@@ -48,10 +55,6 @@ import IconButton from "@material-ui/core/IconButton";
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Backdrop from "@material-ui/core/Backdrop";
-import {faAngleLeft, faShoppingCart} from "@fortawesome/fontawesome-free-solid";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {ButtonsRowContainer, ReturnToCartButton} from "./components/InfoStep/InfoStep.style";
-import {Icon} from "react-bulma-components";
 
 const steps = ['Shipping address', 'Payment details', 'Review your order'];
 function reducer(state, action) {
@@ -195,9 +198,7 @@ const App = (props) => {
                   <Hidden mdUp>
                     <div style={{ textAlign: 'center' }}>
                       <CartButton onClick={toggleDrawer(true)}>
-                        <Icon>
-                          <FontAwesomeIcon icon={faShoppingCart} />
-                        </Icon>
+                        <ShoppingBasketIcon fontSize="small"/>
                         &nbsp;&nbsp;&nbsp;Show Cart
                       </CartButton>
 

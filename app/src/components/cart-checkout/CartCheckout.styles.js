@@ -1,14 +1,13 @@
 import styled from "styled-components";
-import {
-  Section,
-  Container,
-  Image,
-  Heading,
-  Form,
-  Button
-} from "react-bulma-components";
 
-const { Field, Control } = Form;
+import Heading from 'react-bulma-components/lib/components/heading';
+import Container from 'react-bulma-components/lib/components/container';
+import Section from 'react-bulma-components/lib/components/section';
+import Image from 'react-bulma-components/lib/components/image';
+
+import Control from 'react-bulma-components/lib/components/form/components/control';
+import Field from 'react-bulma-components/lib/components/form/components/field';
+
 
 export const CartCheckoutSection = styled(Section)`
     width: 100%;
@@ -90,10 +89,13 @@ export const CardInputForm = styled(Control)`
   Justify-content: space-between;
 `;
 
-export const ApplyButton = styled(Button)`
+export const ApplyButton = styled.button`
   margin-left: 10px;
   background-color: #c8c8c8;
+  border-color: #c8c8c8;
   color: white;
+  padding: 8px;
+  border-radius: 4px;
   :hover {
     background-color: #999999;
     color: white;

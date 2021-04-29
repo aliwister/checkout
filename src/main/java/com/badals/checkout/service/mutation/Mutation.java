@@ -47,9 +47,9 @@ public class Mutation implements GraphQLMutationResolver {
         return cartService.setDeliveryAddress(address, secureKey);
         //return new Message("success");
     }
-    public CartDTO setInfo(String email, Address address, String secureKey) {
+    public CartDTO setInfo(String email, Address address, String secureKey, String carrier) {
         log.info("REST request to save Address : {}", address);
-        return cartService.setDeliveryAddressAndEmail(address, email, secureKey);
+        return cartService.setDeliveryAddressAndEmail(address, email, secureKey, carrier);
         //return new Message("success");
     }
     public PaymentResponsePayload processPayment(String token, String ref, String secureKey) throws Exception{

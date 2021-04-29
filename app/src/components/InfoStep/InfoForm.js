@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
+import Input from 'react-bulma-components/lib/components/form/components/input';
 
-import { Form } from 'react-bulma-components';
-const { Input } = Form;
-import 'react-bulma-components/dist/react-bulma-components.min.css';
 
 const InfoDiv = styled.div`
   //padding: ${ props => props.theme.spacing(8)}px;

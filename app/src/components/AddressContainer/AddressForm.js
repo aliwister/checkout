@@ -1,14 +1,14 @@
 import React from "react";
-import {Columns} from 'react-bulma-components';
-import {FormattedPhone} from "./FormattedPhone";
+import Columns from 'react-bulma-components/lib/components/columns';
 import {CheckControl, InfoInput, InputColumns, SelectBox} from "./AddressContainer.style";
-import Checkbox from "@material-ui/core/Checkbox";
 import {Controller} from "react-hook-form";
 
 export const AddressForm = ({register, control}) => {
 
   return (
         <>
+
+
           <Controller as={<InfoInput />}
              register={register}
              control={control}
