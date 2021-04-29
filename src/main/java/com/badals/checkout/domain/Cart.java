@@ -68,6 +68,8 @@ public class Cart implements Serializable {
     @Column(name = "carrier")
     private String carrier;
 
+    private String payment;
+
     private String currency;
 
     @Type(type = "json")

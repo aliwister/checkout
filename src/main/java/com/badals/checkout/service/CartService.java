@@ -3,25 +3,29 @@ package com.badals.checkout.service;
 import com.badals.checkout.domain.*;
 import com.badals.checkout.domain.pojo.Address;
 import com.badals.checkout.domain.pojo.LineItem;
+import com.badals.checkout.domain.pojo.PaymentMethod;
 import com.badals.checkout.repository.CartRepository;
 import com.badals.checkout.repository.OrderRepository;
 import com.badals.checkout.repository.PaymentRepository;
 import com.badals.checkout.service.dto.CartDTO;
-import com.badals.checkout.service.dto.OrderDTO;
+
 import com.badals.checkout.service.mapper.CartMapper;
 import com.badals.checkout.service.mapper.OrderMapper;
+import com.badals.checkout.service.mutation.OrderConfirmationResponse;
 import com.badals.enumeration.OrderState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
+import java.util.Arrays;
+
 import java.util.Optional;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -103,9 +107,10 @@ public class CartService {
         return sum;
     }
 
-    public void setPaymentToken(Long cartId, String paymentToken) {
+    public void setPaymentToken(Long cartId, String paymentRef, String paymentToken) {
         Cart cart = cartRepository.findById(cartId).get();
         cart.setPaymentToken(paymentToken);
+        cart.setPayment(paymentRef);
         cartRepository.save(cart);
     }
 
@@ -154,9 +159,9 @@ public class CartService {
             order.addOrderItem(orderItem);
 
         }
-        order = orderRepository.save(order);
+        order = orderRepository.saveAndFlush(order);
         cart.setSecureKey(cart.getSecureKey() + " DONE");
-        cartRepository.save(cart);
+        cartRepository.saveAndFlush(cart);
 
         return order;
     }
@@ -192,15 +197,20 @@ public class CartService {
         if(cart == null)
             throw new InvalidCartException("No cart found");
 
-        Order order = createOrder(cart, "checkoutcom", true);
-        Payment payment = new Payment();
-        payment.setAmount(order.getTotal());
-        payment.setOrder(order);
-        payment.setPaymentMethod("checkoutcom");
-        payment.setTransactionId(paymentKey);
-        payment.setCreated_date(Instant.now());
-        payment.setTrackId(cart.getId());
-        paymentRepository.save(payment);
+
+
+        PaymentMethod p = Arrays.stream(PaymentMethod.values()).filter(x -> x.ref.equalsIgnoreCase(cart.getPayment())).findFirst().get();
+        Order order = createOrder(cart, cart.getPayment(), p.prePay);
+        if(p.prePay) {
+            Payment payment = new Payment();
+            payment.setAmount(order.getTotal());
+            payment.setOrder(order);
+            payment.setPaymentMethod("checkoutcom");
+            payment.setTransactionId(paymentKey);
+            payment.setCreated_date(Instant.now());
+            payment.setTrackId(cart.getId());
+            paymentRepository.save(payment);
+        }
         cart.setCheckedOut(true);
         cartRepository.save(cart);
         return order;
@@ -222,5 +232,16 @@ public class CartService {
         Cart cart = cartRepository.findBySecureKey(secureKey).get();
         cart.setLock(false);
         cartRepository.saveAndFlush(cart);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public OrderConfirmationResponse createOrder(String paymentKey) throws InvalidCartException {
+        Order o = createOrderWithPaymentByPaymentToken(paymentKey);
+        OrderConfirmationResponse response = new OrderConfirmationResponse();
+        response.setCart(cartMapper.toDto(o.getCart()));
+        response.setOrderRef(o.getReference());
+        response.setCode("200");
+        response.setSuccess(true);
+        return response;
     }
 }

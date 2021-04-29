@@ -1,15 +1,18 @@
 package com.badals.checkout.service.mutation;
 
+import com.badals.checkout.domain.Order;
 import com.badals.checkout.domain.pojo.Address;
 import com.badals.checkout.domain.pojo.Carrier;
 import com.badals.checkout.domain.pojo.PaymentResponsePayload;
 import com.badals.checkout.service.*;
 import com.badals.checkout.service.dto.CartDTO;
 
+import com.badals.checkout.service.mapper.CartMapper;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 /*
@@ -23,6 +26,9 @@ mutation {
 @Component
 public class Mutation implements GraphQLMutationResolver {
     private final Logger log = LoggerFactory.getLogger(Mutation.class);
+
+    @Autowired
+    CartMapper cartMapper;
 
     @Autowired
     CartService cartService;
@@ -47,12 +53,19 @@ public class Mutation implements GraphQLMutationResolver {
         //return new Message("success");
     }
     public PaymentResponsePayload processPayment(String token, String ref, String secureKey) throws Exception{
-
         if(ref.equals("checkoutcom") && token != null)
-           return checkoutPaymentService.processPayment(token, secureKey); //, name);
+           return checkoutPaymentService.processPayment(token, secureKey, true); //, name);
         return paymentService.processPayment(ref, secureKey);
     }
     public CartDTO setCarrier(String value, String secureKey) throws InvalidCartException {
         return carrierService.setCarrier(value, secureKey);
+    }
+
+    public PaymentResponsePayload chargePayment(String token, String ref, String secureKey) throws Exception {
+        return paymentService.processPayment(token, ref, secureKey);
+    }
+
+    public OrderConfirmationResponse createOrder(String token, String paymentKey) throws InvalidCartException {
+        return cartService.createOrder(paymentKey);
     }
 }

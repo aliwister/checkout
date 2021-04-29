@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.badals.checkout.domain.pojo.PaymentMethod.CHECKOUT;
+
 class CardTokenChargeChild extends CardTokenCharge {
    public String successUrl;
    public String failUrl;
@@ -92,7 +94,7 @@ public class CheckoutPaymentService {
       return null;
    }
 
-   public synchronized PaymentResponsePayload processPayment(String cardToken, String secureKey) throws InvalidCartException {
+   public synchronized PaymentResponsePayload processPayment(String cardToken, String secureKey, boolean isWebsite) throws InvalidCartException {
       //String cardToken = "card_tok_CB9C10E3-24CC-4A82-B50A-4DEFDCB15580";
       try {
          CartDTO cart = cartService.findBySecureKeyWithLock(secureKey);
@@ -149,12 +151,15 @@ public class CheckoutPaymentService {
                if(charge.status != null && (charge.status.equalsIgnoreCase("declined") || charge.status.equalsIgnoreCase("flagged")))
                   return paymentDeclined("Payment declined with message " + apiResponse.model.responseCode + " " + apiResponse.model.responseMessage);
 
-               cartService.setPaymentToken(cart.getId(), apiResponse.model.id);
+               cartService.setPaymentToken(cart.getId(), CHECKOUT.ref, apiResponse.model.id);
                if(apiResponse.model.redirectUrl != null)
                   return redirect(apiResponse.model.redirectUrl);
 
                if(apiResponse.model.responseCode.equalsIgnoreCase("10000")) {
-                  return redirect(baseUrl + "checkout/checkout-com-confirmation?cko-payment-token="+apiResponse.model.id);
+                  if(isWebsite)
+                     return redirect(baseUrl + "checkout/checkout-com-confirmation?cko-payment-token="+apiResponse.model.id);
+                  else
+                     return paymentSucessful(apiResponse.model.id);
                }
 
                return paymentDeclined("Payment declined " + charge.status + apiResponse.model.responseCode + " " + apiResponse.model.responseMessage);
@@ -223,9 +228,9 @@ public class CheckoutPaymentService {
       }
    }
 */
-   /*private PaymentResponsePayload paymentSucessful(PaymentProcessed payment) {
-      return new PaymentResponsePayload("Payment Successful", null, PaymentStatus.SUCCESS);
-   }*/
+   private PaymentResponsePayload paymentSucessful(String payload) {
+      return new PaymentResponsePayload("Payment Successful", payload, PaymentStatus.SUCCESS);
+   }
 
    private PaymentResponsePayload paymentDeclined(String message) {
       log.warn("DECLINE MESSAGE: " + message);
