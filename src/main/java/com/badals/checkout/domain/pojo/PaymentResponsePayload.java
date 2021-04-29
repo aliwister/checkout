@@ -5,12 +5,12 @@ import lombok.Data;
 @Data
 public class PaymentResponsePayload {
     String message;
-    String redirect;
+    String payload;
     PaymentStatus status;
 
-    public PaymentResponsePayload(String message, String redirect, PaymentStatus status) {
+    public PaymentResponsePayload(String message, String payload, PaymentStatus status) {
         this.message = message;
-        this.redirect = redirect;
+        this.payload = payload;
         this.status = status;
     }
 

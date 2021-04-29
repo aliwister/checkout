@@ -1,7 +1,8 @@
 package com.badals.checkout;
 
 
-import org.springframework.context.annotation.Bean;
+import com.badals.checkout.security.JWTConfigurer;
+import com.badals.checkout.security.TokenProvider;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.springframework.web.filter.CorsFilter;
@@ -20,16 +20,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
     private final CookieFilter cookieFilter;
+    private final TokenProvider tokenProvider;
 
-    public SecurityConfiguration(CorsFilter corsFilter, CookieFilter cookieFilter) {
+    public SecurityConfiguration(CorsFilter corsFilter, CookieFilter cookieFilter, TokenProvider tokenProvider) {
         this.corsFilter = corsFilter;
         this.cookieFilter = cookieFilter;
+        this.tokenProvider = tokenProvider;
     }
 
-    @Bean
+/*    @Bean
     public PasswordEncoder passwordEncoder() {
         return new CustomPasswordEncoder();
-    }
+    }*/
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -79,8 +81,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/management/prometheus").permitAll()
             //.antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
         .and()
-            .httpBasic();
+            .httpBasic()
+        .and()
+                .apply(securityConfigurerAdapter());
         // @formatter:on
+    }
+
+    private JWTConfigurer securityConfigurerAdapter() {
+        return new JWTConfigurer(tokenProvider);
     }
 
 }

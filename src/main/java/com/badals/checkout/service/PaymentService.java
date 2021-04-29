@@ -14,11 +14,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
+
+import static com.badals.checkout.domain.pojo.PaymentMethod.BANK;
+import static com.badals.checkout.domain.pojo.PaymentMethod.CHECKOUT;
+import static com.badals.checkout.domain.pojo.PaymentStatus.SUCCESS;
 
 @Service
 public class PaymentService {
@@ -28,6 +33,9 @@ public class PaymentService {
     CartRepository cartRepository;
 
     @Autowired
+    CheckoutPaymentService checkoutPaymentService;
+
+    @Autowired
     CartMapper cartMapper;
 
     @Value("${app.faceurl}")
@@ -35,8 +43,8 @@ public class PaymentService {
 
     List<PaymentMethod> list = new ArrayList<PaymentMethod>() {{
         //add(new PaymentMethod("omannet", "Omannet", "", true));
-        add(new PaymentMethod("checkoutcom", "Checkout.com", "checkout-logo.svg", true));
-        add(new PaymentMethod("bankwire", "Deposit to Bank Account", "",false));
+        add(PaymentMethod.CHECKOUT);
+        add(BANK);
     }};
 
     @Autowired
@@ -53,6 +61,23 @@ public class PaymentService {
     public PaymentResponsePayload processPayment(String paymentMethod, String secureKey) throws InvalidCartException {
         Cart cart = cartRepository.findBySecureKey(secureKey).orElse(null);
         Order order = cartService.createOrder(cart, paymentMethod, false);
-        return new PaymentResponsePayload("Success",faceUrl+ "order-received?ref="+order.getReference()+"&key="+order.getConfirmationKey(), PaymentStatus.SUCCESS);
+        return new PaymentResponsePayload("Success",faceUrl+ "order-received?ref="+order.getReference()+"&key="+order.getConfirmationKey(), SUCCESS);
     }
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public PaymentResponsePayload processPayment(String token, String ref, String secureKey) throws InvalidCartException {
+       Cart cart = cartRepository.findBySecureKey(secureKey).orElse(null);
+       PaymentResponsePayload response = null;
+
+       if(ref.equals(CHECKOUT.ref) && token != null) {
+           response = checkoutPaymentService.processPayment(token, secureKey, false);
+       }
+
+       else if(ref.equals(BANK.ref) ) {
+           UUID idOne = UUID.randomUUID();
+           String guid = idOne.toString();
+           cartService.setPaymentToken(cart.getId(), BANK.ref, guid);
+           response = new PaymentResponsePayload("Success", guid, SUCCESS);
+       }
+       return response;
+   }
 }

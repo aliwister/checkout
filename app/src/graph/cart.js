@@ -10,23 +10,23 @@ export const CART = gql`
         secureKey
         deliveryAddressId
         deliveryAddress {
-alias
-save
-             firstName
-             lastName
-             line1
-             line2
-             city
-             country
-             postalCode
-mobile
-                lng
-                lat
-                plusCode
+            alias
+            save
+            firstName
+            lastName
+            line1
+            line2
+            city
+            country
+            postalCode
+            mobile
+            lng
+            lat
+            plusCode
          
         }
         invoiceAddress {
-            id
+             id
              firstName
              lastName
              line1
@@ -37,18 +37,18 @@ mobile
         }
         addresses {
             id
-             firstName
-             lastName
-             line1
-             line2
-             city
-             country
-             postalCode
-          
-                lng
-                lat
-                plusCode
-           
+            alias
+            mobile
+            firstName
+            lastName
+            line1
+            line2
+            city
+            country
+            postalCode
+            lng
+            lat
+            plusCode
         }
         paymentMethods {
             ref
