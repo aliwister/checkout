@@ -47,6 +47,7 @@ graphql:
 checkoutcom:
   sk: sk_test_5fce5cd8-9991-42bb-a5a4-eae1141404a0
   pk: pk_test_47eb04c5-dfdc-4eec-ab09-da415202c97e
+  live: false
 
 app:
   baseurl: http://127.0.0.1:8081/
