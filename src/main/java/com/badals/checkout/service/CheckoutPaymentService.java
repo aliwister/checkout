@@ -50,6 +50,9 @@ public class CheckoutPaymentService {
    @Value("${checkoutcom.sk}")
    private String _sk;
 
+   @Value("${checkoutcom.live}")
+   private Boolean _isLive;
+
    @Value("${app.baseurl}")
    private String baseUrl;
 
@@ -128,6 +131,8 @@ public class CheckoutPaymentService {
          cardTokenChargePayload.udf4="udf 4 value";
          cardTokenChargePayload.udf5="udf 5 value";
 
+
+
          cardTokenChargePayload.products = new ArrayList<Product>();
          for (LineItem item: cart.getItems())
             cardTokenChargePayload.products.add(new CheckoutProduct(item.getName(), "", item.getSku(), item.getPrice().doubleValue(), item.getQuantity().intValue()));
@@ -135,7 +140,13 @@ public class CheckoutPaymentService {
 
 
          // Create APIClient instance with your secret key
-         APIClient ckoAPIClient= new APIClient(_sk, Environment.LIVE);
+         APIClient ckoAPIClient = null;
+         if(_isLive)
+            ckoAPIClient= new APIClient(_sk, Environment.LIVE);
+         else {
+            cardTokenChargePayload.attemptN3D = true;
+            ckoAPIClient = new APIClient(_sk, Environment.SANDBOX);
+         }
          // Submit your request and receive an apiResponse
          Response<Charge> apiResponse = ckoAPIClient.chargeService.chargeWithCardToken(cardTokenChargePayload);
 
@@ -174,7 +185,7 @@ public class CheckoutPaymentService {
             // Api has returned an error object. You can access the details in the error property of the apiResponse.
             // apiResponse.error
             log.info("DECLINING----------------------------------------------");
-            return paymentDeclined("Payment declined " + ((apiResponse.model!= null)?apiResponse.model.responseCode + " " + apiResponse.model.responseMessage:"no code"));
+            return paymentDeclined("Payment declined: " + ((apiResponse.hasError)?apiResponse.error.errorCode +  "-" + apiResponse.error.message:"no code"));
          }
       } catch (LockedCartException e) {
          return paymentIgnored("Exception Occurred for " + cardToken);
