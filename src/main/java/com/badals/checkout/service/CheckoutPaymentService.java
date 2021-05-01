@@ -144,7 +144,8 @@ public class CheckoutPaymentService {
          if(_isLive)
             ckoAPIClient= new APIClient(_sk, Environment.LIVE);
          else {
-            cardTokenChargePayload.attemptN3D = true;
+            cardTokenChargePayload.attemptN3D = false;
+            cardTokenChargePayload.chargeMode=2;
             ckoAPIClient = new APIClient(_sk, Environment.SANDBOX);
          }
          // Submit your request and receive an apiResponse
