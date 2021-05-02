@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class OrderConfirmationResponse extends MutationResponse {
-   CartDTO cart;
+   //CartDTO cart;
    String orderRef;
+   String confirmationKey;
 }

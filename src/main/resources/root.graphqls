@@ -103,7 +103,8 @@ type Mutation {
 
 type OrderConfirmation {
     orderRef: String
-    cart: Cart
+    confirmationKey: String
+    #cart: Cart
     code: String
     success: Boolean
     message: String

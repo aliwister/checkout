@@ -245,8 +245,9 @@ public class CartService {
     public OrderConfirmationResponse createOrder(String paymentKey) throws InvalidCartException {
         Order o = createOrderWithPaymentByPaymentToken(paymentKey);
         OrderConfirmationResponse response = new OrderConfirmationResponse();
-        response.setCart(cartMapper.toDto(o.getCart()));
+        //response.setCart(cartMapper.toDto(o.getCart()));
         response.setOrderRef(o.getReference());
+        response.setConfirmationKey(o.getConfirmationKey());
         response.setCode("200");
         response.setSuccess(true);
         return response;
