@@ -38,6 +38,7 @@ export const SmallAddressForm = ({register, control, errors, state, dispatch}) =
               required
               id="firstName"
               name="firstName"
+                      maxlength="15"
               placeholder="First name"
               rules={{ required: true, maxLength: 15, minLength: 2 }}
           />
@@ -49,6 +50,7 @@ export const SmallAddressForm = ({register, control, errors, state, dispatch}) =
               required
               id="lastName"
               name="lastName"
+                      maxlength="15"
               placeholder="Last name"
               autoComplete="lname"
               rules={{ required: true, maxLength: 15, minLength: 2 }}
@@ -59,6 +61,7 @@ export const SmallAddressForm = ({register, control, errors, state, dispatch}) =
           required
           id="line2"
           name="line2"
+          maxlength="50"
           placeholder="House #, Apt #, Landmark"
           autoComplete="billing address-line2"
           register={register}

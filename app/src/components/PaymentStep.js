@@ -117,7 +117,7 @@ export const PaymentStep = ({ state, dispatch }) => {
       variables: { token, ref: paymentMethod, secureKey }
     });
     if (processPayment.status == 'REDIRECT')
-      window.location = processPayment.redirect;
+      window.location = processPayment.payload;
     else if (processPayment.status == 'DECLINED') {
       alert(processPayment.message);
       window.location.reload();
