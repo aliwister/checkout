@@ -5,16 +5,16 @@ import lombok.Data;
 import java.io.Serializable;
 
 public enum PaymentMethod implements Serializable {
-    BANK("bankwire", "Bank Transfer", "", false),
-    CHECKOUT("checkoutcom", "Checkout.com", "", true);
+    BANK("bankwire", "Bank Muscat Transfer", "bank-transfer.svg", false),
+    CHECKOUT("checkoutcom", "Credit/Debit Card via Checkout.com", "credit-card.svg", true);
     public final String ref;
-    public final String name;
+    public final String label;
     public final String image;
     public final boolean prePay;
 
-    PaymentMethod(String ref, String name, String image, boolean prePay) {
+    PaymentMethod(String ref, String label, String image, boolean prePay) {
         this.ref = ref;
-        this.name = name;
+        this.label = label;
         this.image = image;
         this.prePay = prePay;
     }

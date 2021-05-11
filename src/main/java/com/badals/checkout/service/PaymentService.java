@@ -23,6 +23,7 @@ import java.util.*;
 
 import static com.badals.checkout.domain.pojo.PaymentMethod.BANK;
 import static com.badals.checkout.domain.pojo.PaymentMethod.CHECKOUT;
+import static com.badals.checkout.domain.pojo.PaymentStatus.REDIRECT;
 import static com.badals.checkout.domain.pojo.PaymentStatus.SUCCESS;
 
 @Service
@@ -58,10 +59,12 @@ public class PaymentService {
         return list;
     }
 
-    public PaymentResponsePayload processPayment(String paymentMethod, String secureKey) throws InvalidCartException {
+    @Transactional
+    public PaymentResponsePayload processPaymentWeb(String paymentMethod, String secureKey) throws InvalidCartException {
         Cart cart = cartRepository.findBySecureKey(secureKey).orElse(null);
         Order order = cartService.createOrder(cart, paymentMethod, false);
-        return new PaymentResponsePayload("Success",faceUrl+ "order-received?ref="+order.getReference()+"&key="+order.getConfirmationKey(), SUCCESS);
+        PaymentResponsePayload response = new PaymentResponsePayload("Success",faceUrl+ "order-received?ref="+order.getReference()+"&key="+order.getConfirmationKey(), REDIRECT);
+        return response;
     }
     @PreAuthorize("hasRole('ROLE_USER')")
     public PaymentResponsePayload processPayment(String token, String ref, String secureKey) throws InvalidCartException {

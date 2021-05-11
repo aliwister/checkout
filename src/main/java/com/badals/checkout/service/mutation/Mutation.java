@@ -55,7 +55,7 @@ public class Mutation implements GraphQLMutationResolver {
     public PaymentResponsePayload processPayment(String token, String ref, String secureKey) throws Exception{
         if(ref.equals("checkoutcom") && token != null)
            return checkoutPaymentService.processPayment(token, secureKey, true); //, name);
-        return paymentService.processPayment(ref, secureKey);
+        return paymentService.processPaymentWeb(ref, secureKey);
     }
     public CartDTO setCarrier(String value, String secureKey) throws InvalidCartException {
         return carrierService.setCarrier(value, secureKey);

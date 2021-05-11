@@ -39,6 +39,7 @@ type PaymentMethod {
     ref: String
     name: String
     image: String
+    label: String
 }
 type CartItem {
     productId: Long

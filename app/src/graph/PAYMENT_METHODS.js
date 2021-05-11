@@ -5,6 +5,7 @@ export const PAYMENT_METHODS = gql`
         ref
         name
         image
+        label
     }
   }
 `;
