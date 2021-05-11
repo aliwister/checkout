@@ -117,6 +117,7 @@ public class CartService {
         cartRepository.save(cart);
     }
 
+    @Transactional
     public Order createOrder(Cart cart, String paymentMethod, boolean isPaid) {
         Order order = new Order();
         order.setCurrency("OMR");//cart.getCurrency());
@@ -168,7 +169,7 @@ public class CartService {
         }
         order = orderRepository.saveAndFlush(order);
         cart.setSecureKey(cart.getSecureKey() + " DONE");
-        cartRepository.saveAndFlush(cart);
+        cartRepository.save(cart);
 
         return order;
     }
