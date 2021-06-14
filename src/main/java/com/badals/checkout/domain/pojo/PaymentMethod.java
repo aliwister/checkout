@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public enum PaymentMethod implements Serializable {
     BANK("bankwire", "Bank Muscat Transfer", "bank-transfer.svg", false),
-    CHECKOUT("checkoutcom", "Credit/Debit Card via Checkout.com", "credit-card.svg", true);
+    CHECKOUT("checkoutcom", "Credit/Debit Card", "credit-card.svg", true);
     public final String ref;
     public final String label;
     public final String image;

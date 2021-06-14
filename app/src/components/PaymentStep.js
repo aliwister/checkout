@@ -91,6 +91,17 @@ export const PaymentStep = ({ state, dispatch }) => {
   const [open, setOpen] = React.useState(false);
   const [once, setOnce] = React.useState(false);
 
+  const codeStr = `
+<!-- Event snippet for Purchase conversion page -->
+<script>
+  gtag('event', 'conversion', {
+      'send_to': 'AW-930697440/hIuGCIaHucICEOCh5bsD',
+      'transaction_id': ''
+  });
+</script>
+`
+
+
   const onSubmit = async () => {
     //console.log("In onsubmit");
     //console.log(data);
@@ -192,6 +203,7 @@ export const PaymentStep = ({ state, dispatch }) => {
           )}
         </form>
       </CheckoutButtonContainer>
+      <div dangerouslySetInnerHTML={{ __html: codeStr }} />
     </React.Fragment>
   )
 }
