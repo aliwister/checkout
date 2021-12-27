@@ -164,6 +164,8 @@ public class CartService {
             orderItem.setLineTotal(item.getPrice().multiply(item.getQuantity()));
             orderItem.setSku(item.getSku());
             orderItem.setRef(item.getRef());
+            if(item.getCost() != null)
+                orderItem.setCost(item.getCost());
             order.addOrderItem(orderItem);
 
         }
