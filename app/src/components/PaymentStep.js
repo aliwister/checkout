@@ -91,23 +91,35 @@ export const PaymentStep = ({ state, dispatch }) => {
   const [open, setOpen] = React.useState(false);
   const [once, setOnce] = React.useState(false);
 
+  const codeStr = `
+<!-- Event snippet for Purchase conversion page -->
+<script>
+  gtag('event', 'conversion', {
+      'send_to': 'AW-930697440/hIuGCIaHucICEOCh5bsD',
+      'transaction_id': ''
+  });
+</script>
+`
+
+
   const onSubmit = async () => {
-    console.log("In onsubmit");
-    console.log(data);
+    //console.log("In onsubmit");
+    //console.log(data);
     setOpen(true);
     const {
       data: { processPayment },
     } = await processPaymentMutation({
       variables: { token: null, ref: paymentMethod, secureKey }
     });
-    if (processPayment.redirect)
-      window.location = processPayment.redirect;
+    //console.log(processPayment);
+    if (processPayment.status === 'REDIRECT')
+      window.location = processPayment.payload;
     else
       alert("Payment unsuccessful");
   }
 
   const handleProcessPayment = async (token) => {
-    console.log('In handleProcessPayment');
+    //console.log('In handleProcessPayment');
     setOnce(true);
     if (once)
       return;
@@ -146,11 +158,11 @@ export const PaymentStep = ({ state, dispatch }) => {
                 onChange={() => setPaymentMethod(x.ref)}
                 value={x.ref}
                 key={x.ref}
-                name={x.name}
+                name={x.label}
               >
                 &nbsp;&nbsp;
                 {x.image && (<Image src={require('../assets/' + x.image)} />)}
-                {!x.image && (<span>{x.name} </span>)}
+               <span> &nbsp; &nbsp; {x.label} </span>
               </PaymentSelectRadio>
               {(x.ref == 'checkoutcom' && paymentMethod === x.ref) && (
 
@@ -191,6 +203,7 @@ export const PaymentStep = ({ state, dispatch }) => {
           )}
         </form>
       </CheckoutButtonContainer>
+      <div dangerouslySetInnerHTML={{ __html: codeStr }} />
     </React.Fragment>
   )
 }

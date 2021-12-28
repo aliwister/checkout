@@ -29,6 +29,13 @@ public class OrderItem implements Serializable {
     @Column(name = "price", precision = 21, scale = 2)
     private BigDecimal price;
 
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
+
+    @Column(name = "cost", precision = 21, scale = 2)
+    private BigDecimal cost;
+
     @Column(name = "comment")
     private String comment;
 
@@ -235,5 +242,9 @@ public class OrderItem implements Serializable {
             ", sequence=" + getSequence() +
             ", shippingInstructions='" + getShippingInstructions() + "'" +
             "}";
+    }
+
+    public BigDecimal getCost() {
+        return cost;
     }
 }
