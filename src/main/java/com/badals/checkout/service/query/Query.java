@@ -3,10 +3,7 @@ package com.badals.checkout.service.query;
 import com.badals.checkout.domain.pojo.Address;
 import com.badals.checkout.domain.pojo.Carrier;
 import com.badals.checkout.domain.pojo.PaymentMethod;
-import com.badals.checkout.service.CarrierService;
-import com.badals.checkout.service.CartService;
-import com.badals.checkout.service.InvalidCartException;
-import com.badals.checkout.service.PaymentService;
+import com.badals.checkout.service.*;
 import com.badals.checkout.service.dto.CartDTO;
 import com.badals.checkout.service.mutation.Mutation;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
@@ -36,20 +33,33 @@ query {
 public class Query implements GraphQLQueryResolver {
     private final Logger log = LoggerFactory.getLogger(Query.class);
 
-    @Autowired
-    private CartService cartService;
+    private final CartService cartService;
 
-    @Autowired
-    private CarrierService carrierService;
+    private final TenantCartService tenantCartService;
 
-    @Autowired
-    private PaymentService paymentService;
+    private final CarrierService carrierService;
+
+    private final PaymentService paymentService;
+
+    public Query(CartService cartService, TenantCartService tenantCartService, CarrierService carrierService, PaymentService paymentService) {
+        this.cartService = cartService;
+        this.tenantCartService = tenantCartService;
+        this.carrierService = carrierService;
+        this.paymentService = paymentService;
+    }
 
     public String test(String param) {
         return "Im a query";
     }
 
     public CartDTO cart(String secureKey) {
+        return cartService.findBySecureKey(secureKey);
+    }
+    public CartDTO tenantCart(String secureKey) {
+        return tenantCartService.findBySecureKey(secureKey);
+    }
+
+    public CartDTO profileCart(String secureKey) {
         return cartService.findBySecureKey(secureKey);
     }
 

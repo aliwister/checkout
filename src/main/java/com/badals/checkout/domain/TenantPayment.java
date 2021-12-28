@@ -1,0 +1,190 @@
+package com.badals.checkout.domain;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.Instant;
+
+/**
+ * A OrderPayment.
+ */
+@Entity
+@Table(catalog="profileshop", name = "payment")
+public class TenantPayment implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotNull
+    @Column(name = "payment_method", nullable = false)
+    private String paymentMethod;
+
+    @Column(name = "auth_code")
+    private String authCode;
+
+    @Column(name = "card_number")
+    private String cardNumber;
+
+    @NotNull
+    @Column(name = "amount", precision = 21, scale = 2, nullable = false)
+    private BigDecimal amount;
+
+    @Column(name = "transaction_id")
+    private String transactionId;
+
+    //ALTER TABLE shop.payment ADD track_id BIGINT NULL;
+    @Column(name = "track_id")
+    private Long trackId;
+
+    @NotNull
+    @Column(name = "created_date", nullable = false)
+    private Instant created_date;
+
+    @ManyToOne
+    @JsonIgnoreProperties("orderPayments")
+    private TenantOrder order;
+
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public TenantPayment paymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+        return this;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getAuthCode() {
+        return authCode;
+    }
+
+    public TenantPayment authCode(String authCode) {
+        this.authCode = authCode;
+        return this;
+    }
+
+    public void setAuthCode(String authCode) {
+        this.authCode = authCode;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public TenantPayment cardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+        return this;
+    }
+
+    public Long getTrackId() {
+        return trackId;
+    }
+
+    public void setTrackId(Long trackId) {
+        this.trackId = trackId;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public TenantPayment amount(BigDecimal amount) {
+        this.amount = amount;
+        return this;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public TenantPayment transactionId(String transactionId) {
+        this.transactionId = transactionId;
+        return this;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public Instant getCreated_date() {
+        return created_date;
+    }
+
+    public TenantPayment created_date(Instant created_date) {
+        this.created_date = created_date;
+        return this;
+    }
+
+    public void setCreated_date(Instant created_date) {
+        this.created_date = created_date;
+    }
+
+    public TenantOrder getOrder() {
+        return order;
+    }
+
+    public TenantPayment order(TenantOrder order) {
+        this.order = order;
+        return this;
+    }
+
+    public void setOrder(TenantOrder order) {
+        this.order = order;
+    }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof TenantPayment)) {
+            return false;
+        }
+        return id != null && id.equals(((TenantPayment) o).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderPayment{" +
+            "id=" + getId() +
+            ", paymentMethod='" + getPaymentMethod() + "'" +
+            ", authCode='" + getAuthCode() + "'" +
+            ", cardNumber='" + getCardNumber() + "'" +
+            ", amount=" + getAmount() +
+            ", transactionId='" + getTransactionId() + "'" +
+            ", created_date='" + getCreated_date() + "'" +
+            "}";
+    }
+}

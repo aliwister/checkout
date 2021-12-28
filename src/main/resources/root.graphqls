@@ -1,6 +1,25 @@
 scalar BigDecimal
 scalar Long
 
+type Query {
+    test(param: String): String
+    cart(secureKey: String): Cart
+    tenantCart(secureKey: String): Cart
+    carriers(secureKey: String): [Carrier]
+    paymentMethods(currency: String): [PaymentMethod]
+}
+type Mutation {
+
+    setInfo(email: String, address: AddressInput, secureKey: String, carrier: String): Cart
+    processPayment(token: String, ref: String, secureKey: String): PaymentResponsePayload
+
+    setCarrier(value: String, secureKey: String): Cart
+
+    chargePayment(token: String, paymentRef: String, secureKey: String): PaymentResponsePayload
+    createOrder(token: String, paymentKey: String): OrderConfirmation
+}
+
+
 enum PaymentStatus {
     SUCCESS
     DECLINED
@@ -83,22 +102,6 @@ input AddressInput {
      lng: String
      lat: String
      plusCode: String
-}
-type Query {
-    test(param: String): String
-    cart(secureKey: String): Cart
-    carriers(secureKey: String): [Carrier]
-    paymentMethods(currency: String): [PaymentMethod]
-}
-type Mutation {
-
-    setInfo(email: String, address: AddressInput, secureKey: String, carrier: String): Cart
-    processPayment(token: String, ref: String, secureKey: String): PaymentResponsePayload
-
-    setCarrier(value: String, secureKey: String): Cart
-
-    chargePayment(token: String, paymentRef: String, secureKey: String): PaymentResponsePayload
-    createOrder(token: String, paymentKey: String): OrderConfirmation
 }
 
 type OrderConfirmation {
