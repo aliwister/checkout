@@ -7,6 +7,7 @@ type Query {
     tenantCart(secureKey: String): Cart
     carriers(secureKey: String): [Carrier]
     paymentMethods(currency: String): [PaymentMethod]
+    addressDescription(isoCode: String, lang: String): AddressFormat
 }
 type Mutation {
 

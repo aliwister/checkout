@@ -59,10 +59,6 @@ public class Query implements GraphQLQueryResolver {
         return tenantCartService.findBySecureKey(secureKey);
     }
 
-    public CartDTO profileCart(String secureKey) {
-        return cartService.findBySecureKey(secureKey);
-    }
-
     public List<Carrier> carriers(String secureKey) throws InvalidCartException {
         return carrierService.findByStateCityWeight(secureKey);
     }

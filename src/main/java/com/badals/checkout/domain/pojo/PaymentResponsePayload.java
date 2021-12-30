@@ -7,6 +7,7 @@ public class PaymentResponsePayload {
     String message;
     String payload;
     PaymentStatus status;
+    String ref;
 
     public PaymentResponsePayload(String message, String payload, PaymentStatus status) {
         this.message = message;
