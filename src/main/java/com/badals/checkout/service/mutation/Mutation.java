@@ -76,7 +76,7 @@ public class Mutation implements GraphQLMutationResolver {
     }
 
     public CartDTO setTenantCarrier(String value, String secureKey) throws InvalidCartException {
-        return carrierService.setCarrier(value, secureKey);
+        return carrierService.setTenantCarrier(value, secureKey);
     }
 
     public PaymentResponsePayload chargePayment(String token, String ref, String secureKey) throws Exception {
