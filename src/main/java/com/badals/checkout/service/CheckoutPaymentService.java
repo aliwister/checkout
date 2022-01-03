@@ -257,5 +257,9 @@ public class CheckoutPaymentService {
    private PaymentResponsePayload redirect(String href) {
       return new PaymentResponsePayload("Payment Successful", href, PaymentStatus.REDIRECT);
    }
-   
+
+   public PaymentResponsePayload processTenantPayment(String token, String secureKey, boolean b) {
+      return new PaymentResponsePayload("Payment Successful", "http://www.google.com", PaymentStatus.REDIRECT);
+
+   }
 }

@@ -12,10 +12,13 @@ type Query {
 type Mutation {
 
     setInfo(email: String, address: AddressInput, secureKey: String, carrier: String): Cart
+
+    setTenantInfo(email: String, address: AddressInput, secureKey: String, carrier: String): Cart
+    setTenantCarrier(value: String, secureKey: String): Cart
+    processTenantPayment(token: String, ref: String, secureKey: String): PaymentResponsePayload
+
     processPayment(token: String, ref: String, secureKey: String): PaymentResponsePayload
-
     setCarrier(value: String, secureKey: String): Cart
-
     chargePayment(token: String, paymentRef: String, secureKey: String): PaymentResponsePayload
     createOrder(token: String, paymentKey: String): OrderConfirmation
 }

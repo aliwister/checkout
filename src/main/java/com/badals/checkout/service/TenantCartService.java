@@ -58,7 +58,7 @@ public class TenantCartService {
         log.info("Request to get Cart : {}", secureKey);
         log.info("Entity {}", cartRepository.findBySecureKey(secureKey));
         Optional<CartDTO> cartDTO = cartRepository.findBySecureKey(secureKey)
-                .map(cartMapper::toProfileDto);
+                .map(cartMapper::toTenanteDto);
         log.info("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
         log.info("Returning DTO {}", cartDTO);
         return cartDTO.get();
@@ -68,7 +68,7 @@ public class TenantCartService {
         TenantCart cart = cartRepository.findBySecureKey(secureKey).get();
         cart.setDeliveryAddress(address);
         cart = cartRepository.save(cart);
-        return cartMapper.toProfileDto(cart);
+        return cartMapper.toTenanteDto(cart);
     }
 
     public CartDTO setDeliveryAddressAndEmail(Address address, String email, String secureKey, String carrier) {
@@ -85,7 +85,7 @@ public class TenantCartService {
             cart.setCarrier(carrier);
         cart.setEmail(email);
         cart = cartRepository.save(cart);
-        return cartMapper.toProfileDto(cart);
+        return cartMapper.toTenanteDto(cart);
     }
     public CartDTO setCarrier() {
         return null;
@@ -234,7 +234,7 @@ public class TenantCartService {
             throw new LockedCartException("Already locked");
         cart.setLock(true);
         cart = cartRepository.saveAndFlush(cart);
-        return cartMapper.toProfileDto(cart);
+        return cartMapper.toTenanteDto(cart);
     }
     @Transactional
     public void unlock(String secureKey) {

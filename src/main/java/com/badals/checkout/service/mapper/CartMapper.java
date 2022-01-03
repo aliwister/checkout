@@ -10,7 +10,7 @@ import org.mapstruct.*;
 public interface CartMapper extends EntityMapper<CartDTO, Cart> {
 
     CartDTO toDto(Cart cart);
-    CartDTO toProfileDto(TenantCart cart);
+    CartDTO toTenanteDto(TenantCart cart);
 
     Cart toEntity(CartDTO cartDTO);
 

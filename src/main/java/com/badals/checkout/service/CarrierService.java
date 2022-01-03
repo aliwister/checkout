@@ -1,15 +1,14 @@
 package com.badals.checkout.service;
 
 import com.badals.checkout.domain.Cart;
-import com.badals.checkout.domain.pojo.Address;
+import com.badals.checkout.domain.TenantCart;
 import com.badals.checkout.domain.pojo.Carrier;
 import com.badals.checkout.repository.CartRepository;
+import com.badals.checkout.repository.TenantCartRepository;
 import com.badals.checkout.service.dto.CartDTO;
 import com.badals.checkout.service.mapper.CartMapper;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +20,10 @@ import java.util.stream.Stream;
 public class CarrierService {
     private final Logger log = LoggerFactory.getLogger(CarrierService.class);
 
-    @Autowired
-    CartRepository cartRepository;
+    private final CartRepository cartRepository;
+    private final TenantCartRepository tenantCartRepository;
 
-    @Autowired
-    CartMapper cartMapper;
+    private final CartMapper cartMapper;
 
     List<Carrier> ship = new ArrayList<Carrier>(){{
         add(new Carrier("Badals.com Home Delivery -- Muscat Only", "BADALSMUSCAT", BigDecimal.valueOf(1), ""));
@@ -42,6 +40,12 @@ public class CarrierService {
         add(new Carrier("Store Pickup", "PICKUP", BigDecimal.valueOf(0), ""));
     }};
 
+    public CarrierService(CartRepository cartRepository, TenantCartRepository tenantCartRepository, CartMapper cartMapper) {
+        this.cartRepository = cartRepository;
+        this.tenantCartRepository = tenantCartRepository;
+        this.cartMapper = cartMapper;
+    }
+
     @Transactional(readOnly = true)
     public List<Carrier> findByStateCityWeight(String state, String city, BigDecimal weight, boolean isPickup ) {
         if(isPickup) {
@@ -57,6 +61,15 @@ public class CarrierService {
         cart.setCarrier(value);
         cart = cartRepository.save(cart);
         return cartMapper.toDto(cart);
+    }
+
+    public CartDTO setTenantCarrier(String value, String secureKey) throws InvalidCartException {
+        TenantCart cart = tenantCartRepository.findBySecureKey(secureKey).orElse(null);
+        if(cart == null)
+            throw new InvalidCartException("cart invalid");
+        cart.setCarrier(value);
+        cart = tenantCartRepository.save(cart);
+        return cartMapper.toTenanteDto(cart);
     }
 
     public BigDecimal getCarrierCost(String ref) {

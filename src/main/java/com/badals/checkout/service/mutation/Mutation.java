@@ -1,8 +1,6 @@
 package com.badals.checkout.service.mutation;
 
-import com.badals.checkout.domain.Order;
 import com.badals.checkout.domain.pojo.Address;
-import com.badals.checkout.domain.pojo.Carrier;
 import com.badals.checkout.domain.pojo.PaymentResponsePayload;
 import com.badals.checkout.service.*;
 import com.badals.checkout.service.dto.CartDTO;
@@ -11,8 +9,6 @@ import com.badals.checkout.service.mapper.CartMapper;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 /*
@@ -27,20 +23,24 @@ mutation {
 public class Mutation implements GraphQLMutationResolver {
     private final Logger log = LoggerFactory.getLogger(Mutation.class);
 
-    @Autowired
-    CartMapper cartMapper;
+    private final CartMapper cartMapper;
+    private final CartService cartService;
 
-    @Autowired
-    CartService cartService;
+    private final TenantCartService tenantCartService;
 
-    @Autowired
-    private CarrierService carrierService;
+    private final CarrierService carrierService;
 
-    @Autowired
-    CheckoutPaymentService checkoutPaymentService;
+    private final CheckoutPaymentService checkoutPaymentService;
+    private final PaymentService paymentService;
 
-    @Autowired
-    private PaymentService paymentService;
+    public Mutation(CartMapper cartMapper, CartService cartService, TenantCartService tenantCartService, CarrierService carrierService, CheckoutPaymentService checkoutPaymentService, PaymentService paymentService) {
+        this.cartMapper = cartMapper;
+        this.cartService = cartService;
+        this.tenantCartService = tenantCartService;
+        this.carrierService = carrierService;
+        this.checkoutPaymentService = checkoutPaymentService;
+        this.paymentService = paymentService;
+    }
 
     public CartDTO updateInfo(Address address, String secureKey) {
         log.info("REST request to save Address : {}", address);
@@ -52,12 +52,30 @@ public class Mutation implements GraphQLMutationResolver {
         return cartService.setDeliveryAddressAndEmail(address, email, secureKey, carrier);
         //return new Message("success");
     }
+
+    public CartDTO setTenantInfo(String email, Address address, String secureKey, String carrier) {
+        log.info("REST request to save Address : {}", address);
+        return tenantCartService.setDeliveryAddressAndEmail(address, email, secureKey, carrier);
+        //return new Message("success");
+    }
+
     public PaymentResponsePayload processPayment(String token, String ref, String secureKey) throws Exception{
         if(ref.equals("checkoutcom") && token != null)
            return checkoutPaymentService.processPayment(token, secureKey, true); //, name);
         return paymentService.processPaymentWeb(ref, secureKey);
     }
+
+    public PaymentResponsePayload processTenantPayment(String token, String ref, String secureKey) throws Exception{
+        if(ref.equals("checkoutcom") && token != null)
+           return checkoutPaymentService.processTenantPayment(token, secureKey, true); //, name);
+        return paymentService.processPaymentWeb(ref, secureKey);
+    }
+
     public CartDTO setCarrier(String value, String secureKey) throws InvalidCartException {
+        return carrierService.setCarrier(value, secureKey);
+    }
+
+    public CartDTO setTenantCarrier(String value, String secureKey) throws InvalidCartException {
         return carrierService.setCarrier(value, secureKey);
     }
 
