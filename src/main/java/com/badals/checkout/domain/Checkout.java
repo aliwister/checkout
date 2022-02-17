@@ -1,20 +1,21 @@
 package com.badals.checkout.domain;
 
 
+import com.badals.checkout.aop.tenant.TenantSupport;
 import com.badals.checkout.domain.pojo.Address;
 import com.badals.checkout.domain.pojo.LineItem;
 import com.badals.checkout.xtra.PaymentType;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Data;
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.*;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * A Product.
@@ -25,8 +26,13 @@ import java.util.*;
 })
 @Entity
 @Data
-@Table(name = "checkout_cart")
-public class Cart implements Serializable {
+@Table(catalog = "profileshop", name = "checkout")
+@FilterDef(name = "tenantFilter", parameters = {@ParamDef(name = "tenantId", type = "string")})
+@Filter(name = "tenantFilter", condition = "tenant_id = :tenantId")
+public class Checkout implements Serializable, TenantSupport {
+
+    @Column(name = "cart_weight")
+    private String cartWeight;
 
     private static final long serialVersionUID = 1L;
 
@@ -34,7 +40,6 @@ public class Cart implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NaturalId
     private String ref;
     private String name;
     private String phone;
@@ -68,17 +73,22 @@ public class Cart implements Serializable {
     @Column(name = "carrier")
     private String carrier;
 
+    @Column(name = "carrier_service")
+    private String carrierService;
 
     private String payment;
 
     private String currency;
 
+    @Column(name = "carrier_rate")
+    private BigDecimal carrierRate;
+
     @Type(type = "json")
-    @Column(name = "cart", columnDefinition = "string")
+    @Column(name = "checkout_content", columnDefinition = "string")
     List<LineItem> items;
 
     @Column(name="tenant_id")
-    private Long tenantId;
+    private String tenantId;
 
     @Column(name="payment_token")
     private String paymentToken;
@@ -89,15 +99,18 @@ public class Cart implements Serializable {
     @Column(name="allow_pickup")
     private Boolean allowPickup;
 
+    @Column(name="guest")
+    private Boolean guest;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Cart)) {
+        if (!(o instanceof Checkout)) {
             return false;
         }
-        return id != null && id.equals(((Cart) o).id);
+        return id != null && id.equals(((Checkout) o).id);
     }
 
     @Override

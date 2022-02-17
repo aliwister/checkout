@@ -1,15 +1,15 @@
-scalar BigDecimal
-scalar Long
+scalar LocalDate
 
-type Query {
+extend type Query {
     test(param: String): String
     cart(secureKey: String): Cart
-    tenantCart(secureKey: String): Cart
+    tenantCheckout(secureKey: String): Cart
     carriers(secureKey: String): [Carrier]
-    paymentMethods(currency: String): [PaymentMethod]
+    #paymentMethods(currency: String): [PaymentMethod]
     addressDescription(isoCode: String, lang: String): AddressFormat
+    orderConfirmation(paymentKey: String): OrderConfirmation
 }
-type Mutation {
+extend type Mutation {
 
     setInfo(email: String, address: AddressInput, secureKey: String, carrier: String): Cart
 
@@ -20,10 +20,44 @@ type Mutation {
     processPayment(token: String, ref: String, secureKey: String): PaymentResponsePayload
     setCarrier(value: String, secureKey: String): Cart
     chargePayment(token: String, paymentRef: String, secureKey: String): PaymentResponsePayload
-    createOrder(token: String, paymentKey: String): OrderConfirmation
+    #createOrder(token: String, paymentKey: String): OrderConfirmation
 }
 
 
+enum AddressField {
+    firstName, lastName, line1, line2, postalCode, state, city, mobile, alias, country, save
+}
+
+enum OptionType {
+    REQUIRED, OPTIONAL, NONE
+}
+
+enum FieldType {
+    TEXT, REMOTE_SELECT, REMOTE_AUTOCOMPLETE, SELECT, CHECKBOX, AUTOCOMPLETE, MOBILE
+}
+
+type AddressFormat {
+    inputFormat: String
+    displayFormat: String
+    descriptions: [FieldDescription]
+    gmap: OptionType
+}
+
+type FieldDescription {
+    field: AddressField
+    label: String
+    required: Boolean
+    minLength: Int
+    maxLength: Int
+    regex: String
+    fieldType: FieldType
+    options: [Option]
+}
+
+type Option {
+    label: String
+    value: String
+}
 enum PaymentStatus {
     SUCCESS
     DECLINED
@@ -36,10 +70,11 @@ type PaymentResponsePayload {
     status: PaymentStatus
 }
 type Carrier {
+    id: Int
     name: String!
     value: String!
     cost: BigDecimal!
-    image: String
+    logo: String
 }
 type Address {
     id: Long
@@ -84,12 +119,15 @@ type Cart {
     deliveryAddressId: Long
     invoiceAddress: Address
     addresses: [Address]
-    paymentMethods: [PaymentMethod]
+    paymentTypes: [PaymentMethod]
     carrier: String
     currency: String
     items: [CartItem]
-    tenantId: Long
+    tenantId: String
     allowPickup: Boolean
+    guest: Boolean
+    carrierRate:String
+    carrierService: String
 }
 input AddressInput {
      id: Long
@@ -109,11 +147,20 @@ input AddressInput {
      plusCode: String
 }
 
+#type OrderConfirmation {
+#    reference: String
+#    cart: Cart
+#    code: String
+#    success: Boolean
+#    message: String
+#}
+
 type OrderConfirmation {
-    orderRef: String
+    id: Long
+    reference: String
+    invoiceDate: LocalDate
+    deliveryDate: LocalDate
+    currency: String
+    cart: Cart
     confirmationKey: String
-    #cart: Cart
-    code: String
-    success: Boolean
-    message: String
 }

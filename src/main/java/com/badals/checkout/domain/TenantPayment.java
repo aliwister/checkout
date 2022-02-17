@@ -1,6 +1,11 @@
 package com.badals.checkout.domain;
 
+import com.badals.checkout.aop.tenant.TenantSupport;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,8 +17,11 @@ import java.time.Instant;
  * A OrderPayment.
  */
 @Entity
+@Data
 @Table(catalog="profileshop", name = "payment")
-public class TenantPayment implements Serializable {
+@FilterDef(name = "tenantFilter", parameters = {@ParamDef(name = "tenantId", type = "string")})
+@Filter(name = "tenantFilter", condition = "tenant_id = :tenantId")
+public class TenantPayment implements Serializable, TenantSupport {
 
     private static final long serialVersionUID = 1L;
 
@@ -50,64 +58,19 @@ public class TenantPayment implements Serializable {
     @JsonIgnoreProperties("orderPayments")
     private TenantOrder order;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
     public TenantPayment paymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
         return this;
     }
 
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public String getAuthCode() {
-        return authCode;
-    }
 
     public TenantPayment authCode(String authCode) {
         this.authCode = authCode;
         return this;
     }
-
-    public void setAuthCode(String authCode) {
-        this.authCode = authCode;
-    }
-
-    public String getCardNumber() {
-        return cardNumber;
-    }
-
     public TenantPayment cardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
         return this;
-    }
-
-    public Long getTrackId() {
-        return trackId;
-    }
-
-    public void setTrackId(Long trackId) {
-        this.trackId = trackId;
-    }
-
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
     }
 
     public TenantPayment amount(BigDecimal amount) {
@@ -115,25 +78,9 @@ public class TenantPayment implements Serializable {
         return this;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public String getTransactionId() {
-        return transactionId;
-    }
-
     public TenantPayment transactionId(String transactionId) {
         this.transactionId = transactionId;
         return this;
-    }
-
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
-    }
-
-    public Instant getCreated_date() {
-        return created_date;
     }
 
     public TenantPayment created_date(Instant created_date) {
@@ -141,23 +88,15 @@ public class TenantPayment implements Serializable {
         return this;
     }
 
-    public void setCreated_date(Instant created_date) {
-        this.created_date = created_date;
-    }
-
-    public TenantOrder getOrder() {
-        return order;
-    }
-
     public TenantPayment order(TenantOrder order) {
         this.order = order;
         return this;
     }
 
-    public void setOrder(TenantOrder order) {
-        this.order = order;
-    }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+    @Column(name="tenant_id")
+    private String tenantId;
+
+
 
     @Override
     public boolean equals(Object o) {

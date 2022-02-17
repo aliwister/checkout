@@ -1,7 +1,12 @@
 package com.badals.checkout.domain;
 
+import com.badals.checkout.aop.tenant.TenantSupport;
 import com.badals.checkout.domain.pojo.Address;
 import com.badals.enumeration.OrderState;
+import lombok.Data;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -15,8 +20,11 @@ import java.util.Set;
  * A Order.
  */
 @Entity
+@Data
 @Table(catalog="profileshop", name = "jhi_order")
-public class TenantOrder extends Auditable<String> implements Serializable {
+@FilterDef(name = "tenantFilter", parameters = {@ParamDef(name = "tenantId", type = "string")})
+@Filter(name = "tenantFilter", condition = "tenant_id = :tenantId")
+public class TenantOrder extends Auditable<String> implements Serializable, TenantSupport {
 
     private static final long serialVersionUID = 1L;
 
@@ -55,7 +63,7 @@ public class TenantOrder extends Auditable<String> implements Serializable {
 
     @OneToOne
     @JoinColumn(unique = true)
-    private TenantCart cart;
+    private Checkout cart;
 
     @Type(type = "json")
     @Column(name = "delivery_address", columnDefinition = "string")
@@ -89,6 +97,9 @@ public class TenantOrder extends Auditable<String> implements Serializable {
     @Column(name = "coupon_name")
     private BigDecimal couponName;
 
+    @Column(name="tenant_id")
+    private String tenantId;
+
 
     @Column
     private String email;
@@ -108,86 +119,7 @@ public class TenantOrder extends Auditable<String> implements Serializable {
     @Column
     private String paymentMethod;
 
-    public String getCarrier() {
-        return carrier;
-    }
 
-    public void setCarrier(String carrier) {
-        this.carrier = carrier;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-
-    public BigDecimal getSubtotal() {
-        return subtotal;
-    }
-
-    public void setSubtotal(BigDecimal subtotal) {
-        this.subtotal = subtotal;
-    }
-
-    public Long getDeliveryAddressId() {
-        return deliveryAddressId;
-    }
-
-    public void setDeliveryAddressId(Long deliveryAddressId) {
-        this.deliveryAddressId = deliveryAddressId;
-    }
-
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        this.total = total;
-    }
-
-    public BigDecimal getTaxesTotal() {
-        return taxesTotal;
-    }
-
-    public void setTaxesTotal(BigDecimal taxesTotal) {
-        this.taxesTotal = taxesTotal;
-    }
-
-    public BigDecimal getDeliveryTotal() {
-        return deliveryTotal;
-    }
-
-    public void setDeliveryTotal(BigDecimal deliveryTotal) {
-        this.deliveryTotal = deliveryTotal;
-    }
-
-    public BigDecimal getDiscountsTotal() {
-        return discountsTotal;
-    }
-
-    public void setDiscountsTotal(BigDecimal discountsTotal) {
-        this.discountsTotal = discountsTotal;
-    }
-
-    public BigDecimal getCouponName() {
-        return couponName;
-    }
-
-    public void setCouponName(BigDecimal couponName) {
-        this.couponName = couponName;
-    }
-
-    public String getConfirmationKey() {
-        return confirmationKey;
-    }
-
-    public void setConfirmationKey(String confirmationKey) {
-        this.confirmationKey = confirmationKey;
-    }
 
     /*@ManyToOne
         @JsonIgnoreProperties("orders")
@@ -200,30 +132,9 @@ public class TenantOrder extends Auditable<String> implements Serializable {
     @OneToMany(mappedBy = "order", cascade=CascadeType.ALL, orphanRemoval = true)
     private Set<TenantOrderItem> orderItems = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getReference() {
-        return reference;
-    }
-
     public TenantOrder reference(String reference) {
         this.reference = reference;
         return this;
-    }
-
-    public void setReference(String reference) {
-        this.reference = reference;
-    }
-
-    public LocalDate getInvoiceDate() {
-        return invoiceDate;
     }
 
     public TenantOrder invoiceDate(LocalDate invoiceDate) {
@@ -231,39 +142,9 @@ public class TenantOrder extends Auditable<String> implements Serializable {
         return this;
     }
 
-    public void setInvoiceDate(LocalDate invoiceDate) {
-        this.invoiceDate = invoiceDate;
-    }
-
-    public LocalDate getDeliveryDate() {
-        return deliveryDate;
-    }
-
     public TenantOrder deliveryDate(LocalDate deliveryDate) {
         this.deliveryDate = deliveryDate;
         return this;
-    }
-
-    public void setDeliveryDate(LocalDate deliveryDate) {
-        this.deliveryDate = deliveryDate;
-    }
-
-    public OrderState getOrderState() {
-        return orderState;
-    }
-
-    public void setOrderState(OrderState orderState) {
-        this.orderState = orderState;
-    }
-
-    public TenantOrder orderState(OrderState orderState) {
-        this.orderState = orderState;
-        return this;
-    }
-
-
-    public String getCurrency() {
-        return currency;
     }
 
     public TenantOrder currency(String currency) {
@@ -271,25 +152,9 @@ public class TenantOrder extends Auditable<String> implements Serializable {
         return this;
     }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    public TenantCart getCart() {
-        return cart;
-    }
-
-    public TenantOrder cart(TenantCart cart) {
+    public TenantOrder cart(Checkout cart) {
         this.cart = cart;
         return this;
-    }
-
-    public void setCart(TenantCart cart) {
-        this.cart = cart;
-    }
-
-    public Address getDeliveryAddress() {
-        return deliveryAddress;
     }
 
     public TenantOrder deliveryAddress(Address address) {
@@ -297,25 +162,9 @@ public class TenantOrder extends Auditable<String> implements Serializable {
         return this;
     }
 
-    public void setDeliveryAddress(Address address) {
-        this.deliveryAddress = address;
-    }
-
-    public Address getInvoiceAddress() {
-        return invoiceAddress;
-    }
-
     public TenantOrder invoiceAddress(Address address) {
         this.invoiceAddress = address;
         return this;
-    }
-
-    public void setInvoiceAddress(Address address) {
-        this.invoiceAddress = address;
-    }
-
-    public Set<TenantOrderItem> getOrderItems() {
-        return orderItems;
     }
 
     public TenantOrder orderItems(Set<TenantOrderItem> orderItems) {
@@ -334,11 +183,6 @@ public class TenantOrder extends Auditable<String> implements Serializable {
         orderItem.setOrder(null);
         return this;
     }
-
-    public void setOrderItems(Set<TenantOrderItem> orderItems) {
-        this.orderItems = orderItems;
-    }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {

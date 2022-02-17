@@ -1,6 +1,7 @@
 package com.badals.checkout.service.mapper;
 
 import com.badals.checkout.domain.Order;
+import com.badals.checkout.domain.TenantOrder;
 import com.badals.checkout.service.dto.OrderDTO;
 
 import org.mapstruct.Mapper;
@@ -15,6 +16,9 @@ public interface OrderMapper extends EntityMapper<OrderDTO, Order> {
     @Mapping(target = "orderItems", ignore = true)
     @Mapping(target = "removeOrderItem", ignore = true)
     Order toEntity(OrderDTO orderDTO);
+
+    OrderDTO toTenantDto(TenantOrder order);
+
 
     default Order fromId(Long id) {
         if (id == null) {

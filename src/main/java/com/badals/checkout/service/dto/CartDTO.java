@@ -2,10 +2,9 @@ package com.badals.checkout.service.dto;
 
 import com.badals.checkout.domain.pojo.Address;
 import com.badals.checkout.domain.pojo.LineItem;
-import com.badals.checkout.domain.pojo.PaymentMethod;
+import com.badals.checkout.xtra.PaymentType;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -24,16 +23,19 @@ public class CartDTO {
     private Long deliveryAddressId;
 
     List<Address> addresses;
-    List<PaymentMethod> paymentMethods;
+    List<PaymentType> paymentTypes;
 
     private String carrier;
+    private Double carrierRate;
+    private String carrierService;
     private String currency;
 
     List<LineItem> items;
 
-    private Long tenantId;
+    private String tenantId;
 
     private Boolean allowPickup;
+    private Boolean guest;
 
     @Override
     public String toString() {
@@ -47,11 +49,13 @@ public class CartDTO {
                 ", deliveryAddress=" + deliveryAddress +
                 ", invoiceAddress=" + invoiceAddress +
                 ", addresses=" + addresses +
-                ", paymentMethods=" + paymentMethods +
+                ", paymentMethods=" + paymentTypes +
                 ", carrier='" + carrier + '\'' +
                 ", currency='" + currency + '\'' +
                 ", items=" + items +
                 ", tenantId=" + tenantId +
                 '}';
     }
+
+
 }

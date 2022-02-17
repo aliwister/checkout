@@ -3,7 +3,7 @@ package com.badals.checkout.service;
 import com.badals.checkout.domain.*;
 import com.badals.checkout.domain.pojo.Address;
 import com.badals.checkout.domain.pojo.LineItem;
-import com.badals.checkout.domain.pojo.PaymentMethod;
+import com.badals.checkout.xtra.PaymentType;
 import com.badals.checkout.repository.CartRepository;
 import com.badals.checkout.repository.OrderRepository;
 import com.badals.checkout.repository.PaymentRepository;
@@ -209,7 +209,7 @@ public class CartService {
 
 
 
-        PaymentMethod p = Arrays.stream(PaymentMethod.values()).filter(x -> x.ref.equalsIgnoreCase(cart.getPayment())).findFirst().get();
+        PaymentType p = Arrays.stream(PaymentType.values()).filter(x -> x.ref.equalsIgnoreCase(cart.getPayment())).findFirst().get();
         Order order = createOrder(cart, cart.getPayment(), p.prePay);
         if(p.prePay) {
             Payment payment = new Payment();

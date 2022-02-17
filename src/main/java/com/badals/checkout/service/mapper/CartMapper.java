@@ -1,7 +1,7 @@
 package com.badals.checkout.service.mapper;
 
 import com.badals.checkout.domain.Cart;
-import com.badals.checkout.domain.TenantCart;
+import com.badals.checkout.domain.Checkout;
 import com.badals.checkout.service.dto.CartDTO;
 import org.mapstruct.*;
 
@@ -10,7 +10,7 @@ import org.mapstruct.*;
 public interface CartMapper extends EntityMapper<CartDTO, Cart> {
 
     CartDTO toDto(Cart cart);
-    CartDTO toTenanteDto(TenantCart cart);
+    CartDTO toTenanteDto(Checkout cart);
 
     Cart toEntity(CartDTO cartDTO);
 

@@ -1,16 +1,8 @@
 package com.badals.checkout.domain;
 
 
-import com.badals.checkout.domain.pojo.Address;
-import com.badals.checkout.domain.pojo.LineItem;
-import com.badals.checkout.domain.pojo.PaymentMethod;
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Data;
 import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 import java.io.Serializable;

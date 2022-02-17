@@ -9,9 +9,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @SpringBootApplication
-@EnableAspectJAutoProxy
-
 @EnableConfigurationProperties({ApplicationProperties.class})
+@EnableAspectJAutoProxy
 public class CheckoutApplication {
 	private static final Logger logger = LoggerFactory.getLogger(CheckoutApplication.class);
 	public static void main(String[] args) {

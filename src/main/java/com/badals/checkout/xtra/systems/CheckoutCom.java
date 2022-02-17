@@ -1,9 +1,12 @@
-package com.badals.checkout.service;
+package com.badals.checkout.xtra.systems;
 
 import com.badals.checkout.domain.pojo.LineItem;
 import com.badals.checkout.domain.pojo.PaymentResponsePayload;
-import com.badals.checkout.domain.pojo.PaymentStatus;
+import com.badals.checkout.service.CartService;
+import com.badals.checkout.service.InvalidCartException;
+import com.badals.checkout.service.LockedCartException;
 import com.badals.checkout.service.dto.CartDTO;
+import com.badals.checkout.xtra.PaymentSystem;
 import com.checkout.APIClient;
 import com.checkout.api.services.charge.request.CardTokenCharge;
 import com.checkout.api.services.charge.request.ChargeRefund;
@@ -23,7 +26,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.badals.checkout.domain.pojo.PaymentMethod.CHECKOUT;
+import static com.badals.checkout.xtra.PaymentType.CHECKOUT;
 
 class CardTokenChargeChild extends CardTokenCharge {
    public String successUrl;
@@ -40,8 +43,8 @@ class CheckoutProduct extends Product {
 }
 
 @Service
-public class CheckoutPaymentService {
-   private final Logger log = LoggerFactory.getLogger(CheckoutPaymentService.class);
+public class CheckoutCom extends PaymentSystem {
+   private final Logger log = LoggerFactory.getLogger(CheckoutCom.class);
    //CheckoutApi api;
 
    @Autowired
@@ -240,26 +243,4 @@ public class CheckoutPaymentService {
       }
    }
 */
-   private PaymentResponsePayload paymentSucessful(String payload) {
-      return new PaymentResponsePayload("Payment Successful", payload, PaymentStatus.SUCCESS);
-   }
-
-   private PaymentResponsePayload paymentDeclined(String message) {
-      log.warn("DECLINE MESSAGE: " + message);
-      return new PaymentResponsePayload(message, null, PaymentStatus.DECLINED);
-   }
-
-   private PaymentResponsePayload paymentIgnored(String message) {
-      log.warn("IGNORED MESSAGE: " + message);
-      return new PaymentResponsePayload(message, null, PaymentStatus.IGNORED);
-   }
-
-   private PaymentResponsePayload redirect(String href) {
-      return new PaymentResponsePayload("Payment Successful", href, PaymentStatus.REDIRECT);
-   }
-
-   public PaymentResponsePayload processTenantPayment(String token, String secureKey, boolean b) {
-      return new PaymentResponsePayload("Payment Successful", "http://www.google.com", PaymentStatus.REDIRECT);
-
-   }
 }

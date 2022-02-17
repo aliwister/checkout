@@ -1,0 +1,8 @@
+scalar BigDecimal
+scalar Long
+
+type Query {
+    test(param: String): String
+}
+type Mutation {
+}

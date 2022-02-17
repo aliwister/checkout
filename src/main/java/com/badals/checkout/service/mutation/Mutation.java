@@ -6,6 +6,7 @@ import com.badals.checkout.service.*;
 import com.badals.checkout.service.dto.CartDTO;
 
 import com.badals.checkout.service.mapper.CartMapper;
+import com.badals.checkout.xtra.systems.CheckoutCom;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,19 +27,19 @@ public class Mutation implements GraphQLMutationResolver {
     private final CartMapper cartMapper;
     private final CartService cartService;
 
-    private final TenantCartService tenantCartService;
+    private final TenantCheckoutService tenantCheckoutService;
 
     private final CarrierService carrierService;
 
-    private final CheckoutPaymentService checkoutPaymentService;
+    private final CheckoutCom checkoutCom;
     private final PaymentService paymentService;
 
-    public Mutation(CartMapper cartMapper, CartService cartService, TenantCartService tenantCartService, CarrierService carrierService, CheckoutPaymentService checkoutPaymentService, PaymentService paymentService) {
+    public Mutation(CartMapper cartMapper, CartService cartService, TenantCheckoutService tenantCheckoutService, CarrierService carrierService, CheckoutCom checkoutCom, PaymentService paymentService) {
         this.cartMapper = cartMapper;
         this.cartService = cartService;
-        this.tenantCartService = tenantCartService;
+        this.tenantCheckoutService = tenantCheckoutService;
         this.carrierService = carrierService;
-        this.checkoutPaymentService = checkoutPaymentService;
+        this.checkoutCom = checkoutCom;
         this.paymentService = paymentService;
     }
 
@@ -55,19 +56,19 @@ public class Mutation implements GraphQLMutationResolver {
 
     public CartDTO setTenantInfo(String email, Address address, String secureKey, String carrier) {
         log.info("REST request to save Address : {}", address);
-        return tenantCartService.setDeliveryAddressAndEmail(address, email, secureKey, carrier);
+        return tenantCheckoutService.setDeliveryAddressAndEmail(address, email, secureKey, carrier);
         //return new Message("success");
     }
 
     public PaymentResponsePayload processPayment(String token, String ref, String secureKey) throws Exception{
         if(ref.equals("checkoutcom") && token != null)
-           return checkoutPaymentService.processPayment(token, secureKey, true); //, name);
+           return checkoutCom.processPayment(token, secureKey, true); //, name);
         return paymentService.processPaymentWeb(ref, secureKey);
     }
 
     public PaymentResponsePayload processTenantPayment(String token, String ref, String secureKey) throws Exception{
         if(ref.equals("checkoutcom") && token != null)
-           return checkoutPaymentService.processTenantPayment(token, secureKey, true); //, name);
+           return checkoutCom.processTenantPayment(token, secureKey, true); //, name);
         return paymentService.processPaymentWeb(ref, secureKey);
     }
 
@@ -75,7 +76,7 @@ public class Mutation implements GraphQLMutationResolver {
         return carrierService.setCarrier(value, secureKey);
     }
 
-    public CartDTO setTenantCarrier(String value, String secureKey) throws InvalidCartException {
+    public CartDTO setTenantCarrier(Long value, String secureKey) throws InvalidCartException {
         return carrierService.setTenantCarrier(value, secureKey);
     }
 

@@ -2,14 +2,12 @@ package com.badals.checkout.service;
 
 import com.badals.checkout.domain.Cart;
 import com.badals.checkout.domain.Order;
-import com.badals.checkout.domain.OrderItem;
 import com.badals.checkout.domain.pojo.*;
 import com.badals.checkout.repository.CartRepository;
 import com.badals.checkout.repository.OrderRepository;
-import com.badals.checkout.service.dto.CartDTO;
-import com.badals.checkout.service.dto.OrderDTO;
 import com.badals.checkout.service.mapper.CartMapper;
-import com.badals.enumeration.OrderState;
+import com.badals.checkout.xtra.PaymentType;
+import com.badals.checkout.xtra.systems.CheckoutCom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +16,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.*;
 
-import static com.badals.checkout.domain.pojo.PaymentMethod.BANK;
-import static com.badals.checkout.domain.pojo.PaymentMethod.CHECKOUT;
+import static com.badals.checkout.xtra.PaymentType.*;
 import static com.badals.checkout.domain.pojo.PaymentStatus.REDIRECT;
 import static com.badals.checkout.domain.pojo.PaymentStatus.SUCCESS;
 
@@ -34,7 +30,7 @@ public class PaymentService {
     CartRepository cartRepository;
 
     @Autowired
-    CheckoutPaymentService checkoutPaymentService;
+    CheckoutCom checkoutCom;
 
     @Autowired
     CartMapper cartMapper;
@@ -42,10 +38,11 @@ public class PaymentService {
     @Value("${app.faceurl}")
     String faceUrl;
 
-    List<PaymentMethod> list = new ArrayList<PaymentMethod>() {{
+    List<PaymentType> list = new ArrayList<PaymentType>() {{
         //add(new PaymentMethod("omannet", "Omannet", "", true));
-        add(PaymentMethod.CHECKOUT);
+        add(PaymentType.CHECKOUT);
         add(BANK);
+        add(STRIPE);
     }};
 
     @Autowired
@@ -55,7 +52,7 @@ public class PaymentService {
     private CartService cartService;
 
     @Transactional(readOnly = true)
-    public List<PaymentMethod> findByCurrency(String currency) {
+    public List<PaymentType> findByCurrency(String currency) {
         return list;
     }
 
@@ -72,7 +69,7 @@ public class PaymentService {
        PaymentResponsePayload response = null;
 
        if(ref.equals(CHECKOUT.ref) && token != null) {
-           response = checkoutPaymentService.processPayment(token, secureKey, false);
+           response = checkoutCom.processPayment(token, secureKey, false);
        }
 
        else if(ref.equals(BANK.ref) ) {

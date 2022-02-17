@@ -1,6 +1,7 @@
 package com.badals.checkout;
 
 
+import com.badals.checkout.aop.tenant.TenantRequestFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.server.MimeMappings;
@@ -86,7 +87,7 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
             source.registerCorsConfiguration("/**", config);
         }
         config.setAllowedOrigins(Collections.singletonList("*")); // Provide list of origins if you want multiple origins
-        config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept"));
+        config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "X-TenantID"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
         config.setAllowCredentials(true);
         source.registerCorsConfiguration("/**", config);
@@ -112,4 +113,10 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
     public CookieFilter cookieFilter() {
         return new CookieFilter();
     }
+
+    @Bean
+    public TenantRequestFilter tenantRequestFilter() {
+        return new TenantRequestFilter();
+    }
+
 }

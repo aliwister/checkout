@@ -1,32 +1,26 @@
 package com.badals.checkout.domain;
 
-
-import com.badals.checkout.domain.pojo.Address;
-import com.badals.checkout.domain.pojo.LineItem;
-import com.badals.checkout.domain.pojo.PaymentMethod;
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import com.vladmihalcea.hibernate.type.json.JsonStringType;
+import com.badals.checkout.aop.tenant.TenantSupport;
+import com.badals.enumeration.CartState;
 import lombok.Data;
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.List;
+
 
 /**
- * A Product.
+ * A Cart.
  */
-@TypeDefs({
-        @TypeDef(name = "json", typeClass = JsonStringType.class),
-        @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
-})
 @Entity
 @Data
-@Table(catalog = "profileshop", name = "checkout")
-public class TenantCart implements Serializable {
+@Table(name = "cart", catalog = "profileshop")
+@FilterDef(name = "tenantFilter", parameters = {@ParamDef(name = "tenantId", type = "string")})
+@Filter(name = "tenantFilter", condition = "tenant_id = :tenantId")
+public class TenantCart implements Serializable, TenantSupport {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,59 +28,20 @@ public class TenantCart implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NaturalId
-    private String ref;
-    private String name;
-    private String phone;
-    private String email;
-
-    @Column(name="_lock")
-    private Boolean lock;
-
-    @Column(name="secure_key")
+    @NotNull
+    @Column(name = "secure_key", nullable = false, unique = true)
     private String secureKey;
 
-    @Type(type = "json")
-    @Column(name = "delivery_address", columnDefinition = "string")
-    private Address deliveryAddress;
+    //@NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "cart_state", nullable = false)
+    private CartState cartState = CartState.UNCLAIMED;
 
-    @Column(name = "delivery_address_id", columnDefinition = "string")
-    private Long deliveryAddressId;
-
-    @Type(type = "json")
-    @Column(name = "invoice_address", columnDefinition = "string")
-    private Address invoiceAddress;
-
-    @Type(type = "json")
-    @Column(name = "addresses", columnDefinition = "string")
-    private List<Address> addresses;
-
-    @Type(type = "json")
-    @Column(name = "payment_methods", columnDefinition = "string")
-    private List<PaymentMethod> paymentMethods;
-
-    @Column(name = "carrier")
-    private String carrier;
-
-    private String payment;
-
-    private String currency;
-
-    @Type(type = "json")
-    @Column(name = "checkout_content", columnDefinition = "string")
-    List<LineItem> items;
 
     @Column(name="tenant_id")
-    private Long tenantId;
+    private String tenantId;
 
-    @Column(name="payment_token")
-    private String paymentToken;
-
-    @Column(name="checked_out")
-    private Boolean checkedOut;
-
-    @Column(name="allow_pickup")
-    private Boolean allowPickup;
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -107,20 +62,17 @@ public class TenantCart implements Serializable {
     @Override
     public String toString() {
         return "Cart{" +
-                "id=" + id +
-                ", ref='" + ref + '\'' +
-                ", name='" + name + '\'' +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                ", secureKey='" + secureKey + '\'' +
-                ", deliveryAddress=" + deliveryAddress +
-                ", invoiceAddress=" + invoiceAddress +
-                ", addresses=" + addresses +
-                ", paymentMethods=" + paymentMethods +
-                ", carrier='" + carrier + '\'' +
-                ", currency='" + currency + '\'' +
-                ", items=" + items +
-                ", tenantId=" + tenantId +
-                '}';
+            "id=" + getId() +
+            ", secureKey='" + getSecureKey() + "'" +
+            ", cartState='" + getCartState() + "'" +
+            "}";
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 }
