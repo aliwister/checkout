@@ -202,10 +202,11 @@ public class TenantCheckoutService {
         Checkout checkout = checkoutRepository.findByPaymentToken(paymentKey).orElse(null);
         if(checkout == null)
             throw new InvalidCartException("No checkout found");
-
+        OrderConfirmation orderConfirmation = new OrderConfirmation();
+        TenantOrder order = null;
         if(!checkout.getCheckedOut()) {
             PaymentType p = Arrays.stream(PaymentType.values()).filter(x -> x.ref.equalsIgnoreCase(checkout.getPayment())).findFirst().get();
-            TenantOrder order = createOrder(checkout, checkout.getPayment(), p.prePay);
+            order = createOrder(checkout, checkout.getPayment(), p.prePay);
             if (p.prePay) {
                 TenantPayment payment = new TenantPayment();
                 payment.setAmount(order.getTotal());
@@ -214,20 +215,21 @@ public class TenantCheckoutService {
                 payment.setTransactionId(paymentKey);
                 payment.setCreated_date(Instant.now());
                 payment.setTrackId(checkout.getId());
+                payment.setCurrency(order.getCurrency());
                 paymentRepository.save(payment);
             }
             checkout.setRef(order.getReference());
             checkout.setCheckedOut(true);
             checkoutRepository.save(checkout);
-
-            OrderConfirmation orderConfirmation = new OrderConfirmation();
-            orderConfirmation.setCart(cartMapper.toTenanteDto(checkout));
-            orderConfirmation.setReference(order.getReference());
-            orderConfirmation.setConfirmationKey(order.getConfirmationKey());
-
-            return orderConfirmation;
         }
-        throw new InvalidCartException("Cart Doesn't exist");
+        else {
+            order = orderRepository.findByCartId(checkout.getId()).get();
+        }
+        orderConfirmation.setCart(cartMapper.toTenanteDto(checkout));
+        orderConfirmation.setReference(order.getReference());
+        orderConfirmation.setConfirmationKey(order.getConfirmationKey());
+        orderConfirmation.setCurrency(order.getCurrency());
+        return orderConfirmation;
     }
     @Transactional
     public CartDTO findBySecureKeyWithLock(String token) throws InvalidCartException, LockedCartException {

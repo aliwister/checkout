@@ -45,18 +45,36 @@ public class Tenant implements Serializable {
 
     @Column(name = "mobile_logo")
     private String mobileLogo;
-/*
+
     @Column(name = "discount_rate")
-    private Integer discountRate;*/
+    private Integer discountRate;
 
     @Column(name = "active")
     private Boolean active;
-/*
+
+    @Column(name = "is_custom_domain")
+    private Boolean customDomain;
+
+    @Column(name = "is_profile_signin")
+    private Boolean profileAuth;
+
     @Column(name = "monthly_fee")
-    private BigDecimal monthlyFee;*/
+    private BigDecimal monthlyFee;
 
     @Column(name = "tenant_id")
     private String tenantId;
+
+    @Column(name = "google_ads")
+    private String googleAds;
+
+    @Column(name = "plan_name")
+    private String planName;
+
+    @Column(name = "max_products")
+    private Long maxProducts;
+
+    @Column(name = "created_date")
+    private LocalDate createdDate;
 
     @Type(type = "json")
     @Column(name = "payment_profile", columnDefinition = "string")

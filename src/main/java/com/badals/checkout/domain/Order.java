@@ -110,7 +110,7 @@ public class Order extends Auditable<String>  implements Serializable {
     @Column
     private String carrier;
 
-    @Column
+    @Column(name = "payment_method")
     private String paymentMethod;
 
     public String getCarrier() {

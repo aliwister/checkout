@@ -20,7 +20,7 @@ import java.util.List;
 import com.stripe.exception.StripeException;
 
 @Controller
-@RequestMapping("stripe-support")
+@RequestMapping("api/stripe-support")
 public class StripeSupportController {
 
    @Autowired

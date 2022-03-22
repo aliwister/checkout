@@ -64,7 +64,7 @@ public class TenantHibernateInterceptor {
    public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder factory, DataSource dataSource, JpaProperties properties) {
       Map<String, Object> jpaPropertiesMap = new HashMap<>(jpaProperties.getProperties());
       jpaPropertiesMap.put("hibernate.ejb.interceptor", hibernateInterceptor());
-      return factory.dataSource(dataSource).packages("com.badals.shop.domain").properties(jpaPropertiesMap).build();
+      return factory.dataSource(dataSource).packages("com.badals.checkout.domain").properties(jpaPropertiesMap).build();
    }
 }
 

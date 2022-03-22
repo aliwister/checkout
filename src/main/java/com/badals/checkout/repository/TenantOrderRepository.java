@@ -17,7 +17,8 @@ import java.util.Optional;
 @SuppressWarnings("unused")
 @Repository
 public interface TenantOrderRepository extends JpaRepository<TenantOrder, Long> {
-   Optional<Order> findByReferenceAndConfirmationKey(String reference, String confirmationKey);
+   Optional<TenantOrder> findByReferenceAndConfirmationKey(String reference, String confirmationKey);
+   Optional<TenantOrder> findByCartId(Long cartId);
 
    @Query(value="select t.id " +
            "from  (select :s0 as id " +

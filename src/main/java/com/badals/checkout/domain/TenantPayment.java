@@ -54,6 +54,9 @@ public class TenantPayment implements Serializable, TenantSupport {
     @Column(name = "created_date", nullable = false)
     private Instant created_date;
 
+    @Column
+    private String currency;
+
     @ManyToOne
     @JsonIgnoreProperties("orderPayments")
     private TenantOrder order;

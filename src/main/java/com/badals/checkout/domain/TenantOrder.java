@@ -65,6 +65,9 @@ public class TenantOrder extends Auditable<String> implements Serializable, Tena
     @JoinColumn(unique = true)
     private Checkout cart;
 
+    @Column(name="cart_id", updatable = false, insertable = false)
+    private Long cartId;
+
     @Type(type = "json")
     @Column(name = "delivery_address", columnDefinition = "string")
     private Address deliveryAddress;
@@ -116,7 +119,7 @@ public class TenantOrder extends Auditable<String> implements Serializable, Tena
     @Column
     private String carrier;
 
-    @Column
+    @Column(name = "payment_method")
     private String paymentMethod;
 
 
