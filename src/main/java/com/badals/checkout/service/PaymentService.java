@@ -1,9 +1,12 @@
 package com.badals.checkout.service;
 
 import com.badals.checkout.domain.Cart;
+import com.badals.checkout.domain.Checkout;
 import com.badals.checkout.domain.Order;
+import com.badals.checkout.domain.TenantOrder;
 import com.badals.checkout.domain.pojo.*;
 import com.badals.checkout.repository.CartRepository;
+import com.badals.checkout.repository.CheckoutRepository;
 import com.badals.checkout.repository.OrderRepository;
 import com.badals.checkout.service.mapper.CartMapper;
 import com.badals.checkout.xtra.PaymentType;
@@ -27,7 +30,7 @@ public class PaymentService {
     private final Logger log = LoggerFactory.getLogger(PaymentService.class);
 
     @Autowired
-    CartRepository cartRepository;
+    CheckoutRepository checkoutRepository;
 
     @Autowired
     CheckoutCom checkoutCom;
@@ -49,7 +52,7 @@ public class PaymentService {
     private OrderRepository orderRepository;
 
     @Autowired
-    private CartService cartService;
+    private TenantCheckoutService checkoutService;
 
     @Transactional(readOnly = true)
     public List<PaymentType> findByCurrency(String currency) {
@@ -58,14 +61,14 @@ public class PaymentService {
 
     @Transactional
     public PaymentResponsePayload processPaymentWeb(String paymentMethod, String secureKey) throws InvalidCartException {
-        Cart cart = cartRepository.findBySecureKey(secureKey).orElse(null);
-        Order order = cartService.createOrder(cart, paymentMethod, false);
-        PaymentResponsePayload response = new PaymentResponsePayload("Success",faceUrl+ "order-received?ref="+order.getReference()+"&key="+order.getConfirmationKey(), REDIRECT);
+        Checkout cart = checkoutRepository.findBySecureKey(secureKey).orElse(null);
+        TenantOrder order = checkoutService.createOrder(cart, paymentMethod, false);
+        PaymentResponsePayload response = new PaymentResponsePayload("Success",order.getConfirmationKey(), SUCCESS, order.getReference());
         return response;
     }
     @PreAuthorize("hasRole('ROLE_USER')")
     public PaymentResponsePayload processPayment(String token, String ref, String secureKey) throws InvalidCartException {
-       Cart cart = cartRepository.findBySecureKey(secureKey).orElse(null);
+        Checkout cart = checkoutRepository.findBySecureKey(secureKey).orElse(null);
        PaymentResponsePayload response = null;
 
        if(ref.equals(CHECKOUT.ref) && token != null) {
@@ -75,7 +78,7 @@ public class PaymentService {
        else if(ref.equals(BANK.ref) ) {
            UUID idOne = UUID.randomUUID();
            String guid = idOne.toString();
-           cartService.setPaymentToken(cart.getId(), BANK.ref, guid);
+           checkoutService.setPaymentToken(cart.getId(), BANK.ref, guid);
            response = new PaymentResponsePayload("Success", guid, SUCCESS);
        }
        return response;

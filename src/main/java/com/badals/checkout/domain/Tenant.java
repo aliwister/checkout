@@ -55,7 +55,7 @@ public class Tenant implements Serializable {
     @Column(name = "is_custom_domain")
     private Boolean customDomain;
 
-    @Column(name = "is_profile_signin")
+    @Column(name = "is_profile_auth")
     private Boolean profileAuth;
 
     @Column(name = "monthly_fee")

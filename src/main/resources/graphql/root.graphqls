@@ -68,6 +68,7 @@ type PaymentResponsePayload {
     message: String
     payload: String
     status: PaymentStatus
+    ref: String
 }
 type Carrier {
     id: Int

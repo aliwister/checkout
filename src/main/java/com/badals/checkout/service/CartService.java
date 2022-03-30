@@ -122,7 +122,7 @@ public class CartService {
         Order order = new Order();
         order.setCurrency("OMR");//cart.getCurrency());
         //order.setCustomerId(cart.get);
-        order.setInvoiceAddress(cart.getInvoiceAddress());
+        //order.setInvoiceAddress(cart.getInvoiceAddress());
         order.setDeliveryAddressId(cart.getDeliveryAddressId());
         order.setDeliveryAddress(cart.getDeliveryAddress());
         order.setEmail(cart.getEmail());

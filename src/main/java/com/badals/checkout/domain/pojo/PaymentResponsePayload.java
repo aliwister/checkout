@@ -14,6 +14,12 @@ public class PaymentResponsePayload {
         this.payload = payload;
         this.status = status;
     }
+    public PaymentResponsePayload(String message, String payload, PaymentStatus status, String ref) {
+        this.message = message;
+        this.payload = payload;
+        this.status = status;
+        this.ref = ref;
+    }
 
     public PaymentResponsePayload(String message) {
         this.message = message;
