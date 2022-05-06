@@ -57,7 +57,7 @@ public class CheckoutController {
         //return new ResponseEntity<CheckoutDTO>(dto, httpHeaders, HttpStatus.OK);
     }
 
-    @GetMapping("/start")
+/*    @GetMapping("/start")
     public String start(@RequestParam(required=true) String token, Model model) {
         log.info("I'm a token {}", token);
         //log.debug("REST request to create cart : {}", cart);
@@ -72,8 +72,7 @@ public class CheckoutController {
         //log.debug("REST request to create cart : {}", cart);
         model.addAttribute("order", token);
         return "checkout";
-    }
-
+    }*/
 
     @RequestMapping("/ping")
     public String ping(Model model) {
