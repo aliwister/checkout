@@ -7,6 +7,7 @@ import java.io.Serializable;
 @Data
 public class PaymentDef implements Serializable {
    String name;
+   String code;
    String pk;
    String sk;
 }

@@ -34,7 +34,7 @@ public class Tenant implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "domain")
+    @Column(name = "customDomain")
     private String domain;
 
     @Column(name = "plan")
@@ -52,8 +52,8 @@ public class Tenant implements Serializable {
     @Column(name = "active")
     private Boolean active;
 
-    @Column(name = "is_custom_domain")
-    private Boolean customDomain;
+    @Column(name = "is_subdomain")
+    private Boolean subDomain;
 
     @Column(name = "is_profile_auth")
     private Boolean profileAuth;
