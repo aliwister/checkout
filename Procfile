@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -jar target/*.jar -Xmx896M
+web: java -Dserver.port=$PORT -jar target/*.jar -Xmx896M --spring.profiles.active=$ENV
