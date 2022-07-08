@@ -13,7 +13,6 @@ import com.badals.enumeration.CartState;
 import com.badals.enumeration.OrderState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +22,6 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -39,10 +37,12 @@ public class TenantCheckoutService {
     private final TenantOrderRepository orderRepository;
     private final CarrierRepository carrierRepository;
     private final OrderMapper orderMapper;
+    private final TenantRepository tenantRepository;
+
 
     public static int ORDER_REF_SIZE = 7;
 
-    public TenantCheckoutService(CheckoutRepository checkoutRepository, TenantPaymentRepository paymentRepository, CartMapper cartMapper, CarrierService carrierService, TenantOrderRepository orderRepository, CarrierRepository carrierRepository, OrderMapper orderMapper) {
+    public TenantCheckoutService(CheckoutRepository checkoutRepository, TenantPaymentRepository paymentRepository, CartMapper cartMapper, CarrierService carrierService, TenantOrderRepository orderRepository, CarrierRepository carrierRepository, OrderMapper orderMapper, TenantRepository tenantRepository) {
         this.checkoutRepository = checkoutRepository;
         this.paymentRepository = paymentRepository;
         this.cartMapper = cartMapper;
@@ -50,12 +50,16 @@ public class TenantCheckoutService {
         this.orderRepository = orderRepository;
         this.carrierRepository = carrierRepository;
         this.orderMapper = orderMapper;
+        this.tenantRepository = tenantRepository;
+    }
+    public static String buildProfileBaseUrl(Tenant tenant) {
+        return tenant.getIsSubdomain()?"https://"+tenant.getSubdomain()+".profile.shop":"https://www."+tenant.getCustomDomain();
     }
 
     @Transactional(readOnly = true)
     public CartDTO findBySecureKey(String token) {
         log.info("Request to get Cart : {}", token);
-        log.info("Entity {}", checkoutRepository.findBySecureKey(token));
+        //log.info("Entity {}", checkoutRepository.findBySecureKey(token));
         Optional<CartDTO> cartDTO = checkoutRepository.findBySecureKey(token)
                 .map(cartMapper::toTenanteDto);
         log.info("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
@@ -91,7 +95,7 @@ public class TenantCheckoutService {
         return null;
     }
 
-   public Long calculateValue(CartDTO checkout) {
+   public static Long calculateValue(CartDTO checkout) {
        Long value = checkout.getItems().stream().mapToLong(x -> useSubtotalAsLong(x)).sum();
        //sum = sum.add(carrierService.getCarrierCost(checkout.getCarrier())).multiply(BigDecimal.valueOf(1000L));
 
@@ -102,17 +106,18 @@ public class TenantCheckoutService {
         return lineItem.getPrice().multiply(BigDecimal.TEN.multiply(BigDecimal.TEN).multiply(lineItem.getQuantity())).setScale(0).longValue();
     }
 
-    public BigDecimal calculateTotal(Checkout checkout) {
+    public static  BigDecimal calculateTotal(Checkout checkout) {
         BigDecimal sum = BigDecimal.valueOf(checkout.getItems().stream().mapToDouble(x -> x.getPrice().doubleValue() * x.getQuantity().doubleValue()).sum());
         sum = sum.add(checkout.getCarrierRate());
         return sum;
     }
 
-    public BigDecimal calculateSubtotal(Checkout checkout) {
+    public static BigDecimal calculateSubtotal(Checkout checkout) {
         BigDecimal sum = BigDecimal.valueOf(checkout.getItems().stream().mapToDouble(x -> x.getPrice().doubleValue() * x.getQuantity().doubleValue()).sum());
         return sum;
     }
 
+    @Transactional
     public void setPaymentToken(Long cartId, String paymentType, String paymentToken) {
         Checkout checkout = checkoutRepository.findById(cartId).get();
         checkout.setPaymentToken(paymentToken);
@@ -170,9 +175,9 @@ public class TenantCheckoutService {
         order = orderRepository.saveAndFlush(order);
         return order;
     }
-
+    @Transactional
     public String generateOrderId(int attempt) {
-        String ret =  orderRepository.getFirstUnused(generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber());
+        String ret =  orderRepository.getFirstUnused(TenantCheckoutService.generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber(),generateRandomNumber());
         if (ret == null) {
             log.error("ORDER ID is null");
             if(attempt > 3) {
@@ -182,8 +187,7 @@ public class TenantCheckoutService {
         }
         return ret;
     }
-
-    private String generateRandomNumber() {
+    private static String generateRandomNumber() {
         //Random generator = new Random();
         //int num = generator. nextInt(8999999) + 1000000;
         long min = (long) Math.pow(10, ORDER_REF_SIZE - 1);
@@ -249,12 +253,10 @@ public class TenantCheckoutService {
         checkout.setLock(false);
         checkoutRepository.saveAndFlush(checkout);
     }
-
-    @Transactional
-    public void unlock(String token, PaymentType type, String paymentKey) {
-        Checkout checkout = checkoutRepository.findBySecureKey(token).get();
-        checkout.setLock(false);
-        checkoutRepository.saveAndFlush(checkout);
+    @Transactional(readOnly = true)
+    public Tenant getTenant() {
+        Tenant tenant = tenantRepository.findAll().get(0);
+        return tenant;
     }
 
     @PersistenceContext

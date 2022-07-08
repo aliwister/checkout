@@ -65,7 +65,7 @@ public class Query implements GraphQLQueryResolver {
     public AddressFormat addressDescription(String isoCode, String lang) {
         AddressFormat addressFormat = new AddressFormat();
         addressFormat.setInputFormat("{alias}_{firstName}{lastName}_{line1}_{line2}_{city}{state}{postalCode}_{country}{mobile}_{save}");
-        addressFormat.setDisplayFormat(  "({alias}){firstName}{lastName}_{line1}_{line2}_{city}{state}_{mobile}");
+        addressFormat.setDisplayFormat(  "({alias}){firstName} {lastName}_{line1}_{line2}_{city} {state}_{mobile}");
         addressFormat.setGmap( OptionType.REQUIRED);
         addressFormat.setDescriptions( new ArrayList<>() {{
             add(new FieldDescription(AddressField.firstName, "First Name", true, "/^[a-zA-Z]{3,10}$/", FieldType.TEXT, null, 2, 15));
@@ -91,7 +91,7 @@ public class Query implements GraphQLQueryResolver {
                     new ArrayList<>(){{
                         add(new Option("Oman", "OM"));
                     }}, null, null));
-            add(new FieldDescription(AddressField.city, "City", true, "/(.*[a-z]){3}/i", FieldType.TEXT, null, 2, 15));
+            add(new FieldDescription(AddressField.city, "City", true, "/(.*[a-z]){3}/i", FieldType.TEXT, null, 2, 25));
             add(new FieldDescription(AddressField.mobile, "Mobile", true, "/(.*[a-z]){3}/i", FieldType.MOBILE, null, 11, 11));
             add(new FieldDescription(AddressField.alias, "Alias", true, "/(.*[a-z]){3}/i", FieldType.SELECT, new ArrayList<>(){{
                 add(new Option("Home", "home"));

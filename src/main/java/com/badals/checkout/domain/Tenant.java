@@ -8,6 +8,7 @@ import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.Type;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,6 +26,7 @@ import java.time.LocalDate;
 @Filter(name = "tenantFilter", condition = "tenant_id = :tenantId")
 public class Tenant implements Serializable {
 
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -35,7 +37,10 @@ public class Tenant implements Serializable {
     private String name;
 
     @Column(name = "customDomain")
-    private String domain;
+    private String customDomain;
+
+    @Column(name = "subdomain")
+    private String subdomain;
 
     @Column(name = "plan")
     private String plan;
@@ -53,7 +58,7 @@ public class Tenant implements Serializable {
     private Boolean active;
 
     @Column(name = "is_subdomain")
-    private Boolean subDomain;
+    private Boolean isSubdomain;
 
     @Column(name = "is_profile_auth")
     private Boolean profileAuth;
@@ -73,6 +78,7 @@ public class Tenant implements Serializable {
     @Column(name = "max_products")
     private Long maxProducts;
 
+    @CreatedDate
     @Column(name = "created_date")
     private LocalDate createdDate;
 
@@ -83,6 +89,10 @@ public class Tenant implements Serializable {
     @Type(type = "json")
     @Column(name = "carrier_profile", columnDefinition = "string")
     private CarrierProfile carrierProfile;
+
+
+    @Column(name="default_locale")
+    String defaultLocale;
 
 
     @Override

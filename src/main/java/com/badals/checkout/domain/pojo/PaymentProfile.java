@@ -22,7 +22,9 @@ public class PaymentProfile implements Serializable {
       payments.add(def);
    }
 
-
+   public static String findSkByName(PaymentProfile profile, String name) {
+      return profile.getPayments().stream().filter(x -> x.name.equals(name)).findFirst().get().getSk();
+   }
 /*
    private void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException
    {

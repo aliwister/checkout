@@ -1,10 +1,12 @@
 package com.badals.checkout.xtra.systems;
 
+import com.badals.checkout.domain.Tenant;
 import com.badals.checkout.domain.pojo.LineItem;
+import com.badals.checkout.domain.pojo.PaymentProfile;
 import com.badals.checkout.domain.pojo.PaymentResponsePayload;
-import com.badals.checkout.service.CartService;
 import com.badals.checkout.service.InvalidCartException;
 import com.badals.checkout.service.LockedCartException;
+import com.badals.checkout.service.TenantCheckoutService;
 import com.badals.checkout.service.dto.CartDTO;
 import com.badals.checkout.xtra.PaymentSystem;
 import com.checkout.APIClient;
@@ -19,7 +21,6 @@ import com.checkout.helpers.Environment;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.stereotype.Service;
@@ -46,18 +47,18 @@ class CheckoutProduct extends Product {
 public class CheckoutCom extends PaymentSystem {
    private final Logger log = LoggerFactory.getLogger(CheckoutCom.class);
    //CheckoutApi api;
+   private final TenantCheckoutService checkoutService;
 
-   @Autowired
-   CartService cartService;
-
-   @Value("${checkoutcom.sk}")
-   private String _sk;
 
    @Value("${checkoutcom.live}")
    private Boolean _isLive;
 
    @Value("${app.baseurl}")
    private String baseUrl;
+
+   public CheckoutCom(TenantCheckoutService checkoutService) {
+      this.checkoutService = checkoutService;
+   }
 
    //public CheckoutPaymentService(CheckoutApi checkoutApi) {
     //   this.api = checkoutApi;
@@ -103,7 +104,7 @@ public class CheckoutCom extends PaymentSystem {
    public synchronized PaymentResponsePayload processPayment(String cardToken, String secureKey, boolean isWebsite) throws InvalidCartException {
       //String cardToken = "card_tok_CB9C10E3-24CC-4A82-B50A-4DEFDCB15580";
       try {
-         CartDTO cart = cartService.findBySecureKeyWithLock(secureKey);
+         CartDTO cart = checkoutService.findBySecureKeyWithLock(secureKey);
 
          log.info("=========================================================================: "+cardToken);
          log.info("==========================NEW CC PAYMENT ================================: "+cardToken);
@@ -114,15 +115,15 @@ public class CheckoutCom extends PaymentSystem {
          //cardTokenChargePayload.chargeMode=1;
          cardTokenChargePayload.email = cart.getEmail();
          cardTokenChargePayload.description = "charge description";
-         cardTokenChargePayload.value=cartService.calculateValue(cart);
+         cardTokenChargePayload.value= String.valueOf(TenantCheckoutService.calculateValue(cart));
 
          cardTokenChargePayload.currency="OMR";
          cardTokenChargePayload.trackId= cart.getId().toString();
          cardTokenChargePayload.transactionIndicator = "1";
          //cardTokenChargePayload.customerIp= "96.125.185.51";
          cardTokenChargePayload.cardToken = cardToken;
-         cardTokenChargePayload.successUrl = baseUrl + "checkout/checkout-com-confirmation";;
-         cardTokenChargePayload.failUrl = baseUrl + "checkout/checkout-com-failure";;
+         cardTokenChargePayload.successUrl = baseUrl + "checkout/callback/checkoutcom/success";;
+         cardTokenChargePayload.failUrl = baseUrl + "checkout/callback/checkoutcom/failure";;
 
 
          cardTokenChargePayload.metadata = new HashMap<String,String>();
@@ -140,16 +141,18 @@ public class CheckoutCom extends PaymentSystem {
          for (LineItem item: cart.getItems())
             cardTokenChargePayload.products.add(new CheckoutProduct(item.getName(), "", item.getSku(), item.getPrice().doubleValue(), item.getQuantity().intValue()));
 
-
-
+         Tenant tenant = checkoutService.getTenant();
+         PaymentProfile profile = tenant.getPaymentProfile();
+         String sk = PaymentProfile.findSkByName(profile, "checkoutcom");
+         _isLive = true;
          // Create APIClient instance with your secret key
          APIClient ckoAPIClient = null;
          if(_isLive)
-            ckoAPIClient= new APIClient(_sk, Environment.LIVE);
+            ckoAPIClient= new APIClient(sk, Environment.LIVE);
          else {
             cardTokenChargePayload.attemptN3D = false;
             cardTokenChargePayload.chargeMode=2;
-            ckoAPIClient = new APIClient(_sk, Environment.SANDBOX);
+            ckoAPIClient = new APIClient(sk, Environment.SANDBOX);
          }
          // Submit your request and receive an apiResponse
          Response<Charge> apiResponse = ckoAPIClient.chargeService.chargeWithCardToken(cardTokenChargePayload);
@@ -166,7 +169,7 @@ public class CheckoutCom extends PaymentSystem {
                if(charge.status != null && (charge.status.equalsIgnoreCase("declined") || charge.status.equalsIgnoreCase("flagged")))
                   return paymentDeclined("Payment declined with message " + apiResponse.model.responseCode + " " + apiResponse.model.responseMessage);
 
-               cartService.setPaymentToken(cart.getId(), CHECKOUT.ref, apiResponse.model.id);
+               checkoutService.setPaymentToken(cart.getId(), CHECKOUT.ref, apiResponse.model.id);
                if(apiResponse.model.redirectUrl != null)
                   return redirect(apiResponse.model.redirectUrl);
 
@@ -196,7 +199,7 @@ public class CheckoutCom extends PaymentSystem {
       } catch (Exception e) {
          e.printStackTrace();
       } finally {
-         cartService.unlock(secureKey);
+         checkoutService.unlock(secureKey);
       }
 
       return paymentDeclined("Exception Occurred for " + cardToken);
