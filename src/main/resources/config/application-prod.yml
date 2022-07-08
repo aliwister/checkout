@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://badal-website-fra.cuv8f0sngmtx.eu-central-1.rds.amazonaws.com/shop?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:mysql://profileshop.cprwxqewcyku.us-east-1.rds.amazonaws.com/profileshop?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: shop-api
-    password: 4158yORAQ64ipEXobeFO385O6olo7oKp~
+    password: 8ICoW7vA55TebaTi4AWOlel3fOdOFE
     testWhileIdle:  true
     validationQuery:  SELECT 1
   jpa:
