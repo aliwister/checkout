@@ -91,7 +91,7 @@ public class CarrierService {
     private List<ShipRate> getRates(Checkout cart) {
         Address address = cart.getDeliveryAddress();
         if (cart.getDeliveryAddressId() != null && cart.getDeliveryAddressId() > -1) {
-            address = cart.getAddresses().stream().filter(x -> x.getId() == cart.getDeliveryAddressId()).findFirst().get();
+            address = cart.getAddresses().stream().filter(x -> x.getId().equals(cart.getDeliveryAddressId())).findFirst().get();
         }
         String level4 = address.getCity();
         String level3 = address.getState();
