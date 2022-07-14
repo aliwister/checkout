@@ -8,7 +8,6 @@ import com.badals.checkout.xtra.PaymentType;
 import com.badals.checkout.repository.*;
 import com.badals.checkout.service.dto.CartDTO;
 import com.badals.checkout.service.mapper.CartMapper;
-import com.badals.checkout.service.mapper.OrderMapper;
 import com.badals.enumeration.CartState;
 import com.badals.enumeration.OrderState;
 import org.slf4j.Logger;
@@ -36,20 +35,18 @@ public class TenantCheckoutService {
     private final CarrierService carrierService;
     private final TenantOrderRepository orderRepository;
     private final CarrierRepository carrierRepository;
-    private final OrderMapper orderMapper;
     private final TenantRepository tenantRepository;
 
 
     public static int ORDER_REF_SIZE = 7;
 
-    public TenantCheckoutService(CheckoutRepository checkoutRepository, TenantPaymentRepository paymentRepository, CartMapper cartMapper, CarrierService carrierService, TenantOrderRepository orderRepository, CarrierRepository carrierRepository, OrderMapper orderMapper, TenantRepository tenantRepository) {
+    public TenantCheckoutService(CheckoutRepository checkoutRepository, TenantPaymentRepository paymentRepository, CartMapper cartMapper, CarrierService carrierService, TenantOrderRepository orderRepository, CarrierRepository carrierRepository, TenantRepository tenantRepository) {
         this.checkoutRepository = checkoutRepository;
         this.paymentRepository = paymentRepository;
         this.cartMapper = cartMapper;
         this.carrierService = carrierService;
         this.orderRepository = orderRepository;
         this.carrierRepository = carrierRepository;
-        this.orderMapper = orderMapper;
         this.tenantRepository = tenantRepository;
     }
     public static String buildProfileBaseUrl(Tenant tenant) {
@@ -61,7 +58,7 @@ public class TenantCheckoutService {
         log.info("Request to get Cart : {}", token);
         //log.info("Entity {}", checkoutRepository.findBySecureKey(token));
         Optional<CartDTO> cartDTO = checkoutRepository.findBySecureKey(token)
-                .map(cartMapper::toTenanteDto);
+                .map(cartMapper::toDto);
         log.info("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
         log.info("Returning DTO {}", cartDTO);
         return cartDTO.get();
@@ -71,7 +68,7 @@ public class TenantCheckoutService {
         Checkout checkout = checkoutRepository.findBySecureKey(token).get();
         checkout.setDeliveryAddress(address);
         checkout = checkoutRepository.save(checkout);
-        return cartMapper.toTenanteDto(checkout);
+        return cartMapper.toDto(checkout);
     }
 
     @Transactional
@@ -89,7 +86,7 @@ public class TenantCheckoutService {
             checkout.setCarrier(carrier);
         checkout.setEmail(email);
         checkout = checkoutRepository.save(checkout);
-        return cartMapper.toTenanteDto(checkout);
+        return cartMapper.toDto(checkout);
     }
     public CartDTO setCarrier() {
         return null;
@@ -229,7 +226,7 @@ public class TenantCheckoutService {
         else {
             order = orderRepository.findByCartId(checkout.getId()).get();
         }
-        orderConfirmation.setCart(cartMapper.toTenanteDto(checkout));
+        orderConfirmation.setCart(cartMapper.toDto(checkout));
         orderConfirmation.setReference(order.getReference());
         orderConfirmation.setConfirmationKey(order.getConfirmationKey());
         orderConfirmation.setCurrency(order.getCurrency());
@@ -245,7 +242,7 @@ public class TenantCheckoutService {
             throw new LockedCartException("Already locked");
         checkout.setLock(true);
         checkout = checkoutRepository.saveAndFlush(checkout);
-        return cartMapper.toTenanteDto(checkout);
+        return cartMapper.toDto(checkout);
     }
     @Transactional
     public void unlock(String token) {

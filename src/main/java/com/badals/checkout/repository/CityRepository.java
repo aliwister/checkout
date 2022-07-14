@@ -1,6 +1,5 @@
 package com.badals.checkout.repository;
 
-import com.badals.checkout.domain.Cart;
 import com.badals.checkout.domain.City;
 import com.badals.checkout.domain.State;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -25,7 +25,6 @@ public class Mutation implements GraphQLMutationResolver {
     private final Logger log = LoggerFactory.getLogger(Mutation.class);
 
     private final CartMapper cartMapper;
-    private final CartService cartService;
 
     private final TenantCheckoutService tenantCheckoutService;
 
@@ -34,24 +33,12 @@ public class Mutation implements GraphQLMutationResolver {
     private final CheckoutCom checkoutCom;
     private final PaymentService paymentService;
 
-    public Mutation(CartMapper cartMapper, CartService cartService, TenantCheckoutService tenantCheckoutService, CarrierService carrierService, CheckoutCom checkoutCom, PaymentService paymentService) {
+    public Mutation(CartMapper cartMapper,  TenantCheckoutService tenantCheckoutService, CarrierService carrierService, CheckoutCom checkoutCom, PaymentService paymentService) {
         this.cartMapper = cartMapper;
-        this.cartService = cartService;
         this.tenantCheckoutService = tenantCheckoutService;
         this.carrierService = carrierService;
         this.checkoutCom = checkoutCom;
         this.paymentService = paymentService;
-    }
-
-    public CartDTO updateInfo(Address address, String secureKey) {
-        log.info("REST request to save Address : {}", address);
-        return cartService.setDeliveryAddress(address, secureKey);
-        //return new Message("success");
-    }
-    public CartDTO setInfo(String email, Address address, String secureKey, String carrier) {
-        log.info("REST request to save Address : {}", address);
-        return cartService.setDeliveryAddressAndEmail(address, email, secureKey, carrier);
-        //return new Message("success");
     }
 
     public CartDTO setTenantInfo(String email, Address address, String secureKey, String carrier) {
@@ -72,9 +59,7 @@ public class Mutation implements GraphQLMutationResolver {
         return paymentService.processPaymentWeb(ref, secureKey);
     }
 
-    public CartDTO setCarrier(String value, String secureKey) throws InvalidCartException {
-        return carrierService.setCarrier(value, secureKey);
-    }
+
 
     public CartDTO setTenantCarrier(Long value, String secureKey) throws InvalidCartException {
         return carrierService.setTenantCarrier(value, secureKey);
@@ -84,7 +69,4 @@ public class Mutation implements GraphQLMutationResolver {
         return paymentService.processPayment(token, ref, secureKey);
     }
 
-    public OrderConfirmationResponse createOrder(String token, String paymentKey) throws InvalidCartException {
-        return cartService.createOrder(paymentKey);
-    }
 }

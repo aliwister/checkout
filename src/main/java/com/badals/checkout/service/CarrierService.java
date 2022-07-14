@@ -1,12 +1,10 @@
 package com.badals.checkout.service;
 
-import com.badals.checkout.domain.Cart;
 import com.badals.checkout.domain.Checkout;
 import com.badals.checkout.domain.pojo.Address;
 import com.badals.checkout.domain.pojo.projection.ShipRate;
 import com.badals.checkout.repository.CarrierRepository;
 import com.badals.checkout.service.dto.CarrierDTO;
-import com.badals.checkout.repository.CartRepository;
 import com.badals.checkout.repository.CheckoutRepository;
 import com.badals.checkout.service.dto.CartDTO;
 import com.badals.checkout.service.mapper.CarrierMapper;
@@ -27,7 +25,6 @@ import java.util.stream.Stream;
 public class CarrierService {
     private final Logger log = LoggerFactory.getLogger(CarrierService.class);
 
-    private final CartRepository cartRepository;
     private final CarrierRepository carrierRepository;;
     private final CheckoutRepository checkoutRepository;
     private final CarrierMapper carrierMapper;
@@ -48,8 +45,7 @@ public class CarrierService {
         add(new CarrierDTO(-10, "Store Pickup", "PICKUP", BigDecimal.valueOf(0), ""));
     }};
 
-    public CarrierService(CartRepository cartRepository, CarrierRepository carrierRepository, CheckoutRepository checkoutRepository, CarrierMapper carrierMapper, CartMapper cartMapper) {
-        this.cartRepository = cartRepository;
+    public CarrierService(CarrierRepository carrierRepository, CheckoutRepository checkoutRepository, CarrierMapper carrierMapper, CartMapper cartMapper) {
         this.carrierRepository = carrierRepository;
         this.checkoutRepository = checkoutRepository;
         this.carrierMapper = carrierMapper;
@@ -62,17 +58,6 @@ public class CarrierService {
             return pickup;
         }
         return ship;
-    }
-
-
-    @Transactional
-    public CartDTO setCarrier(String value, String secureKey) throws InvalidCartException {
-        Cart cart = cartRepository.findBySecureKey(secureKey).orElse(null);
-        if(cart == null)
-            throw new InvalidCartException("cart invalid");
-        cart.setCarrier(value);
-        cart = cartRepository.save(cart);
-        return cartMapper.toDto(cart);
     }
 
     @PersistenceContext
@@ -113,7 +98,7 @@ public class CarrierService {
         cart.setCarrierService(rate.getRateName());
         cart.setCarrierRate(rate.getPrice());
         checkoutRepository.save(cart);
-        return cartMapper.toTenanteDto(cart);
+        return cartMapper.toDto(cart);
     }
 
     public BigDecimal getTenantCarrierCost(String ref) {
@@ -123,15 +108,5 @@ public class CarrierService {
     public BigDecimal getCarrierCost(String ref) {
         return Stream.concat(ship.stream(),pickup.stream()).filter(x-> x.getValue().equals(ref)).findFirst().get().getCost();
     }
-    @Transactional(readOnly = true)
-    public List<CarrierDTO> findByStateCityWeight(String secureKey) throws InvalidCartException {
-        Cart cart = cartRepository.findBySecureKey(secureKey).orElse(null);
-        if(cart == null)
-            throw new InvalidCartException("cart invalid");
 
-        if(cart.getCarrier() != null && cart.getCarrier().equalsIgnoreCase("pickup")) {
-            return pickup;
-        }
-        return ship;
-    }
 }

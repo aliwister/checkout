@@ -1,6 +1,5 @@
 package com.badals.checkout.xtra;
 
-import com.badals.checkout.domain.Payment;
 import com.badals.checkout.domain.pojo.PaymentResponsePayload;
 import com.badals.checkout.domain.pojo.PaymentStatus;
 import org.slf4j.Logger;

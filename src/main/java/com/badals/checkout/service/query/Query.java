@@ -32,16 +32,13 @@ query {
 public class Query implements GraphQLQueryResolver {
     private final Logger log = LoggerFactory.getLogger(Query.class);
 
-    private final CartService cartService;
-
     private final TenantCheckoutService tenantCheckoutService;
 
     private final CarrierService carrierService;
 
     private final PaymentService paymentService;
 
-    public Query(CartService cartService, TenantCheckoutService tenantCheckoutService, CarrierService carrierService, PaymentService paymentService) {
-        this.cartService = cartService;
+    public Query(TenantCheckoutService tenantCheckoutService, CarrierService carrierService, PaymentService paymentService) {
         this.tenantCheckoutService = tenantCheckoutService;
         this.carrierService = carrierService;
         this.paymentService = paymentService;
@@ -51,9 +48,6 @@ public class Query implements GraphQLQueryResolver {
         return "Im a query";
     }
 
-    public CartDTO cart(String secureKey) {
-        return cartService.findBySecureKey(secureKey);
-    }
     public CartDTO tenantCheckout(String secureKey) {
         return tenantCheckoutService.findBySecureKey(secureKey);
     }
