@@ -53,9 +53,6 @@ public class CheckoutCom extends PaymentSystem {
    @Value("${checkoutcom.live}")
    private Boolean _isLive;
 
-   @Value("${app.baseurl}")
-   private String baseUrl;
-
    public CheckoutCom(TenantCheckoutService checkoutService) {
       this.checkoutService = checkoutService;
    }
@@ -105,6 +102,8 @@ public class CheckoutCom extends PaymentSystem {
       //String cardToken = "card_tok_CB9C10E3-24CC-4A82-B50A-4DEFDCB15580";
       try {
          CartDTO cart = checkoutService.findBySecureKeyWithLock(secureKey);
+         String baseUrl = TenantCheckoutService.buildProfileBaseUrl(checkoutService.getTenant());
+
 
          log.info("=========================================================================: "+cardToken);
          log.info("==========================NEW CC PAYMENT ================================: "+cardToken);
@@ -122,8 +121,8 @@ public class CheckoutCom extends PaymentSystem {
          cardTokenChargePayload.transactionIndicator = "1";
          //cardTokenChargePayload.customerIp= "96.125.185.51";
          cardTokenChargePayload.cardToken = cardToken;
-         cardTokenChargePayload.successUrl = baseUrl + "checkout/callback/checkoutcom/success";;
-         cardTokenChargePayload.failUrl = baseUrl + "checkout/callback/checkoutcom/failure";;
+         cardTokenChargePayload.successUrl = baseUrl + "/checkout/callbacks/checkoutcom/success";;
+         cardTokenChargePayload.failUrl = baseUrl + "/checkout/callbacks/checkoutcom/failure";;
 
 
          cardTokenChargePayload.metadata = new HashMap<String,String>();

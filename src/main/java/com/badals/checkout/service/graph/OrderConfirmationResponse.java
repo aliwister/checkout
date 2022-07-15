@@ -1,6 +1,5 @@
-package com.badals.checkout.service.mutation;
+package com.badals.checkout.service.graph;
 
-import com.badals.checkout.service.dto.CartDTO;
 import lombok.Data;
 
 @Data

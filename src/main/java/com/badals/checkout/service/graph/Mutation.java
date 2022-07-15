@@ -1,4 +1,4 @@
-package com.badals.checkout.service.mutation;
+package com.badals.checkout.service.graph;
 
 import com.badals.checkout.domain.pojo.Address;
 import com.badals.checkout.domain.pojo.PaymentResponsePayload;

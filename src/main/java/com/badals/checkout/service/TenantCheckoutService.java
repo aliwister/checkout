@@ -94,13 +94,13 @@ public class TenantCheckoutService {
 
    public static Long calculateValue(CartDTO checkout) {
        Long value = checkout.getItems().stream().mapToLong(x -> useSubtotalAsLong(x)).sum();
-       //sum = sum.add(carrierService.getCarrierCost(checkout.getCarrier())).multiply(BigDecimal.valueOf(1000L));
+       value += (long) (1000*checkout.getCarrierRate());
 
        return value;
    }
 
     public static Long useSubtotalAsLong(LineItem lineItem) {
-        return lineItem.getPrice().multiply(BigDecimal.TEN.multiply(BigDecimal.TEN).multiply(lineItem.getQuantity())).setScale(0).longValue();
+        return lineItem.getPrice().multiply(BigDecimal.TEN.multiply(BigDecimal.TEN).multiply(BigDecimal.TEN).multiply(lineItem.getQuantity())).setScale(0).longValue();
     }
 
     public static  BigDecimal calculateTotal(Checkout checkout) {

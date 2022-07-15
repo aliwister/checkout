@@ -1,4 +1,4 @@
-package com.badals.checkout.service.mutation;
+package com.badals.checkout.service.graph;
 
 import lombok.Data;
 

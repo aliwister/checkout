@@ -1,9 +1,8 @@
-package com.badals.checkout.service.query;
+package com.badals.checkout.service.graph;
 
 import com.badals.checkout.addressing.*;
 import com.badals.checkout.domain.pojo.OrderConfirmation;
 import com.badals.checkout.service.dto.CarrierDTO;
-import com.badals.checkout.xtra.PaymentType;
 import com.badals.checkout.service.*;
 import com.badals.checkout.service.dto.CartDTO;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
