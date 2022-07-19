@@ -4,6 +4,7 @@ import com.badals.checkout.domain.*;
 import com.badals.checkout.domain.pojo.Address;
 import com.badals.checkout.domain.pojo.OrderConfirmation;
 import com.badals.checkout.domain.pojo.LineItem;
+import com.badals.checkout.domain.pojo.projection.ShipRate;
 import com.badals.checkout.xtra.PaymentType;
 import com.badals.checkout.repository.*;
 import com.badals.checkout.service.dto.CartDTO;
@@ -21,6 +22,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -82,12 +84,27 @@ public class TenantCheckoutService {
             checkout.setDeliveryAddressId(address.getId());
             //checkout.setDeliveryAddress(null);
         }
-        if (carrier != null)
+        if (carrier != null) {
             checkout.setCarrier(carrier);
+            setCarrierRate(checkout, carrier);
+        }
+
         checkout.setEmail(email);
         checkout = checkoutRepository.save(checkout);
         return cartMapper.toDto(checkout);
     }
+
+    private void setCarrierRate(Checkout checkout, String carrier) {
+        if (carrier.equals("pickup")) {
+            List<ShipRate> rates = carrierRepository.getRate(carrier, checkout.getCartWeight());
+            if (rates != null && rates.size() > 0) {
+                checkout.setCarrierRate(rates.get(0).getPrice());
+            }
+            return;
+        }
+        checkout.setCarrierRate(null);
+    }
+
     public CartDTO setCarrier() {
         return null;
     }
@@ -258,4 +275,7 @@ public class TenantCheckoutService {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    public void setCarrierRate(int i) {
+    }
 }

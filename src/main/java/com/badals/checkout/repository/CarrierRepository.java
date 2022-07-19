@@ -39,6 +39,20 @@ public interface CarrierRepository extends JpaRepository<Carrier, Long> {
            "where czr.active = 1  and czr.condition_min <= :weight +0.0 and czr.condition_max > :weight +0.0 and (z.code = :code) " +
            "order by level desc, price asc")
    public List<ShipRate> getShippingRates(@Param("code") String code, @Param("weight") String weight);
+
+   @Query(nativeQuery = true, value = "select czr.id,  " +
+           "czr.carrier_ref as `carrierRef`,  " +
+           "c.name as `carrier_name`,  " +
+           "c.logo as `carrier_logo`,  " +
+           "czr.price,  czr.rate_name as `rateName`, " +
+           "czr.condition_min as `conditionMin`,  " +
+           "czr.condition_max as `conditionMax`, " +
+           "czr.handling_fee as `handlingFee`, " +
+           "czr.is_free as `isFree` " +
+           "from profileshop.carrier_zone_rate czr " +
+           "join profileshop.carrier c on czr.carrier_ref = c.`ref`  " +
+           "where czr.active = 1  and czr.condition_min <= :weight +0.0 and czr.condition_max > :weight +0.0 and c.`ref` = :carrierRef")
+   public List<ShipRate> getRate(@Param("carrierRef") String carrierRef, @Param("weight") String weight);
    
 }
 
