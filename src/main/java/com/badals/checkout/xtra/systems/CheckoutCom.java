@@ -174,7 +174,7 @@ public class CheckoutCom extends PaymentSystem {
 
                if(apiResponse.model.responseCode.equalsIgnoreCase("10000")) {
                   if(isWebsite)
-                     return redirect(baseUrl + "checkout/checkout-com-confirmation?cko-payment-token="+apiResponse.model.id);
+                     return redirect(baseUrl + "/checkout/callbacks/checkoutcom/success?cko-payment-token="+apiResponse.model.id);
                   else
                      return paymentSucessful(apiResponse.model.id);
                }
