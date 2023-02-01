@@ -21,6 +21,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.badals.checkout.service.TenantCheckoutService.calculateSubtotal;
+
 @Service
 public class CarrierService {
     private final Logger log = LoggerFactory.getLogger(CarrierService.class);
@@ -82,7 +84,7 @@ public class CarrierService {
         String level3 = address.getState();
         String level2 = address.getCountry();
 
-        return carrierRepository.getShippingRates(level3, cart.getCartWeight());
+        return carrierRepository.getShippingRates(level3, cart.getCartWeight(), calculateSubtotal(cart).toPlainString());
     }
 
     @Transactional

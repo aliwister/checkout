@@ -96,7 +96,7 @@ public class TenantCheckoutService {
 
     private void setCarrierRate(Checkout checkout, String carrier) {
         if (carrier.equals("pickup")) {
-            List<ShipRate> rates = carrierRepository.getRate(carrier, checkout.getCartWeight());
+            List<ShipRate> rates = carrierRepository.getRate(carrier, checkout.getCartWeight(), calculateSubtotal(checkout).toPlainString());
             if (rates != null && rates.size() > 0) {
                 checkout.setCarrierRate(rates.get(0).getPrice());
             }

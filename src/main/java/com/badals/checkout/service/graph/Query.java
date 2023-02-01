@@ -64,7 +64,7 @@ public class Query implements GraphQLQueryResolver {
             add(new FieldDescription(AddressField.firstName, "First Name", true, "/^[a-zA-Z]{3,10}$/", FieldType.TEXT, null, 2, 15));
             add(new FieldDescription(AddressField.lastName, "Last Name", true, "/^[a-zA-Z]{3,10}$/", FieldType.TEXT, null, 2, 15));
             add(new FieldDescription(AddressField.line1, "Address", true, "/^.{3,50}$/", FieldType.TEXT, null, 5, 30));
-            add(new FieldDescription(AddressField.line2, "Landmark", true, "/^.{3,50}$/", FieldType.TEXT, null, 5, 30));
+            add(new FieldDescription(AddressField.line2, "Landmark", false, "/^.{3,50}$/", FieldType.TEXT, null, 5, 30));
             add(new FieldDescription(AddressField.postalCode, "Postal Code", false, "/^[0-9]{3}$/", FieldType.TEXT, null, 3, 5));
             add(new FieldDescription(AddressField.state, "State", true, "", FieldType.SELECT,
                     new ArrayList<>(){{

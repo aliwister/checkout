@@ -36,9 +36,9 @@ public interface CarrierRepository extends JpaRepository<Carrier, Long> {
            "join profileshop.carrier_zone cz on czr.carrier_zone_code = cz.code and cz.active = 1  " +
            "join profileshop.carrier_zone_zone czz on cz.code = czz.carrier_zone_code    " +
            "join profileshop.`zone` z on z.code = czz.zone_code or z.part_of = czz.zone_code and z.active = 1   " +
-           "where czr.active = 1  and czr.condition_min <= :weight +0.0 and czr.condition_max > :weight +0.0 and (z.code = :code) " +
+           "where czr.active = 1  and ((czr.condition_min <= :weight +0.0 and czr.condition_max > :weight +0.0 and czr.condition_type = 'WEIGHT') or (czr.condition_min <= :price +0.0 and czr.condition_max > :price +0.0  and czr.condition_type = 'PRICE')) and (z.code = :code) " +
            "order by level desc, price asc")
-   public List<ShipRate> getShippingRates(@Param("code") String code, @Param("weight") String weight);
+   public List<ShipRate> getShippingRates(@Param("code") String code, @Param("weight") String weight, @Param("price") String price);
 
    @Query(nativeQuery = true, value = "select czr.id,  " +
            "czr.carrier_ref as `carrierRef`,  " +
@@ -51,8 +51,8 @@ public interface CarrierRepository extends JpaRepository<Carrier, Long> {
            "czr.is_free as `isFree` " +
            "from profileshop.carrier_zone_rate czr " +
            "join profileshop.carrier c on czr.carrier_ref = c.`ref`  " +
-           "where czr.active = 1  and czr.condition_min <= :weight +0.0 and czr.condition_max > :weight +0.0 and c.`ref` = :carrierRef")
-   public List<ShipRate> getRate(@Param("carrierRef") String carrierRef, @Param("weight") String weight);
+           "where czr.active = 1  and ((czr.condition_min <= :weight +0.0 and czr.condition_max > :weight +0.0 and czr.condition_type = 'WEIGHT') or (czr.condition_min <= :price +0.0 and czr.condition_max > :price +0.0  and czr.condition_type = 'PRICE')) and c.`ref` = :carrierRef")
+   public List<ShipRate> getRate(@Param("carrierRef") String carrierRef, @Param("weight") String weight, @Param("price") String price);
    
 }
 
