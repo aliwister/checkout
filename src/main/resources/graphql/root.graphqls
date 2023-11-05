@@ -21,6 +21,8 @@ extend type Mutation {
     setCarrier(value: String, secureKey: String): Cart
     chargePayment(token: String, paymentRef: String, secureKey: String): PaymentResponsePayload
     #createOrder(token: String, paymentKey: String): OrderConfirmation
+
+#    useReward(secureKey: String, reward: String): Message
 }
 
 
@@ -34,6 +36,10 @@ enum OptionType {
 
 enum FieldType {
     TEXT, REMOTE_SELECT, REMOTE_AUTOCOMPLETE, SELECT, CHECKBOX, AUTOCOMPLETE, MOBILE
+}
+
+type Message {
+    value: String
 }
 
 type AddressFormat {
