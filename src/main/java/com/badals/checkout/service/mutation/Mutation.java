@@ -6,6 +6,7 @@ import com.badals.checkout.service.*;
 import com.badals.checkout.service.dto.CartDTO;
 
 import com.badals.checkout.service.mapper.CartMapper;
+import com.badals.checkout.service.pojo.Message;
 import com.badals.checkout.xtra.systems.CheckoutCom;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import org.slf4j.Logger;
@@ -86,5 +87,9 @@ public class Mutation implements GraphQLMutationResolver {
 
     public OrderConfirmationResponse createOrder(String token, String paymentKey) throws InvalidCartException {
         return cartService.createOrder(paymentKey);
+    }
+
+    public Message useReward(String secureKey, String reward){
+        return tenantCheckoutService.useReward(secureKey, reward);
     }
 }
