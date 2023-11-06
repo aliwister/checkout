@@ -2,6 +2,7 @@ package com.badals.checkout.domain;
 
 import com.badals.checkout.aop.tenant.TenantSupport;
 import com.badals.checkout.domain.enumeration.DiscountReductionType;
+import com.badals.checkout.domain.pojo.PriceMap;
 import com.badals.checkout.domain.pojo.RewardInfo;
 import com.badals.checkout.domain.pojo.RewardRules;
 import lombok.Data;
@@ -45,8 +46,9 @@ public class Reward extends Auditable<Long> implements Serializable, TenantSuppo
     @Column(name = "discount_reduction_type")
     private DiscountReductionType discountReductionType;
 
-    @Column(name = "discount_reduction_value")
-    private Double discountReductionValue;
+    @Type(type = "json")
+    @Column(name = "discount_reduction_value", columnDefinition = "string")
+    private PriceMap discountReductionValue;
 
     @Column(name = "tenant_id")
     private String tenantId;
