@@ -1,9 +1,8 @@
 package com.badals.checkout.service;
 
 import com.badals.checkout.domain.*;
-import com.badals.checkout.domain.pojo.Address;
-import com.badals.checkout.domain.pojo.OrderConfirmation;
-import com.badals.checkout.domain.pojo.LineItem;
+import com.badals.checkout.domain.pojo.*;
+import com.badals.checkout.service.pojo.Message;
 import com.badals.checkout.xtra.PaymentType;
 import com.badals.checkout.repository.*;
 import com.badals.checkout.service.dto.CartDTO;
@@ -38,11 +37,13 @@ public class TenantCheckoutService {
     private final CarrierRepository carrierRepository;
     private final OrderMapper orderMapper;
     private final TenantRepository tenantRepository;
-
+    private final RewardRepository rewardRepository;
+    private final PointUsageHistoryRepository pointUsageHistoryRepository;
+    private final PointRepository pointRepository;
 
     public static int ORDER_REF_SIZE = 7;
 
-    public TenantCheckoutService(CheckoutRepository checkoutRepository, TenantPaymentRepository paymentRepository, CartMapper cartMapper, CarrierService carrierService, TenantOrderRepository orderRepository, CarrierRepository carrierRepository, OrderMapper orderMapper, TenantRepository tenantRepository) {
+    public TenantCheckoutService(CheckoutRepository checkoutRepository, TenantPaymentRepository paymentRepository, CartMapper cartMapper, CarrierService carrierService, TenantOrderRepository orderRepository, CarrierRepository carrierRepository, OrderMapper orderMapper, TenantRepository tenantRepository, RewardRepository rewardRepository, PointUsageHistoryRepository pointUsageHistoryRepository, PointRepository pointRepository) {
         this.checkoutRepository = checkoutRepository;
         this.paymentRepository = paymentRepository;
         this.cartMapper = cartMapper;
@@ -51,6 +52,9 @@ public class TenantCheckoutService {
         this.carrierRepository = carrierRepository;
         this.orderMapper = orderMapper;
         this.tenantRepository = tenantRepository;
+        this.rewardRepository = rewardRepository;
+        this.pointUsageHistoryRepository = pointUsageHistoryRepository;
+        this.pointRepository = pointRepository;
     }
     public static String buildProfileBaseUrl(Tenant tenant) {
         return tenant.getIsSubdomain()?"https://"+tenant.getSubdomain()+".profile.shop":"https://www."+tenant.getCustomDomain();
@@ -261,4 +265,48 @@ public class TenantCheckoutService {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Transactional
+    public Message useReward(String secureKey, String reward){
+        Checkout checkout = checkoutRepository.findBySecureKey(secureKey).orElse(null);
+        if(checkout == null)
+            return new Message("Cart not found", "404");
+
+        Reward r = rewardRepository.findByRewardType(reward);
+
+        if(r == null)
+            return new Message("Reward not found", "404");
+
+        // do need to checkif reward is tekrari
+
+        if(!r.getActive())
+            return new Message("Reward not active", "400");
+        if(!checkRewardRules(checkout, r))
+            return new Message("Reward not applicable", "400");
+        // add reward discount to adjustments of the checkout
+        AdjustmentProfile adjustmentProfile = rewardToAdjustment(r);
+        //check if we have enough points
+
+        checkoutRepository.save(checkout);
+        //add to reward usage count
+        rewardRepository.save(r);
+        //add to history
+        return new Message("Reward applied", "200");
+    }
+
+    private Boolean checkRewardRules(Checkout checkout, Reward reward){
+        Double itemCount = checkout.getItems().stream().mapToDouble((x) -> x.getQuantity().doubleValue()).sum();
+        for (RewardRules rule: reward.getRewardRules()) {
+            if(rule.getMinCartAmount() > itemCount)
+                return false;
+        }
+        return true;
+    }
+
+    private AdjustmentProfile rewardToAdjustment(Reward reward){
+        AdjustmentProfile adjustmentProfile = new AdjustmentProfile();
+        adjustmentProfile.setDiscount(reward.getDiscountReductionValue());
+        adjustmentProfile.setDiscountReductionType(reward.getDiscountReductionType());
+        return adjustmentProfile;
+    }
 }
