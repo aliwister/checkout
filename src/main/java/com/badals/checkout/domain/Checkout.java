@@ -3,6 +3,7 @@ package com.badals.checkout.domain;
 
 import com.badals.checkout.aop.tenant.TenantSupport;
 import com.badals.checkout.domain.pojo.Address;
+import com.badals.checkout.domain.pojo.AdjustmentProfile;
 import com.badals.checkout.domain.pojo.LineItem;
 import com.badals.checkout.xtra.PaymentType;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
@@ -101,6 +102,10 @@ public class Checkout implements Serializable, TenantSupport {
 
     @Column(name="guest")
     private Boolean guest;
+
+    @Type(type = "json")
+    @Column(name="adjustments", columnDefinition = "string")
+    private List<AdjustmentProfile> adjustments;
 
     @Override
     public boolean equals(Object o) {
