@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 public class RewardInfo implements Serializable {
-    private String langugage;
+    private String language;
     private String name;
     private String description;
 }
