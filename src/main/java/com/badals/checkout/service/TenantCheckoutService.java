@@ -12,6 +12,7 @@ import com.badals.enumeration.CartState;
 import com.badals.enumeration.OrderState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +21,7 @@ import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -277,21 +276,38 @@ public class TenantCheckoutService {
         if(r == null)
             return new Message("Reward not found", "404");
 
-        // do need to checkif reward is tekrari
-
+        PointUsageHistory existingPointUsageHistory = pointUsageHistoryRepository.findByCheckoutIdAndRewardId(checkout.getId(), r.getId());
+        if(existingPointUsageHistory != null)
+            return new Message("Reward already used", "400");
         if(!r.getActive())
             return new Message("Reward not active", "400");
         if(!checkRewardRules(checkout, r))
             return new Message("Reward not applicable", "400");
+
+        //check if we have enough points
+        // todo fix1: customer to user
+        // todo fix2: get user_Id from security context
+        Integer points = getPointsForCustomer(1L);
+        if(points < r.getPoints())
+            return new Message("Not enough points", "400");
+//        SecurityContextHolder.getContext().getAuthentication().getName();
+
         // add reward discount to adjustments of the checkout
         AdjustmentProfile adjustmentProfile = rewardToAdjustment(r);
-        //check if we have enough points
-
+        checkout.getAdjustments().add(adjustmentProfile);
         checkoutRepository.save(checkout);
         //add to reward usage count
+        r.setTimesExchanged(r.getTimesExchanged() + 1);
         rewardRepository.save(r);
-        //add to history
-        return new Message("Reward applied", "200");
+//        add to history
+        PointUsageHistory pointUsageHistory = new PointUsageHistory();
+        pointUsageHistory.setCustomerId(1L);
+        pointUsageHistory.setPoints(r.getPoints());
+        pointUsageHistory.setCreatedDate(Date.from(Instant.now()));
+        pointUsageHistory.setRewardId(r.getId());
+        pointUsageHistory.setCheckoutId(checkout.getId());
+        pointUsageHistoryRepository.save(pointUsageHistory);
+        return new Message(SecurityContextHolder.getContext().getAuthentication().getName(), "200");
     }
 
     private Boolean checkRewardRules(Checkout checkout, Reward reward){
@@ -308,5 +324,13 @@ public class TenantCheckoutService {
         adjustmentProfile.setDiscount(reward.getDiscountReductionValue());
         adjustmentProfile.setDiscountReductionType(reward.getDiscountReductionType());
         return adjustmentProfile;
+    }
+
+    private Integer getPointsForCustomer(Long customerId){
+        List<Point> earnedPoints = pointRepository.findAllByCustomerId(customerId);
+        List<PointUsageHistory> usedPoints = pointUsageHistoryRepository.findAllByCustomerId(customerId);
+        Integer earned = earnedPoints.stream().mapToInt(Point::getAmount).sum();
+        Integer used = usedPoints.stream().mapToInt(PointUsageHistory::getPoints).sum();
+        return earned - used;
     }
 }
