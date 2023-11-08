@@ -23,6 +23,7 @@ extend type Mutation {
     #createOrder(token: String, paymentKey: String): OrderConfirmation
 
     useReward(secureKey: String, reward: String): Message
+    #removeReward(secureKey: String ): Message
 }
 
 
