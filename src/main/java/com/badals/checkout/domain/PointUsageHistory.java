@@ -28,12 +28,12 @@ public class PointUsageHistory extends Auditable<Long> implements Serializable, 
     @Column(name = "customer_id")
     private Long customerId;
 
-    @Column(name = "order_id")
-    private Long orderId;
-
     @Column(name = "tenant_id")
     private String tenantId;
 
-    @Column(name = "amount")
-    private Integer amount;
+    @Column(name = "checkout_id")
+    private Long checkoutId;
+
+    @Column(name = "points")
+    private Integer points;
 }
