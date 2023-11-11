@@ -1,6 +1,7 @@
 package com.badals.checkout.service.query;
 
 import com.badals.checkout.addressing.*;
+import com.badals.checkout.domain.Reward;
 import com.badals.checkout.domain.pojo.OrderConfirmation;
 import com.badals.checkout.service.dto.CarrierDTO;
 import com.badals.checkout.xtra.PaymentType;
@@ -106,4 +107,7 @@ public class Query implements GraphQLQueryResolver {
    public OrderConfirmation orderConfirmation(String paymentKey) throws InvalidCartException {
       return tenantCheckoutService.createOrderWithPaymentByPaymentToken(paymentKey);
    }
+    public List<Reward> getAffordableRewards(){
+        return tenantCheckoutService.getAffordableRewards();
+    }
 }
