@@ -92,4 +92,9 @@ public class Mutation implements GraphQLMutationResolver {
     public Message useReward(String secureKey, String reward){
         return tenantCheckoutService.useReward(secureKey, reward);
     }
+
+    public Message removeReward(String secureKey, String reward){
+        return tenantCheckoutService.removeReward(secureKey, reward);
+    }
+
 }

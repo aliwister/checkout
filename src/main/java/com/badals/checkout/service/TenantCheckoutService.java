@@ -1,6 +1,7 @@
 package com.badals.checkout.service;
 
 import com.badals.checkout.domain.*;
+import com.badals.checkout.domain.enumeration.DiscountSource;
 import com.badals.checkout.domain.pojo.*;
 import com.badals.checkout.service.pojo.Message;
 import com.badals.checkout.xtra.PaymentType;
@@ -12,7 +13,6 @@ import com.badals.enumeration.CartState;
 import com.badals.enumeration.OrderState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -311,6 +311,38 @@ public class TenantCheckoutService {
         pointUsageHistoryRepository.save(pointUsageHistory);
 
         return new Message("reward added successfully", "200");
+    }
+
+    @Transactional
+    public Message removeReward(String secureKey, String reward_type){
+        Checkout checkout = checkoutRepository.findBySecureKey(secureKey).orElse(null);
+        if(checkout == null)
+            return new Message("Cart not found", "404");
+        if(checkout.getAdjustments() == null)
+            return new Message("adjustments empty", "200");
+        for (int i = 0; i < checkout.getAdjustments().size(); i++) {
+            AdjustmentProfile adjustmentProfile = checkout.getAdjustments().get(i);
+            if(adjustmentProfile.getDiscountSource() == DiscountSource.REWARD
+                    && adjustmentProfile.getSourceRef().equals(reward_type)){
+                checkout.getAdjustments().remove(i);
+                break;
+            }
+
+        }
+        checkoutRepository.save(checkout);
+
+        Reward reward = rewardRepository.findByRewardType(reward_type);
+        reward.setTimesExchanged(reward.getTimesExchanged() - 1);
+        rewardRepository.save(reward);
+        pointUsageHistoryRepository.removeByCheckoutIdAndRewardId(checkout.getId(), reward.getId());
+
+        return new Message("successfully removed reward","200");
+    }
+
+    @Transactional
+    public List<Reward> getAffordableRewards(){
+        Integer points = getPointsForCustomer(1L);
+        return rewardRepository.findAllByPointsLessThanEqual(points);
     }
 
     private Boolean checkRewardRules(Checkout checkout, Reward reward){
