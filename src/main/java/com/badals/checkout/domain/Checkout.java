@@ -16,6 +16,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -105,7 +106,7 @@ public class Checkout implements Serializable, TenantSupport {
 
     @Type(type = "json")
     @Column(name="adjustments", columnDefinition = "string")
-    private List<AdjustmentProfile> adjustments;
+    private List<AdjustmentProfile> adjustments = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
