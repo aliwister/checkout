@@ -10,4 +10,5 @@ import java.util.List;
 public interface PointUsageHistoryRepository extends JpaRepository<PointUsageHistory, Long> {
     List<PointUsageHistory> findAllByCustomerId(Long customerId);
     PointUsageHistory findByCheckoutIdAndRewardId(Long checkoutId, Long rewardId);
+    void removeByCheckoutIdAndRewardId(Long checkoutId, Long rewardId);
 }
