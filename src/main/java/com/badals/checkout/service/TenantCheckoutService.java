@@ -294,6 +294,8 @@ public class TenantCheckoutService {
 
         // add reward discount to adjustments of the checkout
         AdjustmentProfile adjustmentProfile = rewardToAdjustment(r);
+        if(checkout.getAdjustments() == null)
+            checkout.setAdjustments(new ArrayList<>());
         checkout.getAdjustments().add(adjustmentProfile);
         checkoutRepository.save(checkout);
         //add to reward usage count
@@ -307,7 +309,8 @@ public class TenantCheckoutService {
         pointUsageHistory.setRewardId(r.getId());
         pointUsageHistory.setCheckoutId(checkout.getId());
         pointUsageHistoryRepository.save(pointUsageHistory);
-        return new Message(SecurityContextHolder.getContext().getAuthentication().getName(), "200");
+
+        return new Message("reward added successfully", "200");
     }
 
     private Boolean checkRewardRules(Checkout checkout, Reward reward){
@@ -323,6 +326,8 @@ public class TenantCheckoutService {
         AdjustmentProfile adjustmentProfile = new AdjustmentProfile();
         adjustmentProfile.setDiscount(reward.getDiscountReductionValue());
         adjustmentProfile.setDiscountReductionType(reward.getDiscountReductionType());
+        adjustmentProfile.setDiscountSource(DiscountSource.REWARD);
+        adjustmentProfile.setSourceRef(reward.getRewardType());
         return adjustmentProfile;
     }
 
