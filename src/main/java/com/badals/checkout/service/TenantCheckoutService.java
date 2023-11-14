@@ -339,11 +339,11 @@ public class TenantCheckoutService {
         return new Message("successfully removed reward","200");
     }
 
-    @Transactional
-    public List<Reward> getAffordableRewards(){
-        Integer points = getPointsForCustomer(1L);
-        return rewardRepository.findAllByPointsLessThanEqual(points);
-    }
+//    @Transactional
+//    public List<Reward> getAffordableRewards(){
+//        Integer points = getPointsForCustomer(1L);
+//        return rewardRepository.findAllByPointsLessThanEqual(points);
+//    }
 
     private Boolean checkRewardRules(Checkout checkout, Reward reward){
         Double itemCount = checkout.getItems().stream().mapToDouble((x) -> x.getQuantity().doubleValue()).sum();

@@ -10,6 +10,7 @@ import com.badals.checkout.service.dto.CartDTO;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -107,7 +108,7 @@ public class Query implements GraphQLQueryResolver {
    public OrderConfirmation orderConfirmation(String paymentKey) throws InvalidCartException {
       return tenantCheckoutService.createOrderWithPaymentByPaymentToken(paymentKey);
    }
-    public List<Reward> getAffordableRewards(){
-        return tenantCheckoutService.getAffordableRewards();
-    }
+//    public List<Reward> getAffordableRewards(){
+//        return tenantCheckoutService.getAffordableRewards();
+//    }
 }

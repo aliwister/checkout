@@ -9,8 +9,6 @@ extend type Query {
     addressDescription(isoCode: String, lang: String): AddressFormat
     orderConfirmation(paymentKey: String): OrderConfirmation
 
-    getAffordableRewards: [Reward]
-
 }
 extend type Mutation {
 
