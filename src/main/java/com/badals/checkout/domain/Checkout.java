@@ -105,8 +105,13 @@ public class Checkout implements Serializable, TenantSupport {
     private Boolean guest;
 
     @Type(type = "json")
-    @Column(name="adjustments", columnDefinition = "string")
+    @Column(name="new_adjustments", columnDefinition = "string")
     private List<AdjustmentProfile> adjustments = new ArrayList<>();
+
+//    @Type(type = "json")
+//    @Column(name="new_adjustments", columnDefinition = "string")
+//    private List<AdjustmentProfile> newAdjustments = new ArrayList<>();
+
 
     @Override
     public boolean equals(Object o) {
