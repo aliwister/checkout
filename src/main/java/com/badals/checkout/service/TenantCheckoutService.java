@@ -112,12 +112,20 @@ public class TenantCheckoutService {
     public static  BigDecimal calculateTotal(Checkout checkout) {
         BigDecimal sum = BigDecimal.valueOf(checkout.getItems().stream().mapToDouble(x -> x.getPrice().doubleValue() * x.getQuantity().doubleValue()).sum());
         sum = sum.add(checkout.getCarrierRate());
-        return sum;
+        BigDecimal discount = BigDecimal.valueOf(calculateDiscount(checkout));
+        return sum.subtract(discount);
     }
 
     public static BigDecimal calculateSubtotal(Checkout checkout) {
         BigDecimal sum = BigDecimal.valueOf(checkout.getItems().stream().mapToDouble(x -> x.getPrice().doubleValue() * x.getQuantity().doubleValue()).sum());
-        return sum;
+        BigDecimal discount = BigDecimal.valueOf(calculateDiscount(checkout));
+        return sum.subtract(discount);
+    }
+
+    public static Double calculateDiscount(Checkout checkout){
+        //todo also check other discont types
+        //for simplicity i'm assuming Discount Type is always set to AMOUNT
+        return checkout.getAdjustments().stream().mapToDouble(x -> Double.parseDouble(x.getDiscount().getPriceForCurrency("USD"))).sum();
     }
 
     @Transactional
@@ -155,6 +163,7 @@ public class TenantCheckoutService {
         order.setCarrier(checkout.getCarrier());
         order.setDeliveryTotal(checkout.getCarrierRate());
         order.setPaymentMethod(paymentMethod);
+        order.setCheckoutId(checkout.getId());
 
         int i = 1;
         for(LineItem item : checkout.getItems()) {
@@ -276,8 +285,9 @@ public class TenantCheckoutService {
         if(r == null)
             return new Message("Reward not found", "404");
 
-        PointUsageHistory existingPointUsageHistory = pointUsageHistoryRepository.findByCheckoutIdAndRewardId(checkout.getId(), r.getId());
-        if(existingPointUsageHistory != null)
+        AdjustmentProfile existingAdjustmentProfile = checkout.getAdjustments().stream().filter(x -> x.getSourceRef().equals(r.getRewardType())).findFirst().orElse(null);
+
+        if(existingAdjustmentProfile != null)
             return new Message("Reward already used", "400");
         if(!r.getActive())
             return new Message("Reward not active", "400");
@@ -287,9 +297,9 @@ public class TenantCheckoutService {
         //check if we have enough points
         // todo fix1: customer to user
         // todo fix2: get user_Id from security context
-        Integer points = getPointsForCustomer(1L);
-        if(points < r.getPoints())
-            return new Message("Not enough points", "400");
+//        Integer points = getPointsForCustomer(1L);
+//        if(points < r.getPoints())
+//            return new Message("Not enough points", "400");
 //        SecurityContextHolder.getContext().getAuthentication().getName();
 
         // add reward discount to adjustments of the checkout
@@ -302,13 +312,13 @@ public class TenantCheckoutService {
         r.setTimesExchanged(r.getTimesExchanged() + 1);
         rewardRepository.save(r);
 //        add to history
-        PointUsageHistory pointUsageHistory = new PointUsageHistory();
-        pointUsageHistory.setCustomerId(1L);
-        pointUsageHistory.setPoints(r.getPoints());
-        pointUsageHistory.setCreatedDate(Date.from(Instant.now()));
-        pointUsageHistory.setRewardId(r.getId());
-        pointUsageHistory.setCheckoutId(checkout.getId());
-        pointUsageHistoryRepository.save(pointUsageHistory);
+//        PointUsageHistory pointUsageHistory = new PointUsageHistory();
+//        pointUsageHistory.setCustomerId(1L);
+//        pointUsageHistory.setPoints(r.getPoints());
+//        pointUsageHistory.setCreatedDate(Date.from(Instant.now()));
+//        pointUsageHistory.setRewardId(r.getId());
+//        pointUsageHistory.setCheckoutId(checkout.getId());
+//        pointUsageHistoryRepository.save(pointUsageHistory);
 
         return new Message("reward added successfully", "200");
     }
@@ -334,7 +344,7 @@ public class TenantCheckoutService {
         Reward reward = rewardRepository.findByRewardType(reward_type);
         reward.setTimesExchanged(reward.getTimesExchanged() - 1);
         rewardRepository.save(reward);
-        pointUsageHistoryRepository.removeByCheckoutIdAndRewardId(checkout.getId(), reward.getId());
+    //        pointUsageHistoryRepository.removeByCheckoutIdAndRewardId(checkout.getId(), reward.getId());
 
         return new Message("successfully removed reward","200");
     }
