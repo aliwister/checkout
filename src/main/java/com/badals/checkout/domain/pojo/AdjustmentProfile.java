@@ -19,4 +19,11 @@ public class AdjustmentProfile implements Serializable {
         this.discount = discount;
         this.discountReductionType = discountReductionType;
     }
+
+    public AdjustmentProfile(PriceMap discount, DiscountReductionType discountReductionType, DiscountSource discountSource, String sourceRef) {
+        this.discount = discount;
+        this.discountReductionType = discountReductionType;
+        this.discountSource = discountSource;
+        this.sourceRef = sourceRef;
+    }
 }
