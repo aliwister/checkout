@@ -19,12 +19,12 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
-    private final CookieFilter cookieFilter;
+    //private final CookieFilter cookieFilter;
     private final TokenProvider tokenProvider;
 
-    public SecurityConfiguration(CorsFilter corsFilter, CookieFilter cookieFilter, TokenProvider tokenProvider) {
+    public SecurityConfiguration(CorsFilter corsFilter, /*CookieFilter cookieFilter,*/ TokenProvider tokenProvider) {
         this.corsFilter = corsFilter;
-        this.cookieFilter = cookieFilter;
+        ///this.cookieFilter = cookieFilter;
         this.tokenProvider = tokenProvider;
     }
 
@@ -48,7 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .csrf()
             .disable()
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-            .addFilterAfter(cookieFilter, CorsFilter.class).antMatcher("/graphql")
+            //.addFilterAfter(cookieFilter, CorsFilter.class).antMatcher("/graphql")
             .exceptionHandling()
             //.authenticationEntryPoint(problemSupport)
             //.accessDeniedHandler(problemSupport)
