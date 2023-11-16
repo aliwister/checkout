@@ -11,6 +11,7 @@ import com.badals.checkout.xtra.systems.CheckoutCom;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 /*
@@ -89,6 +90,7 @@ public class Mutation implements GraphQLMutationResolver {
         return cartService.createOrder(paymentKey);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     public Message useReward(String secureKey, String reward){
         return tenantCheckoutService.useReward(secureKey, reward);
     }
