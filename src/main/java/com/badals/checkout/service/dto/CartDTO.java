@@ -1,6 +1,7 @@
 package com.badals.checkout.service.dto;
 
 import com.badals.checkout.domain.pojo.Address;
+import com.badals.checkout.domain.pojo.AdjustmentProfile;
 import com.badals.checkout.domain.pojo.LineItem;
 import com.badals.checkout.xtra.PaymentType;
 import lombok.Data;
@@ -36,6 +37,7 @@ public class CartDTO {
 
     private Boolean allowPickup;
     private Boolean guest;
+    private List<AdjustmentProfile> adjustments;
 
     @Override
     public String toString() {
