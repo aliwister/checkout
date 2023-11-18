@@ -40,6 +40,28 @@ enum FieldType {
     TEXT, REMOTE_SELECT, REMOTE_AUTOCOMPLETE, SELECT, CHECKBOX, AUTOCOMPLETE, MOBILE
 }
 
+enum DiscountReductionType {
+    AMOUNT
+    PERCENT
+}
+
+enum DiscountSource {
+    REWARD
+    COUPON
+}
+
+type AdjustmentProfile {
+    discount: PriceMap
+    discountReductionType: DiscountReductionType
+    discountSource: DiscountSource
+    sourceRef: String
+}
+
+type PriceMap {
+    prices: String
+    base: String
+}
+
 type Message {
     value: String
     status: String
@@ -138,6 +160,7 @@ type Cart {
     guest: Boolean
     carrierRate:String
     carrierService: String
+    adjustments: [AdjustmentProfile]
 }
 input AddressInput {
      id: Long
