@@ -125,17 +125,17 @@ public class Customer extends UserBase implements Serializable, TenantSupport {
         this.resetDate = resetDate;
     }
 
-    @OneToMany(mappedBy = "customer")
-    @JsonIgnoreProperties("customer")
-    private List<Address> addresses;
-
-    public List<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
-    }
+//    @OneToMany(mappedBy = "customer")
+//    @JsonIgnoreProperties("customer")
+//    private List<Address> addresses;
+//
+//    public List<Address> getAddresses() {
+//        return addresses;
+//    }
+//
+//    public void setAddresses(List<Address> addresses) {
+//        this.addresses = addresses;
+//    }
 
     @JsonIgnore
     @ManyToMany
