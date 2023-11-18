@@ -37,7 +37,7 @@ public class PointCustomer implements Serializable {
     @Column(name = "date_add")
     private LocalDate date_add;
 
-    @ManyToOne(optional = true)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="customer_id", referencedColumnName = "id_customer", nullable = true)
     private Customer customer;
 

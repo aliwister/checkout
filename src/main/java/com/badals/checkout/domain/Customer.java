@@ -14,7 +14,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -89,9 +88,10 @@ public class Customer extends UserBase implements Serializable, TenantSupport {
         this.tenantId = tenantId;
     }
 
-    @OneToOne(optional = true)
-    @JoinColumn(name="id_customer", referencedColumnName = "customer_id")
-    PointCustomer pointCustomer;
+
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, optional = false)
+    private PointCustomer pointCustomer;
 
     public PointCustomer getPointCustomer() {
         return pointCustomer;
