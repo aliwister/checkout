@@ -95,6 +95,7 @@ public class Mutation implements GraphQLMutationResolver {
         return tenantCheckoutService.useReward(secureKey, reward);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     public Message removeReward(String secureKey, String reward){
         return tenantCheckoutService.removeReward(secureKey, reward);
     }
