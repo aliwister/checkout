@@ -13,6 +13,7 @@ import com.badals.enumeration.CartState;
 import com.badals.enumeration.OrderState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,10 +40,11 @@ public class TenantCheckoutService {
     private final RewardRepository rewardRepository;
     private final PointUsageHistoryRepository pointUsageHistoryRepository;
     private final PointRepository pointRepository;
+    private final CustomerRepository customerRepository;
 
     public static int ORDER_REF_SIZE = 7;
 
-    public TenantCheckoutService(CheckoutRepository checkoutRepository, TenantPaymentRepository paymentRepository, CartMapper cartMapper, CarrierService carrierService, TenantOrderRepository orderRepository, CarrierRepository carrierRepository, OrderMapper orderMapper, TenantRepository tenantRepository, RewardRepository rewardRepository, PointUsageHistoryRepository pointUsageHistoryRepository, PointRepository pointRepository) {
+    public TenantCheckoutService(CheckoutRepository checkoutRepository, TenantPaymentRepository paymentRepository, CartMapper cartMapper, CarrierService carrierService, TenantOrderRepository orderRepository, CarrierRepository carrierRepository, OrderMapper orderMapper, TenantRepository tenantRepository, RewardRepository rewardRepository, PointUsageHistoryRepository pointUsageHistoryRepository, PointRepository pointRepository, CustomerRepository customerRepository) {
         this.checkoutRepository = checkoutRepository;
         this.paymentRepository = paymentRepository;
         this.cartMapper = cartMapper;
@@ -54,6 +56,7 @@ public class TenantCheckoutService {
         this.rewardRepository = rewardRepository;
         this.pointUsageHistoryRepository = pointUsageHistoryRepository;
         this.pointRepository = pointRepository;
+        this.customerRepository = customerRepository;
     }
     public static String buildProfileBaseUrl(Tenant tenant) {
         return tenant.getIsSubdomain()?"https://"+tenant.getSubdomain()+".profile.shop":"https://www."+tenant.getCustomDomain();
@@ -285,7 +288,11 @@ public class TenantCheckoutService {
         if(r == null)
             return new Message("Reward not found", "404");
 
-        AdjustmentProfile existingAdjustmentProfile = checkout.getAdjustments().stream().filter(x -> x.getSourceRef().equals(r.getRewardType())).findFirst().orElse(null);
+        Customer customer = customerRepository.findOneByEmailIgnoreCase(SecurityContextHolder.getContext().getAuthentication().getName()).orElse(null);
+        if(customer == null)
+            return new Message("Customer not found", "404");
+
+        AdjustmentProfile existingAdjustmentProfile = Optional.ofNullable(checkout.getAdjustments()).orElse(new ArrayList<>()).stream().filter(x -> x.getSourceRef().equals(r.getRewardType())).findFirst().orElse(null);
 
         if(existingAdjustmentProfile != null)
             return new Message("Reward already used", "400");
@@ -295,12 +302,9 @@ public class TenantCheckoutService {
             return new Message("Reward not applicable", "400");
 
         //check if we have enough points
-        // todo fix1: customer to user
-        // todo fix2: get user_Id from security context
-//        Integer points = getPointsForCustomer(1L);
-//        if(points < r.getPoints())
-//            return new Message("Not enough points", "400");
-//        SecurityContextHolder.getContext().getAuthentication().getName();
+        Integer points = getPointsForCustomer(customer.getId());
+        if(points < r.getPoints())
+            return new Message("Not enough points", "400");
 
         // add reward discount to adjustments of the checkout
         AdjustmentProfile adjustmentProfile = rewardToAdjustment(r);
@@ -312,13 +316,17 @@ public class TenantCheckoutService {
         r.setTimesExchanged(r.getTimesExchanged() + 1);
         rewardRepository.save(r);
 //        add to history
-//        PointUsageHistory pointUsageHistory = new PointUsageHistory();
-//        pointUsageHistory.setCustomerId(1L);
-//        pointUsageHistory.setPoints(r.getPoints());
-//        pointUsageHistory.setCreatedDate(Date.from(Instant.now()));
-//        pointUsageHistory.setRewardId(r.getId());
-//        pointUsageHistory.setCheckoutId(checkout.getId());
-//        pointUsageHistoryRepository.save(pointUsageHistory);
+        PointUsageHistory pointUsageHistory = new PointUsageHistory();
+        pointUsageHistory.setCustomerId(customer.getId());
+        pointUsageHistory.setPoints(r.getPoints());
+        pointUsageHistory.setCreatedDate(Date.from(Instant.now()));
+        pointUsageHistory.setRewardId(r.getId());
+        pointUsageHistory.setCheckoutId(checkout.getId());
+        pointUsageHistoryRepository.save(pointUsageHistory);
+
+        //deduct points from customer
+        customer.getPointCustomer().setSpentPoints(customer.getPointCustomer().getSpentPoints() + r.getPoints());
+        customerRepository.save(customer);
 
         return new Message("reward added successfully", "200");
     }
@@ -326,10 +334,14 @@ public class TenantCheckoutService {
     @Transactional
     public Message removeReward(String secureKey, String reward_type){
         Checkout checkout = checkoutRepository.findBySecureKey(secureKey).orElse(null);
+
         if(checkout == null)
             return new Message("Cart not found", "404");
         if(checkout.getAdjustments() == null)
             return new Message("adjustments empty", "200");
+        Customer customer = customerRepository.findOneByEmailIgnoreCase(SecurityContextHolder.getContext().getAuthentication().getName()).orElse(null);
+        if(customer == null)
+            return new Message("Customer not found", "404");
         for (int i = 0; i < checkout.getAdjustments().size(); i++) {
             AdjustmentProfile adjustmentProfile = checkout.getAdjustments().get(i);
             if(adjustmentProfile.getDiscountSource() == DiscountSource.REWARD
@@ -344,7 +356,11 @@ public class TenantCheckoutService {
         Reward reward = rewardRepository.findByRewardType(reward_type);
         reward.setTimesExchanged(reward.getTimesExchanged() - 1);
         rewardRepository.save(reward);
-    //        pointUsageHistoryRepository.removeByCheckoutIdAndRewardId(checkout.getId(), reward.getId());
+
+        pointUsageHistoryRepository.deleteByCheckoutIdAndRewardId(checkout.getId(), reward.getId());
+
+        customer.getPointCustomer().setSpentPoints(customer.getPointCustomer().getSpentPoints() - reward.getPoints());
+        customerRepository.save(customer);
 
         return new Message("successfully removed reward","200");
     }
