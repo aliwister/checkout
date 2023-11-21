@@ -313,20 +313,20 @@ public class TenantCheckoutService {
         checkout.getAdjustments().add(adjustmentProfile);
         checkoutRepository.save(checkout);
         //add to reward usage count
-        r.setTimesExchanged(r.getTimesExchanged() + 1);
-        rewardRepository.save(r);
+//        r.setTimesExchanged(r.getTimesExchanged() + 1);
+//        rewardRepository.save(r);
 //        add to history
-        PointUsageHistory pointUsageHistory = new PointUsageHistory();
-        pointUsageHistory.setCustomerId(customer.getId());
-        pointUsageHistory.setPoints(r.getPoints());
-        pointUsageHistory.setCreatedDate(Date.from(Instant.now()));
-        pointUsageHistory.setRewardId(r.getId());
-        pointUsageHistory.setCheckoutId(checkout.getId());
-        pointUsageHistoryRepository.save(pointUsageHistory);
+//        PointUsageHistory pointUsageHistory = new PointUsageHistory();
+//        pointUsageHistory.setCustomerId(customer.getId());
+//        pointUsageHistory.setPoints(r.getPoints());
+//        pointUsageHistory.setCreatedDate(Date.from(Instant.now()));
+//        pointUsageHistory.setRewardId(r.getId());
+//        pointUsageHistory.setCheckoutId(checkout.getId());
+//        pointUsageHistoryRepository.save(pointUsageHistory);
 
         //deduct points from customer
-        customer.getPointCustomer().setSpentPoints(customer.getPointCustomer().getSpentPoints() + r.getPoints());
-        customerRepository.save(customer);
+//        customer.getPointCustomer().setSpentPoints(customer.getPointCustomer().getSpentPoints() + r.getPoints());
+//        customerRepository.save(customer);
 
         return new Message("reward added successfully", "200");
     }
@@ -339,9 +339,9 @@ public class TenantCheckoutService {
             return new Message("Cart not found", "404");
         if(checkout.getAdjustments() == null)
             return new Message("adjustments empty", "200");
-        Customer customer = customerRepository.findOneByEmailIgnoreCase(SecurityContextHolder.getContext().getAuthentication().getName()).orElse(null);
-        if(customer == null)
-            return new Message("Customer not found", "404");
+//        Customer customer = customerRepository.findOneByEmailIgnoreCase(SecurityContextHolder.getContext().getAuthentication().getName()).orElse(null);
+//        if(customer == null)
+//            return new Message("Customer not found", "404");
         for (int i = 0; i < checkout.getAdjustments().size(); i++) {
             AdjustmentProfile adjustmentProfile = checkout.getAdjustments().get(i);
             if(adjustmentProfile.getDiscountSource() == DiscountSource.REWARD
@@ -353,14 +353,14 @@ public class TenantCheckoutService {
         }
         checkoutRepository.save(checkout);
 
-        Reward reward = rewardRepository.findByRewardType(reward_type);
-        reward.setTimesExchanged(reward.getTimesExchanged() - 1);
-        rewardRepository.save(reward);
-
-        pointUsageHistoryRepository.deleteByCheckoutIdAndRewardId(checkout.getId(), reward.getId());
-
-        customer.getPointCustomer().setSpentPoints(customer.getPointCustomer().getSpentPoints() - reward.getPoints());
-        customerRepository.save(customer);
+//        Reward reward = rewardRepository.findByRewardType(reward_type);
+//        reward.setTimesExchanged(reward.getTimesExchanged() - 1);
+//        rewardRepository.save(reward);
+//
+//        pointUsageHistoryRepository.deleteByCheckoutIdAndRewardId(checkout.getId(), reward.getId());
+//
+//        customer.getPointCustomer().setSpentPoints(customer.getPointCustomer().getSpentPoints() - reward.getPoints());
+//        customerRepository.save(customer);
 
         return new Message("successfully removed reward","200");
     }
