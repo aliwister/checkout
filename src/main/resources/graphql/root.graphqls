@@ -51,7 +51,7 @@ enum DiscountSource {
 }
 
 type AdjustmentProfile {
-    discount: PriceMap
+    discount: String
     discountReductionType: DiscountReductionType
     discountSource: DiscountSource
     sourceRef: String

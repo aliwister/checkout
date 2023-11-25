@@ -37,7 +37,7 @@ public class CartDTO {
 
     private Boolean allowPickup;
     private Boolean guest;
-    private List<AdjustmentProfile> adjustments;
+    private List<AdjustmentProfileDto> adjustments;
 
     @Override
     public String toString() {

@@ -6,7 +6,7 @@ import com.badals.checkout.service.dto.CartDTO;
 import org.mapstruct.*;
 
 
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", uses = {AdjustmentProfileMapper.class})
 public interface CartMapper extends EntityMapper<CartDTO, Cart> {
 
     CartDTO toDto(Cart cart);
