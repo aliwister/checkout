@@ -1,10 +1,6 @@
 package com.badals.checkout.controller;
 
-import com.badals.checkout.domain.Cart;
-import com.badals.checkout.domain.Order;
-import com.badals.checkout.repository.CartRepository;
-import com.badals.checkout.service.CartService;
-import com.badals.checkout.service.OrderService;
+
 import com.badals.checkout.service.dto.CartDTO;
 import com.badals.checkout.service.dto.CheckoutDTO;
 import com.badals.checkout.service.dto.OrderDTO;
@@ -28,16 +24,7 @@ public class CheckoutController {
     private final Logger log = LoggerFactory.getLogger(CheckoutController.class);
 
     @Autowired
-    CartRepository cartRepository;
-
-    @Autowired
     CartMapper cartMapper;
-
-    @Autowired
-    private OrderService orderService;
-
-    @Autowired
-    private CartService cartService;
 
     @Value("${app.faceurl}")
     String faceUrl;
@@ -48,8 +35,8 @@ public class CheckoutController {
         CheckoutDTO dto = new CheckoutDTO();
         dto.setRedirect("http://www.google.com");
 
-        Cart cart = cartMapper.toEntity(cartDTO);
-        cart = cartRepository.save(cart);
+/*        Cart cart = cartMapper.toEntity(cartDTO);
+        cart = cartRepository.save(cart);*/
 
         return dto;
         //final HttpHeaders httpHeaders= new HttpHeaders();
@@ -83,26 +70,6 @@ public class CheckoutController {
         return "index";
     }
 
-    @RequestMapping("/confirmation")
-    public String confirmation(@RequestParam(required=true) String ref, @RequestParam(required=true) String uiud, Model model) {
-        OrderDTO order = orderService.getByRefAndUiud(ref, uiud);
-        model.addAttribute("order", order);
-        return "confirmation";
-    }
-
-    @GetMapping("/checkout-com-confirmation")
-    public String checkoutConfirmation(@RequestParam(required=true, name="cko-payment-token") String paymentToken, HttpServletResponse response) throws IOException {
-        log.info("I'm a token {}", paymentToken);
-        Order order = null;
-        try {
-            order = cartService.createOrderWithPaymentByPaymentToken(paymentToken);
-        }
-        catch(Exception e) {
-            return "failure";
-        }
-        response.sendRedirect(faceUrl+"order-received?ref="+order.getReference()+"&key="+order.getConfirmationKey());
-        return "index";
-    }
 
     @GetMapping("/testtesttesttest")
     public void testRedirect(@RequestParam(required=true, name="cko-payment-token") String paymentToken, HttpServletResponse response) throws IOException {

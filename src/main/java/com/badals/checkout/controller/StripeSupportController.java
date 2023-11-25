@@ -4,7 +4,7 @@ import com.badals.checkout.domain.Tenant;
 import com.badals.checkout.domain.pojo.PaymentDef;
 import com.badals.checkout.domain.pojo.PaymentProfile;
 import com.badals.checkout.domain.pojo.PaymentResponsePayload;
-import com.badals.checkout.exception.CheckoutException;
+import com.badals.checkout.service.CheckoutException;
 
 import com.badals.checkout.service.TenantCheckoutService;
 import com.badals.checkout.xtra.PaymentType;

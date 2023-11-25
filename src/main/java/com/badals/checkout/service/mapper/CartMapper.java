@@ -1,26 +1,24 @@
 package com.badals.checkout.service.mapper;
 
-import com.badals.checkout.domain.Cart;
 import com.badals.checkout.domain.Checkout;
 import com.badals.checkout.service.dto.CartDTO;
 import org.mapstruct.*;
 
 
 @Mapper(componentModel = "spring", uses = {AdjustmentProfileMapper.class})
-public interface CartMapper extends EntityMapper<CartDTO, Cart> {
+public interface CartMapper extends EntityMapper<CartDTO, Checkout> {
 
-    CartDTO toDto(Cart cart);
-    CartDTO toTenanteDto(Checkout cart);
 
-    Cart toEntity(CartDTO cartDTO);
+   CartDTO toDto(Checkout cart);
 
-    default Cart fromId(Long id) {
-        if (id == null) {
-            return null;
-        }
-        Cart cart = new Cart();
-        cart.setId(id);
-        return cart;
-    }
+   Checkout toEntity(CartDTO cartDTO);
+
+   default Checkout fromId(Long id) {
+      if (id == null) {
+         return null;
+      }
+      Checkout cart = new Checkout();
+      cart.setId(id);
+      return cart;
+   }
 }
-

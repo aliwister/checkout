@@ -1,7 +1,6 @@
 package com.badals.checkout.repository;
 
 
-import com.badals.checkout.domain.Order;
 import com.badals.checkout.domain.TenantOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
