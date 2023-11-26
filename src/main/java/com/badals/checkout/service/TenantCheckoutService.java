@@ -182,7 +182,7 @@ public class TenantCheckoutService {
         order.setCarrier(checkout.getCarrier());
         order.setDeliveryTotal(checkout.getCarrierRate());
         order.setPaymentMethod(paymentMethod);
-        order.setCheckoutId(checkout.getId());
+        order.setCheckoutSecureKey(checkout.getRef());
 
         int i = 1;
         for(LineItem item : checkout.getItems()) {

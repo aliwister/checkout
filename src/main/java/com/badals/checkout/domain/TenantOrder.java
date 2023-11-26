@@ -103,8 +103,8 @@ public class TenantOrder extends Auditable<String> implements Serializable, Tena
     @Column(name="tenant_id")
     private String tenantId;
 
-    @Column(name="checkout_id")
-    private Long checkoutId;
+    @Column(name="checkout_secure_key")
+    private String checkoutSecureKey;
 
 
     @Column
