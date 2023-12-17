@@ -5,6 +5,7 @@ import com.badals.checkout.aop.tenant.TenantSupport;
 import com.badals.checkout.domain.pojo.Address;
 import com.badals.checkout.domain.pojo.AdjustmentProfile;
 import com.badals.checkout.domain.pojo.LineItem;
+import com.badals.checkout.domain.pojo.OldAdjustmentProfile;
 import com.badals.checkout.xtra.PaymentType;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
@@ -109,8 +110,8 @@ public class Checkout implements Serializable, TenantSupport {
     private List<AdjustmentProfile> adjustments = new ArrayList<>();
 
 //    @Type(type = "json")
-//    @Column(name="new_adjustments", columnDefinition = "string")
-//    private List<AdjustmentProfile> newAdjustments = new ArrayList<>();
+//    @Column(name="adjustments", columnDefinition = "string")
+//    private List<OldAdjustmentProfile> newAdjustments = new ArrayList<>();
 
 
     @Override
