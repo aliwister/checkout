@@ -35,8 +35,8 @@ public class StripeSupportController {
    }
 
    @PostMapping(value = "/create-payment-intent", produces = "application/json")
-   public @ResponseBody
-   PaymentResponsePayload request(@RequestParam String token) throws URISyntaxException, StripeException, CheckoutException {
+   @CrossOrigin(origins = "*")
+   public @ResponseBody PaymentResponsePayload request(@RequestParam String token) throws URISyntaxException, StripeException, CheckoutException {
       Tenant tenant = tenantCheckoutService.getTenant();
       PaymentProfile profile = tenant.getPaymentProfile();
       PaymentDef def =  profile.getType(PaymentType.STRIPE);
