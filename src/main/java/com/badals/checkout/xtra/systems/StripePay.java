@@ -44,7 +44,6 @@ public class StripePay extends PaymentSystem {
                          .builder()
                          .setAmount(cartService.calculateValue(cart))
                          .setCurrency(cart.getCurrency())
-                         .setCustomer(cart.getName())
                          .setAutomaticPaymentMethods(
                                  PaymentIntentCreateParams.AutomaticPaymentMethods
                                          .builder()
