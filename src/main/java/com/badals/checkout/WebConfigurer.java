@@ -81,7 +81,7 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOrigins(Collections.singletonList("*")); // Provide list of origins if you want multiple origins
-        config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "X-TenantID"));
+        config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "X-TenantID","Authorization"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
         config.setAllowCredentials(true);
 
