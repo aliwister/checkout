@@ -31,7 +31,7 @@ public class StripeSupportController {
 
    @GetMapping(value="/test-stripe", produces = "application/json")
    public @ResponseBody Boolean test() {
-      return false;
+      return true;
    }
 
    @PostMapping(value = "/create-payment-intent", produces = "application/json")
