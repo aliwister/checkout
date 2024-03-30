@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class CreateCheckoutSession {
+public class CreateCheckoutSessionResponse {
     private String session_id;
     private String client_reference_id;
     private String customer_id;

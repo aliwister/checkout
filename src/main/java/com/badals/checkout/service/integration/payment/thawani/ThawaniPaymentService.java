@@ -1,8 +1,8 @@
 package com.badals.checkout.service.integration.payment.thawani;
 
-import com.badals.checkout.service.integration.payment.thawani.dto.request.CreateCheckoutBody;
+import com.badals.checkout.service.integration.payment.thawani.dto.request.CreateCheckoutSessionBody;
 import com.badals.checkout.service.integration.payment.thawani.dto.request.CreateCustomerBody;
-import com.badals.checkout.service.integration.payment.thawani.dto.response.CreateCheckoutSession;
+import com.badals.checkout.service.integration.payment.thawani.dto.response.CreateCheckoutSessionResponse;
 import com.badals.checkout.service.integration.payment.thawani.dto.response.CreateCustomer;
 import com.badals.checkout.service.integration.payment.thawani.dto.response.ThawaniResponse;
 import org.slf4j.Logger;
@@ -23,7 +23,7 @@ public class ThawaniPaymentService {
         return thawaniApiClient.createCustomer(new CreateCustomerBody(clientCustomerId));
     }
 
-    public ThawaniResponse<CreateCheckoutSession> createCheckoutSession(CreateCheckoutBody request){
-        return thawaniApiClient.createCheckoutSession(request);
+    public ThawaniResponse<CreateCheckoutSessionResponse> createCheckoutSession(String secretKey, CreateCheckoutSessionBody request){
+        return thawaniApiClient.createCheckoutSession(secretKey, request);
     }
 }

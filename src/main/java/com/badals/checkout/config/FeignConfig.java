@@ -12,12 +12,12 @@ import org.springframework.context.annotation.Configuration;
 public class FeignConfig {
 
 //    @Value("${thawani.api.url}")
-    @Value("https://uatcheckout.thawani.om/api/v1")
+    @Value("https://checkout.thawani.om/api/v1")
     private String thawaniApiUrl;
 
 //    @Value("${thawani.api.key}")
-    @Value("rRQ26GcsZzoEhbrP2HZvLYDbn9C9et")
-    private String thawaniApiKey;
+//    @Value("rRQ26GcsZzoEhbrP2HZvLYDbn9C9et")
+//    private String thawaniApiKey;
 
 
     @Bean
@@ -28,7 +28,7 @@ public class FeignConfig {
                 .requestInterceptor(requestTemplate -> {
                     requestTemplate.header("Accept", "application/json");
                     requestTemplate.header("Content-Type", "application/json");
-                    requestTemplate.header("thawani-api-key", thawaniApiKey);
+//                    requestTemplate.header("thawani-api-key", thawaniApiKey);
                 })
                 .target(ThawaniApiClient.class, thawaniApiUrl);
     }
