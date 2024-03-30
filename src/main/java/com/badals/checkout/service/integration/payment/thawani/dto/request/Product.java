@@ -1,11 +1,13 @@
 package com.badals.checkout.service.integration.payment.thawani.dto.request;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Data
 public class Product {
     private String name;
