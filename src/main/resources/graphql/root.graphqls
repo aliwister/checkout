@@ -8,6 +8,8 @@ extend type Query {
     addressDescription(isoCode: String, lang: String): AddressFormat
     orderConfirmation(paymentKey: String): OrderConfirmation
 
+#    stockReportBetweenDates(from: LocalDate, to: LocalDate): [StockReport]
+
 }
 extend type Mutation {
 
@@ -21,8 +23,6 @@ extend type Mutation {
     #setCarrier(value: String, secureKey: String): Cart
     chargePayment(token: String, paymentRef: String, secureKey: String): PaymentResponsePayload
     #createOrder(token: String, paymentKey: String): OrderConfirmation
-
-    getThawaniPaymentSession(secureKey: String): PaymentResponsePayload
 
     useReward(secureKey: String, reward: String): Message
     removeReward(secureKey: String, reward: String): Message

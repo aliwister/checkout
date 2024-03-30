@@ -61,12 +61,6 @@ public class Mutation implements GraphQLMutationResolver {
         return paymentService.processPaymentWeb(ref, secureKey);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public PaymentResponsePayload getThawaniPaymentSession(String secureKey) throws Exception{
-        return paymentService.getThawaniPaymentSession(secureKey);
-    }
-
-
     public CartDTO setTenantCarrier(Long value, String secureKey) throws InvalidCartException {
         return carrierService.setTenantCarrier(value, secureKey);
     }
