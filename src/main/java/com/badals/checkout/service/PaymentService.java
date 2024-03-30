@@ -6,10 +6,10 @@ import com.badals.checkout.domain.pojo.*;
 import com.badals.checkout.repository.CheckoutRepository;
 
 import com.badals.checkout.service.integration.payment.thawani.ThawaniPaymentService;
-import com.badals.checkout.service.integration.payment.thawani.dto.request.CreateCheckoutBody;
+import com.badals.checkout.service.integration.payment.thawani.dto.request.CreateCheckoutSessionBody;
 import com.badals.checkout.service.integration.payment.thawani.dto.request.CreateCheckoutMetaData;
 import com.badals.checkout.service.integration.payment.thawani.dto.request.Product;
-import com.badals.checkout.service.integration.payment.thawani.dto.response.CreateCheckoutSession;
+import com.badals.checkout.service.integration.payment.thawani.dto.response.CreateCheckoutSessionResponse;
 import com.badals.checkout.service.integration.payment.thawani.dto.response.CreateCustomer;
 import com.badals.checkout.service.integration.payment.thawani.dto.response.ThawaniResponse;
 import com.badals.checkout.xtra.PaymentType;
@@ -83,32 +83,4 @@ public class PaymentService {
        }
        return response;
    }
-
-   @Transactional
-    public PaymentResponsePayload getThawaniPaymentSession(String secureKey){
-        //get checkout
-        //create thawani input
-        //see if we have thawani customer in db if not create one
-        //call thawani
-       ThawaniResponse<CreateCustomer> thawaniCustomerResponse =  thawaniPaymentService.createCustomer("tmpmailebi1234@mail.com");
-
-       CreateCheckoutBody request = new CreateCheckoutBody();
-       request.setClient_reference_id("123412");
-       request.setMode("payment");
-       Product product = new Product();
-       product.setName("product 1");
-       product.setQuantity(1);
-       product.setUnit_amount(10000);
-
-       request.setProducts(List.of(product));
-       request.setSuccess_url("https://company.com/success");
-       request.setCancel_url("https://company.com/cancel");
-       CreateCheckoutMetaData metadata = new CreateCheckoutMetaData();
-       metadata.setClient_customer_id(thawaniCustomerResponse.getData().getId());
-       metadata.setClient_checkout_id("123412");
-       request.setMetadata(metadata);
-       ThawaniResponse<CreateCheckoutSession> checkoutSessionThawaniResponse = thawaniPaymentService.createCheckoutSession(request);
-//       log.info("checkoutSessionThawaniResponse: {}", checkoutSessionThawaniResponse);
-       return new PaymentResponsePayload("awaiting payment", "https://uatcheckout.thawani.om/pay/"+checkoutSessionThawaniResponse.getData().getSession_id()+"?key=HGvTMLDssJghr9tlN9gr4DVYt0qyBy", REDIRECT, "thawani");
-    }
 }
