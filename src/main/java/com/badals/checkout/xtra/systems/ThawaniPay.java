@@ -24,10 +24,12 @@ public class ThawaniPay extends PaymentSystem {
 
     private TenantCheckoutService cartService;
     private ThawaniPaymentService thawaniPaymentService;
+    private TenantCheckoutService checkoutService;
 
-    public ThawaniPay(TenantCheckoutService cartService, ThawaniPaymentService thawaniPaymentService) {
+    public ThawaniPay(TenantCheckoutService cartService, ThawaniPaymentService thawaniPaymentService, TenantCheckoutService checkoutService) {
         this.cartService = cartService;
         this.thawaniPaymentService = thawaniPaymentService;
+        this.checkoutService = checkoutService;
     }
 
     public synchronized PaymentResponsePayload processPayment(String secretKey, String secureKey, boolean isWebsite) {
@@ -36,6 +38,7 @@ public class ThawaniPay extends PaymentSystem {
         // todo handle failure scenarios to unlock cart
         CartDTO cart = null;
         try {
+            String baseUrl = TenantCheckoutService.buildProfileBaseUrl(checkoutService.getTenant());
             cart = cartService.findBySecureKeyWithLock(secureKey);
             CreateCheckoutSessionBody createCheckoutSessionBody = CreateCheckoutSessionBody.builder()
                     .client_reference_id(cart.getId().toString())
@@ -45,8 +48,8 @@ public class ThawaniPay extends PaymentSystem {
                             .quantity(item.getQuantity().intValue())
                             .unit_amount((item.getPrice().multiply(new BigDecimal(1000))).intValue())
                             .build()).collect(Collectors.toList()))
-                    .success_url("https://example.com/success")
-                    .cancel_url("https://example.com/cancel")
+                    .success_url(baseUrl + "/checkout/callbacks/thawani/success")
+                    .cancel_url(baseUrl + "/checkout/callbacks/thawani/failure")
                     .metadata(null)
                     .build();
 
