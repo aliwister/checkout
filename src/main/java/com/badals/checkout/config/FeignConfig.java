@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class FeignConfig {
 
 //    @Value("${thawani.api.url}")
-    @Value("https://checkout.thawani.om/api/v1")
+    @Value("https://uatcheckout.thawani.om/api/v1")
     private String thawaniApiUrl;
 
 //    @Value("${thawani.api.key}")
