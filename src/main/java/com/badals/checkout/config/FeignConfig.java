@@ -2,8 +2,11 @@ package com.badals.checkout.config;
 
 import com.badals.checkout.service.integration.payment.thawani.ThawaniApiClient;
 import feign.Feign;
-import feign.gson.GsonDecoder;
+import feign.Logger;
 import feign.gson.GsonEncoder;
+import feign.jackson.JacksonDecoder;
+import feign.jackson.JacksonEncoder;
+import feign.slf4j.Slf4jLogger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,8 +26,10 @@ public class FeignConfig {
     @Bean
     public ThawaniApiClient thawaniApiClient() {
         return Feign.builder()
-                .decoder(new GsonDecoder())
-                .encoder(new GsonEncoder())
+                .decoder(new JacksonDecoder())
+                .encoder(new JacksonEncoder())
+//                .logger(new Slf4jLogger())
+//                .logLevel(Logger.Level.FULL)
                 .requestInterceptor(requestTemplate -> {
                     requestTemplate.header("Accept", "application/json");
                     requestTemplate.header("Content-Type", "application/json");
