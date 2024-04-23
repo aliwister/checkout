@@ -68,4 +68,30 @@ public class StripePay extends PaymentSystem {
       }
 
    }
+
+   public synchronized PaymentResponsePayload processPayment(String sk, Double amount) {
+
+      try {
+         Stripe.apiKey = sk;
+         PaymentIntentCreateParams params =
+                 PaymentIntentCreateParams
+                         .builder()
+                         .setAmount((long) (1000 * amount))
+                         .setCurrency("USD")
+                         .setAutomaticPaymentMethods(
+                                 PaymentIntentCreateParams.AutomaticPaymentMethods
+                                         .builder()
+                                         .setEnabled(true)
+                                         .build()
+                         )
+                         .build();
+
+         PaymentIntent paymentIntent;
+         paymentIntent = PaymentIntent.create(params);
+         return paymentSucessful(paymentIntent.getClientSecret());
+
+      } catch (StripeException e) {
+         return paymentDeclined(e.getUserMessage());
+      }
+   }
 }

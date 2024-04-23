@@ -42,6 +42,14 @@ public class StripeSupportController {
       return stripe.processPayment(def.getSk(), token, true);
    }
 
+   @PostMapping(value = "/create-payment-intent-shipment", produces = "application/json")
+   public @ResponseBody PaymentResponsePayload shipmentStripePayment(@RequestBody Double amount) throws URISyntaxException, StripeException, CheckoutException {
+      Tenant tenant = tenantCheckoutService.getTenant();
+      PaymentProfile profile = tenant.getPaymentProfile();
+      PaymentDef def =  profile.getType(PaymentType.STRIPE);
+      return stripe.processPayment(def.getSk(), amount);
+   }
+
 /*   @PostMapping(value = "/create-payment-profile", produces = "application/json")
    public @ResponseBody
    String create(String token) throws URISyntaxException, StripeException, CheckoutException {
