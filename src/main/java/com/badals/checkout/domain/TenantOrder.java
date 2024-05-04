@@ -122,6 +122,9 @@ public class TenantOrder extends Auditable<String> implements Serializable, Tena
     @Column(name = "payment_method")
     private String paymentMethod;
 
+    @Type(type = "json")
+    @Column(name = "additional_info")
+    private Object additionalInfo;
 
 
     /*@ManyToOne
