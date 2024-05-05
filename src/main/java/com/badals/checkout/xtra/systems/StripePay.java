@@ -69,15 +69,17 @@ public class StripePay extends PaymentSystem {
 
    }
 
-   public synchronized PaymentResponsePayload processPayment(String sk, Double amount) {
+   public synchronized PaymentResponsePayload processPayment(String sk,String secureKey, Double amount) {
 
+      CartDTO cart = null;
       try {
+         cart = cartService.findBySecureKeyWithLock(secureKey);
          Stripe.apiKey = sk;
          PaymentIntentCreateParams params =
                  PaymentIntentCreateParams
                          .builder()
-                         .setAmount((long) (1000 * amount))
-                         .setCurrency("USD")
+                         .setAmount(Double.doubleToLongBits(amount))
+                         .setCurrency(cart.getCurrency())
                          .setAutomaticPaymentMethods(
                                  PaymentIntentCreateParams.AutomaticPaymentMethods
                                          .builder()
@@ -86,12 +88,19 @@ public class StripePay extends PaymentSystem {
                          )
                          .build();
 
-         PaymentIntent paymentIntent;
+         PaymentIntent paymentIntent = null;
          paymentIntent = PaymentIntent.create(params);
+         cartService.setPaymentToken(cart.getId(), PaymentType.STRIPE.ref, paymentIntent.getClientSecret());
          return paymentSucessful(paymentIntent.getClientSecret());
-
+      } catch (InvalidCartException e) {
+         return paymentDeclined(e.getMessage());
+      } catch (LockedCartException e) {
+         return paymentDeclined(e.getMessage());
       } catch (StripeException e) {
          return paymentDeclined(e.getUserMessage());
+      } finally {
+         if(cart != null)
+            cartService.unlock(secureKey);
       }
    }
 }

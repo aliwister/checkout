@@ -10,6 +10,8 @@ import com.badals.checkout.xtra.PaymentType;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
@@ -108,6 +110,12 @@ public class Checkout implements Serializable, TenantSupport {
     @Type(type = "json")
     @Column(name="new_adjustments", columnDefinition = "string")
     private List<AdjustmentProfile> adjustments = new ArrayList<>();
+
+    @Getter
+    @Setter
+    @Type(type = "json")
+    @Column(name = "additional_info")
+    private String additionalInfo;
 
 //    @Type(type = "json")
 //    @Column(name="adjustments", columnDefinition = "string")

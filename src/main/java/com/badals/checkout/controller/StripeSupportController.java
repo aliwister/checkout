@@ -43,11 +43,11 @@ public class StripeSupportController {
    }
 
    @PostMapping(value = "/create-payment-intent-shipment", produces = "application/json")
-   public @ResponseBody PaymentResponsePayload shipmentStripePayment(@RequestBody ShipmentStripePaymentDto shipmentStripePayementDto) throws URISyntaxException, StripeException, CheckoutException {
+   public @ResponseBody PaymentResponsePayload shipmentStripePayment(@RequestBody ShipmentStripePaymentDto shipmentStripePayementDto) {
       Tenant tenant = tenantCheckoutService.getTenant();
       PaymentProfile profile = tenant.getPaymentProfile();
       PaymentDef def =  profile.getType(PaymentType.STRIPE);
-      return stripe.processPayment(def.getSk(), shipmentStripePayementDto.getAmount());
+      return stripe.processPayment(def.getSk(), shipmentStripePayementDto.getSecureKey(), shipmentStripePayementDto.getAmount());
    }
 
 /*   @PostMapping(value = "/create-payment-profile", produces = "application/json")

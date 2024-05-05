@@ -39,6 +39,8 @@ public class CartDTO {
     private Boolean guest;
     private List<AdjustmentProfileDto> adjustments;
 
+    private String additionalInfo;
+
     @Override
     public String toString() {
         return "CartDTO{" +
