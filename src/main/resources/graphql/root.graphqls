@@ -162,6 +162,7 @@ type Cart {
     carrierRate:String
     carrierService: String
     adjustments: [AdjustmentProfile]
+    additionalInfo: String
 }
 input AddressInput {
      id: Long
