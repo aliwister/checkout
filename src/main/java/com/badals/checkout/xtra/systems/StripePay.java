@@ -78,7 +78,7 @@ public class StripePay extends PaymentSystem {
          PaymentIntentCreateParams params =
                  PaymentIntentCreateParams
                          .builder()
-                         .setAmount(Double.doubleToLongBits(amount))
+                         .setAmount(amount.longValue())
                          .setCurrency(cart.getCurrency())
                          .setAutomaticPaymentMethods(
                                  PaymentIntentCreateParams.AutomaticPaymentMethods

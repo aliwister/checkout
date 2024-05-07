@@ -47,7 +47,8 @@ public class StripeSupportController {
       Tenant tenant = tenantCheckoutService.getTenant();
       PaymentProfile profile = tenant.getPaymentProfile();
       PaymentDef def =  profile.getType(PaymentType.STRIPE);
-      return stripe.processPayment(def.getSk(), shipmentStripePayementDto.getSecureKey(), shipmentStripePayementDto.getAmount());
+      System.out.println(shipmentStripePayementDto.getAmount());
+      return stripe.processPayment(def.getSk(), shipmentStripePayementDto.getSecureKey(), shipmentStripePayementDto.getAmount()*100);
    }
 
 /*   @PostMapping(value = "/create-payment-profile", produces = "application/json")
