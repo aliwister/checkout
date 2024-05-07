@@ -183,6 +183,8 @@ public class TenantCheckoutService {
         order.setDeliveryTotal(checkout.getCarrierRate());
         order.setPaymentMethod(paymentMethod);
 
+        order.setAdditionalInfo(checkout.getAdditionalInfo());
+
         int i = 1;
         for(LineItem item : checkout.getItems()) {
             TenantOrderItem orderItem = new TenantOrderItem();
