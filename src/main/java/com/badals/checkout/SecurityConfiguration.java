@@ -71,7 +71,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/test/**").permitAll()
                 .antMatchers("/api/checkout/**/**").permitAll()
             .antMatchers("/api/register").permitAll()
-            .antMatchers("/stripe-support/**").permitAll()
+            .antMatchers("/api/stripe-support/**").permitAll()
             .antMatchers("/thawani-support/**").permitAll()
             .antMatchers("/api/activate").permitAll()
             .antMatchers("/graphql").permitAll()
