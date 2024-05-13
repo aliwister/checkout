@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -jar target/*.jar -Xmx896M --spring.profiles.active=$ENV
+web: java -Dserver.port=$PORT -Xms200M -Xmx256M -jar target/*.jar --spring.profiles.active=prod,no-liquibase
