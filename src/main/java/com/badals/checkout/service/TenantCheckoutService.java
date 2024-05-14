@@ -130,7 +130,7 @@ public class TenantCheckoutService {
 
     public static  BigDecimal calculateTotal(Checkout checkout) {
         BigDecimal sum = BigDecimal.valueOf(checkout.getItems().stream().mapToDouble(x -> x.getPrice().doubleValue() * x.getQuantity().doubleValue()).sum());
-        sum = sum.add(checkout.getCarrierRate());
+        sum = sum.add(checkout.getCarrierRate() == null? BigDecimal.ZERO : checkout.getCarrierRate());
         BigDecimal discount = BigDecimal.valueOf(calculateDiscount(checkout));
         return sum.subtract(discount);
     }
