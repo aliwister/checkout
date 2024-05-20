@@ -39,7 +39,7 @@ public class CartDTO {
     private Boolean guest;
     private List<AdjustmentProfileDto> adjustments;
 
-    private String additionalInfo;
+    private AdditionalInfoDto additionalInfo;
 
     @Override
     public String toString() {
